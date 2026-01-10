@@ -145,3 +145,9 @@ h1 {
 .contact-section button:hover {
     background-color: var(--button-hover-background);
 }
+
+#disqus_thread {
+    width: 90%;
+    max-width: 500px;
+    margin-top: 20px;
+}
