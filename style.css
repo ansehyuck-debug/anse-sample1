@@ -71,6 +71,15 @@ h1 {
     margin-bottom: 30px;
 }
 
+.options {
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.options label {
+    margin-right: 10px;
+}
+
 .number {
     display: inline-block;
     width: 50px;

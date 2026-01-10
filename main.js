@@ -2,10 +2,13 @@ const generateBtn = document.getElementById('generate');
 const lottoNumbers = document.querySelectorAll('.number');
 const themeSwitcher = document.getElementById('theme-switcher');
 const body = document.body;
+const includeBonusCheckbox = document.getElementById('includeBonus');
+
 
 function generateLottoNumbers() {
     const numbers = new Set();
-    while (numbers.size < 6) {
+    const count = includeBonusCheckbox.checked ? 6 : 5;
+    while (numbers.size < count) {
         numbers.add(Math.floor(Math.random() * 45) + 1);
     }
     return Array.from(numbers).sort((a, b) => a - b);
@@ -13,7 +16,13 @@ function generateLottoNumbers() {
 
 function displayNumbers(numbers) {
     lottoNumbers.forEach((element, index) => {
-        element.textContent = numbers[index];
+        if (numbers[index]) {
+            element.textContent = numbers[index];
+            element.style.display = 'inline-block'; // Show the number
+        } else {
+            element.textContent = '';
+            element.style.display = 'none'; // Hide if no number
+        }
     });
 }
 
@@ -32,7 +41,7 @@ themeSwitcher.addEventListener('click', () => {
     }
 });
 
-// Check for saved theme
+// Check for saved theme and initial generation
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -40,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     generateAndDisplay();
+    generateBtn.addEventListener('click', generateAndDisplay);
 });
 
-generateBtn.addEventListener('click', generateAndDisplay);
 
