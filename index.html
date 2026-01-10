@@ -8,12 +8,27 @@
 </head>
 <body>
     <div class="container">
+        <div class="theme-switcher-container">
+            <button id="theme-switcher">Toggle Theme</button>
+        </div>
         <h1>오늘 저녁 뭐 먹지?</h1>
         <div class="menu-display">
+            <img id="menu-image" src="" alt="Menu Image" style="display: none;">
             <span id="menu-recommendation"></span>
         </div>
         <button id="generate">추천 받기</button>
     </div>
+
+    <div class="contact-section">
+        <h2>제휴 문의</h2>
+        <form action="https://formspree.io/f/mlggrwrk" method="POST">
+            <input type="text" name="name" placeholder="이름" required>
+            <input type="email" name="email" placeholder="이메일" required>
+            <textarea name="message" placeholder="내용" required></textarea>
+            <button type="submit">보내기</button>
+        </form>
+    </div>
+
     <script src="main.js"></script>
 </body>
 </html>
