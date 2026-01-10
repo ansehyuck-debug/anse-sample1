@@ -3,27 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로또 번호 추천</title>
+    <title>저녁 메뉴 추천</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="theme-switcher-container">
-            <button id="theme-switcher">Toggle Theme</button>
+        <h1>오늘 저녁 뭐 먹지?</h1>
+        <div class="menu-display">
+            <span id="menu-recommendation"></span>
         </div>
-        <h1>로또 번호 추천</h1>
-        <div class="lotto-numbers">
-            <span class="number"></span>
-            <span class="number"></span>
-            <span class="number"></span>
-            <span class="number"></span>
-            <span class="number"></span>
-        </div>
-        <div class="options">
-            <label for="includeBonus">보너스 번호 포함</label>
-            <input type="checkbox" id="includeBonus">
-        </div>
-        <button id="generate">새 번호 받기</button>
+        <button id="generate">추천 받기</button>
     </div>
     <script src="main.js"></script>
 </body>
