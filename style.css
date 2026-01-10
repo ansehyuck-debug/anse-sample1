@@ -1,23 +1,67 @@
+:root {
+    --background-color: #f0f2f5;
+    --container-background: white;
+    --text-color: #333;
+    --button-background: #008CBA;
+    --button-hover-background: #005f7a;
+    --lotto-number-background: #4CAF50;
+    --lotto-number-color: white;
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    --background-color: #121212;
+    --container-background: #1e1e1e;
+    --text-color: #e0e0e0;
+    --button-background: #005f7a;
+    --button-hover-background: #008CBA;
+    --lotto-number-background: #333;
+    --lotto-number-color: #e0e0e0;
 }
 
 .container {
+    position: relative;
     text-align: center;
-    background-color: white;
+    background-color: var(--container-background);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.theme-switcher-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#theme-switcher {
+    background-color: var(--button-background);
+    color: var(--lotto-number-color);
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#theme-switcher:hover {
+    background-color: var(--button-hover-background);
 }
 
 h1 {
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 30px;
 }
 
@@ -33,15 +77,16 @@ h1 {
     height: 50px;
     line-height: 50px;
     border-radius: 50%;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--lotto-number-background);
+    color: var(--lotto-number-color);
     font-size: 24px;
     font-weight: bold;
     margin: 0 10px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 #generate {
-    background-color: #008CBA;
+    background-color: var(--button-background);
     color: white;
     border: none;
     padding: 15px 30px;
@@ -52,5 +97,5 @@ h1 {
 }
 
 #generate:hover {
-    background-color: #005f7a;
+    background-color: var(--button-hover-background);
 }
