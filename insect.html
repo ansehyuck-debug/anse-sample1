@@ -15,8 +15,8 @@
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="나는 어떤 곤충상일까? - 곤충상 테스트">
-    <meta name="twitter:description" content="AI가 당신의 얼굴을 분석하여 어떤 곤충상에 가까운지 알려드립니다.">
-    <meta name="twitter:image" content="https://anse-sample1.pages.dev/favicon.svg">
+    <meta property="twitter:description" content="AI가 당신의 얼굴을 분석하여 어떤 곤충상에 가까운지 알려드립니다.">
+    <meta property="twitter:image" content="https://anse-sample1.pages.dev/favicon.svg">
 
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="style.css"></noscript>
@@ -51,6 +51,69 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <style>
+        .image-preview-container {
+            max-width: 50%; /* Half size */
+            margin: 20px auto; /* Center the image preview */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        .prediction-graph {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+        }
+        .prediction-bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: var(--text-color-dark);
+        }
+        .prediction-bar-label {
+            flex-basis: 120px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .prediction-bar {
+            flex-grow: 1;
+            height: 20px;
+            background-color: var(--light-green);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+        .prediction-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-green), var(--primary-green));
+            transition: width 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5px;
+            color: white;
+            font-size: 0.8em;
+            box-sizing: border-box;
+        }
+        .insect-features {
+            margin-top: 30px;
+            text-align: left;
+            padding: 20px;
+            background-color: var(--background-light-start);
+            border-radius: 10px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        .insect-features h3 {
+            text-align: center;
+            color: var(--dark-green);
+        }
+        .insect-features p {
+            font-size: 1em;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body>
     <header class="container">
@@ -75,11 +138,20 @@
                 <button id="checkResult" style="margin-left: 10px;">결과 확인하기</button>
             </div>
             
+            <div id="imagePreview" class="image-preview-container">
+                <!-- Uploaded image preview will be displayed here -->
+            </div>
+
             <div id="result" style="margin-top: 20px; font-size: 1.8em; font-weight: bold; min-height: 50px; display: flex; align-items: center; justify-content: center;">
                 여기에 결과가 표시됩니다.
             </div>
-            <div id="imagePreview" style="margin-top: 20px; max-width: 100%; height: auto; border-radius: 10px; overflow: hidden;">
-                <!-- Uploaded image preview will be displayed here -->
+
+            <div id="predictionGraph" class="prediction-graph">
+                <!-- Prediction graph will be displayed here -->
+            </div>
+
+            <div id="insectFeatures" class="insect-features" style="display: none;">
+                <!-- Insect features will be displayed here -->
             </div>
         </article>
     </main>
@@ -104,6 +176,15 @@
     <script type="text/javascript">
         const URL = "https://teachablemachine.withgoogle.com/models/_oRwiza95/";
         let model, maxPredictions;
+
+        const insectDescriptions = {
+            "개미상": "부지런하고 협동심이 강한 인상을 줍니다. 목표 지향적이고 현실적인 성향을 가집니다.",
+            "벌상": "활발하고 에너지가 넘치며, 리더십 있는 모습을 보입니다. 사회성이 뛰어나고 책임감이 강합니다.",
+            "나비상": "아름답고 섬세하며, 자유로운 영혼을 가진 인상을 줍니다. 예술적 감각이 뛰어나고 변화를 즐깁니다.",
+            "사마귀상": "날카롭고 카리스마 있는 인상을 줍니다. 집중력이 좋고 목표를 향해 끈기 있게 나아가는 성향이 있습니다.",
+            "장수풍뎅이상": "튼튼하고 묵직한 인상을 주며, 강인함과 안정감을 가집니다. 신뢰할 수 있고 든든한 타입입니다.",
+            "무당벌레상": "귀엽고 친근하며, 긍정적인 에너지를 발산합니다. 주변 사람들에게 행복을 주는 유쾌한 성격입니다."
+        };
 
         // Load the image model
         async function initModel() {
@@ -143,6 +224,12 @@
             const resultDiv = document.getElementById('result');
             const imagePreviewDiv = document.getElementById('imagePreview');
             const uploadedImageElement = imagePreviewDiv.querySelector('img');
+            const predictionGraphDiv = document.getElementById('predictionGraph');
+            const insectFeaturesDiv = document.getElementById('insectFeatures');
+
+            predictionGraphDiv.innerHTML = ''; // Clear previous graph
+            insectFeaturesDiv.innerHTML = ''; // Clear previous features
+            insectFeaturesDiv.style.display = 'none'; // Hide features initially
 
             if (!uploadedImageElement) {
                 resultDiv.textContent = '사진을 먼저 업로드해주세요!';
@@ -151,7 +238,6 @@
 
             if (!model) {
                 resultDiv.textContent = 'AI 모델 로딩 중입니다. 잠시 후 다시 시도해주세요.';
-                // Try to re-initialize if not loaded (this might be too late if network is slow)
                 await initModel(); 
                 if (!model) {
                     resultDiv.textContent = 'AI 모델 로드에 실패했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
@@ -165,23 +251,53 @@
                 // Create a canvas from the uploaded image for prediction
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = uploadedImageElement.naturalWidth;
-                canvas.height = uploadedImageElement.naturalHeight;
-                ctx.drawImage(uploadedImageElement, 0, 0);
+                // Ensure canvas size matches the model's expected input size (e.g., 224x224 from Teachable Machine defaults)
+                // If not set, it might use natural size which can be too large or small
+                const modelInputSize = 224; // Common input size for Teachable Machine Image models
+                canvas.width = modelInputSize;
+                canvas.height = modelInputSize;
+                ctx.drawImage(uploadedImageElement, 0, 0, modelInputSize, modelInputSize);
+
 
                 const prediction = await model.predict(canvas);
                 
                 let highestProbability = 0;
                 let predictedInsect = '알 수 없음';
 
-                for (let i = 0; i < maxPredictions; i++) {
-                    if (prediction[i].probability > highestProbability) {
-                        highestProbability = prediction[i].probability;
-                        predictedInsect = prediction[i].className;
+                // Display graph and find highest probability
+                prediction.forEach(p => {
+                    const barContainer = document.createElement('div');
+                    barContainer.className = 'prediction-bar-container';
+
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'prediction-bar-label';
+                    labelSpan.textContent = p.className;
+
+                    const barOuter = document.createElement('div');
+                    barOuter.className = 'prediction-bar';
+
+                    const barFill = document.createElement('div');
+                    barFill.className = 'prediction-bar-fill';
+                    barFill.style.width = `${p.probability * 100}%`;
+                    barFill.textContent = `${(p.probability * 100).toFixed(1)}%`;
+
+                    barOuter.appendChild(barFill);
+                    barContainer.appendChild(labelSpan);
+                    barContainer.appendChild(barOuter);
+                    predictionGraphDiv.appendChild(barContainer);
+
+                    if (p.probability > highestProbability) {
+                        highestProbability = p.probability;
+                        predictedInsect = p.className;
                     }
-                }
+                });
                 
-                resultDiv.textContent = `당신은 ${predictedInsect}입니다! (정확도: ${(highestProbability * 100).toFixed(2)}%)`;
+                resultDiv.textContent = `당신은 ${predictedInsect}입니다!`;
+
+                // Display insect features
+                const description = insectDescriptions[predictedInsect] || "해당 곤충상에 대한 설명이 없습니다.";
+                insectFeaturesDiv.innerHTML = `<h3>${predictedInsect} 특징</h3><p>${description}</p>`;
+                insectFeaturesDiv.style.display = 'block';
 
             } catch (error) {
                 console.error("Prediction failed:", error);
