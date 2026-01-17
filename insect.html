@@ -53,8 +53,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <style>
         .image-preview-container {
-            width: 150px; /* Fixed width */
-            height: 150px; /* Fixed height */
+            max-width: 400px; /* Max width */
+            width: 100%; /* Responsive width */
+            height: auto; /* Maintain aspect ratio */
             margin: 20px auto; /* Center the image preview */
             border-radius: 10px;
             overflow: hidden;
@@ -65,9 +66,9 @@
             background-color: var(--background-light-start); /* Placeholder background */
         }
         .image-preview-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Cover the container while maintaining aspect ratio */
+            max-width: 100%; /* Ensure image fits container */
+            max-height: 100%;
+            object-fit: contain; /* Contain the entire image */
             display: block;
         }
         .prediction-graph {
@@ -93,7 +94,7 @@
         .prediction-bar {
             flex-grow: 1;
             height: 20px;
-            background-color: var(--light-green);
+            background-color: var(--prediction-bar-background);
             border-radius: 3px;
             position: relative;
             overflow: hidden;
@@ -106,7 +107,7 @@
             align-items: center;
             justify-content: flex-end;
             padding-right: 5px;
-            color: white;
+            color: var(--text-color-dark);
             font-size: 0.8em;
             box-sizing: border-box;
         }
@@ -193,12 +194,12 @@
         let model, maxPredictions;
 
         const insectDescriptions = {
-            "개미상": "부지런하고 협동심이 강한 인상을 줍니다. 목표 지향적이고 현실적인 성향을 가집니다.",
-            "벌상": "활발하고 에너지가 넘치며, 리더십 있는 모습을 보입니다. 사회성이 뛰어나고 책임감이 강합니다.",
-            "나비상": "아름답고 섬세하며, 자유로운 영혼을 가진 인상을 줍니다. 예술적 감각이 뛰어나고 변화를 즐깁니다.",
-            "사마귀상": "날카롭고 카리스마 있는 인상을 줍니다. 집중력이 좋고 목표를 향해 끈기 있게 나아가는 성향이 있습니다.",
-            "장수풍뎅이상": "튼튼하고 묵직한 인상을 주며, 강인함과 안정감을 가집니다. 신뢰할 수 있고 든든한 타입입니다.",
-            "무당벌레상": "귀엽고 친근하며, 긍정적인 에너지를 발산합니다. 주변 사람들에게 행복을 주는 유쾌한 성격입니다."
+            "개미": "부지런하고 협동심이 강한 인상을 줍니다. 목표 지향적이고 현실적인 성향을 가집니다.",
+            "벌": "활발하고 에너지가 넘치며, 리더십 있는 모습을 보입니다. 사회성이 뛰어나고 책임감이 강합니다.",
+            "나비": "아름답고 섬세하며, 자유로운 영혼을 가진 인상을 줍니다. 예술적 감각이 뛰어나고 변화를 즐깁니다.",
+            "사마귀": "날카롭고 카리스마 있는 인상을 줍니다. 집중력이 좋고 목표를 향해 끈기 있게 나아가는 성향이 있습니다.",
+            "무당벌래": "귀엽고 친근하며, 긍정적인 에너지를 발산합니다. 주변 사람들에게 행복을 주는 유쾌한 성격입니다.",
+            "장수풍뎅이": "튼튼하고 묵직한 인상을 주며, 강인함과 안정감을 가집니다. 신뢰할 수 있고 든든한 타입입니다."
         };
 
         // Load the image model
@@ -265,8 +266,7 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 // Ensure canvas size matches the model's expected input size (e.g., 224x224 from Teachable Machine defaults)
-                // If not set, it might use natural size which can be too large or small
-                const modelInputSize = 224; // Common input size for Teachable Machine Image models
+                const modelInputSize = 224; 
                 canvas.width = modelInputSize;
                 canvas.height = modelInputSize;
                 ctx.drawImage(uploadedImageElement, 0, 0, modelInputSize, modelInputSize);
