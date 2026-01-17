@@ -3,6 +3,7 @@ const menuRecommendation = document.getElementById('menu-recommendation');
 const menuImage = document.getElementById('menu-image'); // New: Get reference to the image element
 const themeSwitcher = document.getElementById('theme-switcher');
 const body = document.body;
+const loadingIndicator = document.getElementById('loading-indicator'); // Get reference to loading indicator
 
 const menus = [
     '치킨', '피자', '삼겹살', '떡볶이', '초밥', '파스타', '김치찌개', '된장찌개',
@@ -39,15 +40,29 @@ function recommendMenu() {
     const recommendedMenu = menus[randomIndex];
     menuRecommendation.textContent = recommendedMenu;
 
-    // New: Handle image display
+    // Show loading indicator and hide image before setting src
+    menuImage.style.display = 'none';
     if (menuImageMap[recommendedMenu]) {
+        loadingIndicator.style.display = 'block';
         menuImage.src = menuImageMap[recommendedMenu];
-        menuImage.style.display = 'block'; // Show the image
     } else {
         menuImage.src = ''; // Clear source
-        menuImage.style.display = 'none'; // Hide the image
+        loadingIndicator.style.display = 'none'; // Ensure loading indicator is hidden if no image
     }
 }
+
+// Add these new lines outside the recommendMenu function, perhaps after variable declarations
+menuImage.addEventListener('load', () => {
+    loadingIndicator.style.display = 'none';
+    menuImage.style.display = 'block';
+});
+
+menuImage.addEventListener('error', () => {
+    loadingIndicator.style.display = 'none';
+    menuImage.src = ''; // Clear source to prevent broken image icon
+    menuImage.style.display = 'none'; // Ensure image remains hidden
+    console.error("Failed to load image for: " + menuRecommendation.textContent);
+});
 
 // --- Theme Switcher Logic ---
 themeSwitcher.addEventListener('click', () => {
