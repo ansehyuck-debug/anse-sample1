@@ -293,8 +293,8 @@ button:hover {
 }
 
 .menu-display, .sentiment-display {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 35px;
+    margin-bottom: 20px;
     min-height: 30px;
     display: flex;
     flex-direction: column;
@@ -322,7 +322,7 @@ button:hover {
 /* Styling for proverb display container */
 .proverb-display {
     margin-top: 30px; /* Match .sentiment-display for consistent spacing */
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     display: flex; /* Apply flexbox for internal alignment */
     flex-direction: column;
     align-items: center;
