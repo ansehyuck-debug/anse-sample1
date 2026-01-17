@@ -66,7 +66,10 @@
     <main class="container">
         <article>
             <h2>금융 시장 심리를 알아봅시다.</h2>
-            <p>이 페이지에서는 금융 시장의 주요 심리 지표와 그 의미에 대해 다룰 예정입니다. (준비 중)</p>
+            <div class="sentiment-display">
+                <span id="market-sentiment">오늘의 금융 시장 심리를 확인해 보세요.</span>
+            </div>
+            <button id="generate-sentiment">심리 확인하기</button>
         </article>
     </main>
 
@@ -88,6 +91,26 @@
 
     <script src="main.js"></script>
     <script>
+        document.getElementById('generate-sentiment').addEventListener('click', function() {
+            const score = Math.floor(Math.random() * 101); // Generate a random score between 0 and 100
+            let sentimentMessage = "";
+
+            if (score >= 0 && score <= 20) {
+                sentimentMessage = "시장 분위기가 상당히 위축돼 있습니다.";
+            } else if (score >= 21 && score <= 40) {
+                sentimentMessage = "시장에 조심스러운 분위기가 감지됩니다.";
+            } else if (score >= 41 && score <= 60) {
+                sentimentMessage = "시장 분위기는 비교적 중립적인 상태입니다.";
+            } else if (score >= 61 && score <= 75) {
+                sentimentMessage = "시장에 다소 낙관적인 기류가 형성돼 있습니다.";
+            } else if (score >= 76 && score <= 100) {
+                sentimentMessage = "시장 전반에 과열 신호가 나타나고 있습니다.";
+            }
+
+            document.getElementById('market-sentiment').textContent = sentimentMessage;
+        });
+
+        // Disqus configuration (remains unchanged)
         var disqus_config = function () {
             this.page.url = 'https://anse-sample1.pages.dev/sentiment.html';
             this.page.identifier = 'https://anse-sample1.pages.dev/sentiment.html';
