@@ -53,7 +53,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <style>
         .image-preview-container {
-            max-width: 300px; /* Max width */
+            max-width: 200px; /* Max width */
             width: 100%; /* Responsive width */
             height: auto; /* Maintain aspect ratio */
             margin: 20px auto; /* Center the image preview */
@@ -66,8 +66,8 @@
             background-color: var(--background-light-start); /* Placeholder background */
         }
         .image-preview-container img {
-            max-width: 100%; /* Ensure image fits container */
-            max-height: 100%;
+            max-width: auto; /* Ensure image fits container */
+            max-height: auto;
             object-fit: cover; /* Contain the entire image */
             display: block;
         }
