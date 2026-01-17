@@ -110,11 +110,13 @@
         document.getElementById('generate-sentiment').addEventListener('click', function() {
             const sentimentSpan = document.getElementById('market-sentiment');
             const scoreSpan = document.getElementById('market-score');
-            const functionUrl = 'https://us-central1-anse-sample1-46739525-2d1c0.cloudfunctions.net/getMarketVolatility';
+            // const functionUrl = 'https://us-central1-anse-sample1-46739525-2d1c0.cloudfunctions.net/getMarketVolatility';
 
-            sentimentSpan.textContent = '준비중';
+            sentimentSpan.textContent = '준비중입니다.';
             scoreSpan.textContent = ''; // Clear previous score as well
 
+            // The following fetch logic is commented out as per user's request
+            /*
             fetch(functionUrl)
                 .then(response => {
                     if (!response.ok) {
@@ -160,6 +162,7 @@
                     sentimentSpan.textContent = '점수를 불러오는 데 실패했습니다.';
                     scoreSpan.textContent = 'Cloud Function이 배포되었는지 확인하세요.';
                 });
+            */
         });
 
         // Disqus configuration (remains unchanged)
