@@ -68,6 +68,7 @@
             <h2>금융 시장 심리를 알아봅시다.</h2>
             <div class="sentiment-display">
                 <span id="market-sentiment">오늘의 금융 시장 심리를 확인해 보세요.</span>
+                <span id="market-score" style="display: block; margin-top: 10px; font-size: 1.2em; font-weight: bold;"></span>
             </div>
             <button id="generate-sentiment">심리 확인하기</button>
         </article>
@@ -108,6 +109,7 @@
             }
 
             document.getElementById('market-sentiment').textContent = sentimentMessage;
+            document.getElementById('market-score').textContent = `(점수: ${score}점, 참고용 지표)`;
         });
 
         // Disqus configuration (remains unchanged)
