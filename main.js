@@ -12,8 +12,26 @@ const menus = [
 
 // New: Map menu items to image paths
 const menuImageMap = {
-    "탕수육": "images/tang-su-yuk.jpg",
-    // Add other menu images here if available
+    "치킨": "images/치킨.png",
+    "피자": "images/피자.png",
+    "삼겹살": "images/삼겹살.png",
+    "떡볶이": "images/떡볶이.png",
+    "초밥": "images/초밥.png",
+    "파스타": "images/파스타.png",
+    "김치찌개": "images/김치찌개.png",
+    "된장찌개": "images/된장찌개.png",
+    "부대찌개": "images/부대찌개.png",
+    "곱창": "images/곱창.png",
+    "족발": "images/족발.png",
+    "보쌈": "images/보쌈.png",
+    "짜장면": "images/짜장면.png",
+    "짬뽕": "images/짬뽕.png",
+    "탕수육": "images/탕수육.png",
+    "돈까스": "images/돈까스.png",
+    "냉면": "images/냉면.png",
+    "국밥": "images/국밥.png",
+    "스테이크": "images/스테이크.png",
+    "햄버거": "images/햄버거.png",
 };
 
 function recommendMenu() {
