@@ -293,6 +293,7 @@ button:hover {
 }
 
 .menu-display, .sentiment-display {
+    margin-top: 30px;
     margin-bottom: 30px;
     min-height: 30px;
     display: flex;
@@ -305,6 +306,26 @@ button:hover {
     font-size: 24px;
     font-weight: bold;
     color: var(--primary-green);
+    min-height: 30px;
+}
+
+/* Styling for proverb display container */
+.proverb-display {
+    margin-top: 30px; /* Match .sentiment-display for consistent spacing */
+    margin-bottom: 30px;
+    display: flex; /* Apply flexbox for internal alignment */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for proverb display heading */
+.proverb-display h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-green);
+    margin-top: 0; /* Override default h2 margin */
+    margin-bottom: 10px; /* Space between heading and proverb text */
     min-height: 30px;
 }
 
