@@ -53,17 +53,30 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <style>
         .image-preview-container {
-            max-width: 50%; /* Half size */
+            width: 150px; /* Fixed width */
+            height: 150px; /* Fixed height */
             margin: 20px auto; /* Center the image preview */
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px var(--shadow-color);
+            display: flex; /* Use flexbox to center image vertically/horizontally */
+            justify-content: center;
+            align-items: center;
+            background-color: var(--background-light-start); /* Placeholder background */
+        }
+        .image-preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the container while maintaining aspect ratio */
+            display: block;
         }
         .prediction-graph {
             margin-top: 30px;
             width: 100%;
             max-width: 500px;
             text-align: left;
+            margin-left: auto;
+            margin-right: auto;
         }
         .prediction-bar-container {
             display: flex;
@@ -145,6 +158,8 @@
             <div id="result" style="margin-top: 20px; font-size: 1.8em; font-weight: bold; min-height: 50px; display: flex; align-items: center; justify-content: center;">
                 여기에 결과가 표시됩니다.
             </div>
+            <p style="text-align: center; font-size: 0.9em; color: var(--text-color-dark); margin-top: 10px;">사진은 저장되지 않습니다.</p>
+
 
             <div id="predictionGraph" class="prediction-graph">
                 <!-- Prediction graph will be displayed here -->
@@ -211,8 +226,6 @@
                 reader.onload = function(e) {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
                     document.getElementById('imagePreview').innerHTML = '';
                     document.getElementById('imagePreview').appendChild(img);
                 };
