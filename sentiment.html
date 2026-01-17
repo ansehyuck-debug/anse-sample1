@@ -92,25 +92,33 @@
 
     <script src="main.js"></script>
     <script>
-        document.getElementById('generate-sentiment').addEventListener('click', function() {
-            const score = Math.floor(Math.random() * 101); // Generate a random score between 0 and 100
+        let currentSentimentScore = null; // Initialize a variable to hold the score
+
+        function generateAndDisplaySentiment() {
+            if (currentSentimentScore === null) {
+                // Generate a new score only if it hasn't been generated yet (e.g., on first click)
+                currentSentimentScore = Math.floor(Math.random() * 101);
+            }
+
             let sentimentMessage = "";
 
-            if (score >= 0 && score <= 20) {
+            if (currentSentimentScore >= 0 && currentSentimentScore <= 20) {
                 sentimentMessage = "시장 분위기가 상당히 위축돼 있습니다.";
-            } else if (score >= 21 && score <= 40) {
+            } else if (currentSentimentScore >= 21 && currentSentimentScore <= 40) {
                 sentimentMessage = "시장에 조심스러운 분위기가 감지됩니다.";
-            } else if (score >= 41 && score <= 60) {
+            } else if (currentSentimentScore >= 41 && currentSentimentScore <= 60) {
                 sentimentMessage = "시장 분위기는 비교적 중립적인 상태입니다.";
-            } else if (score >= 61 && score <= 75) {
+            } else if (currentSentimentScore >= 61 && currentSentimentScore <= 75) {
                 sentimentMessage = "시장에 다소 낙관적인 기류가 형성돼 있습니다.";
-            } else if (score >= 76 && score <= 100) {
+            } else if (currentSentimentScore >= 76 && currentSentimentScore <= 100) {
                 sentimentMessage = "시장 전반에 과열 신호가 나타나고 있습니다.";
             }
 
             document.getElementById('market-sentiment').textContent = sentimentMessage;
-            document.getElementById('market-score').textContent = `(점수: ${score}점, 참고용 지표)`;
-        });
+            document.getElementById('market-score').textContent = `(점수: ${currentSentimentScore}점, 참고용 지표)`;
+        }
+
+        document.getElementById('generate-sentiment').addEventListener('click', generateAndDisplaySentiment);
 
         // Disqus configuration (remains unchanged)
         var disqus_config = function () {
