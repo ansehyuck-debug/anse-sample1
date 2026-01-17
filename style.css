@@ -1,7 +1,7 @@
 :root {
-    --primary-green: #4CAF50; /* Green */
-    --light-green: #81C784; /* Light Green */
-    --dark-green: #2E7D32; /* Dark Green */
+    --primary-color: #4CAF50; /* Green */
+    --light-color: #81C784; /* Light Green */
+    --dark-color: #2E7D32; /* Dark Green */
     --primary-blue: #2196F3; /* Blue */
     --light-blue: #64B5F6; /* Light Blue */
     --dark-blue: #1976D2; /* Dark Blue */
@@ -17,6 +17,8 @@
     --input-border-color: #ccc;
     --table-border-color: #ddd;
     --shadow-color: rgba(0, 0, 0, 0.1);
+
+    --prediction-bar-background: rgba(200, 200, 200, 0.3); /* Light semi-transparent gray */
 }
 
 body.dark-mode {
@@ -35,12 +37,14 @@ body.dark-mode {
 
     --button-background-start: var(--primary-green);
     --button-background-end: var(--primary-blue);
-    --button-background-hover-start: var(--dark-green);
-    --button-background-hover-end: var(--dark-blue);
+    --button-hover-background-start: var(--dark-green);
+    --button-hover-background-end: var(--dark-blue);
     
     --input-border-color: #444;
     --table-border-color: #444;
     --shadow-color: rgba(255, 255, 255, 0.1);
+
+    --prediction-bar-background: rgba(80, 80, 80, 0.5); /* Dark semi-transparent gray */
 }
 
 body {
@@ -172,6 +176,7 @@ ul li {
     box-shadow: 0 1px 3px var(--shadow-color);
 }
 
+
 /* Buttons General */
 button {
     background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
@@ -179,7 +184,7 @@ button {
     border: none;
     padding: 15px 30px;
     font-size: 1.1em;
-    border-radius: 25px;
+    border-radius: 25px; /* Rounded buttons */
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px var(--shadow-color);
@@ -222,7 +227,7 @@ button:hover {
     margin-top: 20px;
     max-width: 100%;
     height: auto;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -316,8 +321,8 @@ table {
     margin: 20px auto;
     border-collapse: collapse;
     border: 1px solid var(--table-border-color);
-    border-radius: 8px; /* Added border-radius for table */
-    overflow: hidden; /* Ensures border-radius applies to cells */
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 th, td {
@@ -366,7 +371,7 @@ footer p {
     }
 
     nav a {
-        margin: 0 8px;
+        margin: 5px 8px; /* Adjusted margin */
         font-size: 0.9em;
     }
 
