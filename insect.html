@@ -53,9 +53,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <style>
         .image-preview-container {
-            max-width: 400px; /* Max width */
-            width: 100%; /* Responsive width */
-            height: auto; /* Maintain aspect ratio */
+            width: 150px; /* Fixed width */
+            height: 150px; /* Fixed height */
             margin: 20px auto; /* Center the image preview */
             border-radius: 10px;
             overflow: hidden;
@@ -66,9 +65,9 @@
             background-color: var(--background-light-start); /* Placeholder background */
         }
         .image-preview-container img {
-            max-width: 100%; /* Ensure image fits container */
-            max-height: 100%;
-            object-fit: contain; /* Contain the entire image */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the container while maintaining aspect ratio */
             display: block;
         }
         .prediction-graph {
@@ -94,20 +93,20 @@
         .prediction-bar {
             flex-grow: 1;
             height: 20px;
-            background-color: var(--light-green); /* This will be overridden by --prediction-bar-background in main style.css */
+            background-color: var(--light-green);
             border-radius: 3px;
             position: relative;
             overflow: hidden;
         }
         .prediction-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--light-green), var(--primary-green)); /* This will be overridden */
+            background: linear-gradient(90deg, var(--light-green), var(--primary-green));
             transition: width 0.5s ease-out;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             padding-right: 5px;
-            color: white; /* This will be overridden */
+            color: white;
             font-size: 0.8em;
             box-sizing: border-box;
         }
