@@ -1,49 +1,88 @@
 :root {
-    --background-color: #f0f2f5;
-    --container-background: white;
-    --text-color: #333;
-    --button-background: #008CBA;
-    --button-hover-background: #005f7a;
-    --menu-text-color: #4CAF50;
+    --primary-color: #4CAF50; /* Green */
+    --light-color: #81C784; /* Light Green */
+    --dark-color: #2E7D32; /* Dark Green */
+    --background-light: #E8F5E9; /* Very light green background */
+    --container-background-light: #FFFFFF; /* White for containers */
+    --text-color-dark: #212121; /* Dark text */
+    --text-color-light: #F1F8E9; /* Light text for dark backgrounds */
+    --button-text-color: white;
     --input-border-color: #ccc;
     --table-border-color: #ddd;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column; /* Align items vertically */
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px 0; /* Add some padding for scrolling */
-    transition: background-color 0.3s, color 0.3s;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode {
     --background-color: #121212;
-    --container-background: #1e1e1e;
-    --text-color: #e0e0e0;
-    --button-background: #005f7a;
-    --button-hover-background: #008CBA;
-    --menu-text-color: #81C784;
+    --container-background-light: #1e1e1e;
+    --text-color-dark: #e0e0e0;
+    --primary-color: #2E7D32; /* Darker green for dark mode primary */
+    --light-color: #4CAF50; /* Regular green */
+    --dark-color: #1B5E20; /* Even darker green */
+    --button-background: var(--primary-color);
+    --button-hover-background: var(--light-color);
     --input-border-color: #444;
     --table-border-color: #444;
+    --shadow-color: rgba(255, 255, 255, 0.1);
 }
 
-.container, .contact-section {
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-color-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px 0;
+    transition: background-color 0.3s, color 0.3s;
+    line-height: 1.6;
+}
+
+.container {
     position: relative;
     text-align: center;
-    background-color: var(--container-background);
+    background-color: var(--container-background-light);
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
     transition: background-color 0.3s;
     width: 90%;
-    max-width: 500px; /* Limit container width */
+    max-width: 700px; /* Increased max-width for content */
     margin-bottom: 20px;
+}
+
+header.container {
+    padding-bottom: 20px;
+    margin-bottom: 0; /* Adjust margin for header */
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+header h1 a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+nav {
+    margin-top: 15px;
+}
+
+nav a {
+    color: var(--dark-color);
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--primary-color);
 }
 
 .theme-switcher-container {
@@ -53,57 +92,163 @@ body.dark-mode {
 }
 
 #theme-switcher {
-    background-color: var(--button-background);
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
     border: none;
-    padding: 10px;
-    font-size: 14px;
+    padding: 8px 12px;
+    font-size: 0.9em;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 #theme-switcher:hover {
-    background-color: var(--button-hover-background);
+    background-color: var(--dark-color);
 }
 
-h1, h2, h3, p, th, td {
-    color: var(--text-color);
+h1, h2, h3, p, th, td, li, span {
+    color: var(--text-color-dark);
 }
 
-h1 {
+h2 {
+    font-size: 2em;
+    color: var(--dark-color);
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+p, li {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+ul li {
+    background-color: var(--background-light);
+    border-left: 5px solid var(--primary-color);
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    text-align: left;
+}
+
+
+/* Buttons General */
+button {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 25px; /* Rounded buttons */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: var(--dark-color);
+    transform: translateY(-2px);
+}
+
+/* Specific button styles for generate/check result */
+#generate, #generate-sentiment, #checkResult {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.2em;
+    padding: 15px 30px;
+    border-radius: 30px;
+}
+
+#generate:hover, #generate-sentiment:hover, #checkResult:hover {
+    background-color: var(--dark-color);
+}
+
+/* Image Upload Specific */
+.file-upload-area {
+    border: 2px dashed var(--primary-color);
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.file-upload-area:hover {
+    background-color: var(--background-light);
+}
+
+.file-upload-area p {
+    font-size: 1.1em;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+#imagePreview {
+    margin-top: 20px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#imagePreview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Result Display */
+#result {
+    margin-top: 30px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--dark-color);
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-display, .sentiment-display {
     margin-bottom: 30px;
-}
-
-.menu-display {
-    margin-bottom: 30px;
-    min-height: 30px; /* Adjusted from 250px */
+    min-height: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-#menu-recommendation {
+#menu-recommendation, #market-sentiment {
     font-size: 24px;
     font-weight: bold;
-    color: var(--menu-text-color);
+    color: var(--primary-color); /* Adjusted to primary green */
     min-height: 30px;
 }
 
-#generate {
-    background-color: var(--button-background);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#generate:hover {
-    background-color: var(--button-hover-background);
+/* Contact Section */
+.contact-section {
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    background-color: var(--container-background-light);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    color: var(--text-color-dark);
+    margin-top: 20px;
 }
 
 .contact-section h2 {
@@ -113,36 +258,39 @@ h1 {
 .contact-section form {
     display: flex;
     flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .contact-section input,
 .contact-section textarea {
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--background-light);
+    color: var(--text-color-dark);
     border: 1px solid var(--input-border-color);
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 1em;
 }
 
 .contact-section button {
-    background-color: var(--button-background);
+    background-color: var(--dark-color);
     color: white;
     border: none;
     padding: 15px;
-    font-size: 18px;
-    border-radius: 5px;
+    font-size: 1.1em;
+    border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .contact-section button:hover {
-    background-color: var(--button-hover-background);
+    background-color: var(--primary-color);
 }
 
+/* Table Styling */
 table {
-    width: 80%;
+    width: 100%; /* Make table full width of its container */
     margin: 20px auto;
     border-collapse: collapse;
     border: 1px solid var(--table-border-color);
@@ -150,18 +298,105 @@ table {
 
 th, td {
     border: 1px solid var(--table-border-color);
-    padding: 8px;
+    padding: 12px;
     text-align: center;
 }
 
 th {
-    background-color: var(--background-color);
+    background-color: var(--background-light);
+    font-weight: bold;
+    color: var(--dark-color);
+}
+
+/* Footer Styling */
+footer.container {
+    margin-top: 40px;
+    padding: 20px;
+    font-size: 0.9em;
+    color: var(--text-color-dark);
+    box-shadow: none; /* No shadow for footer */
+    background-color: transparent; /* Transparent background */
+}
+
+footer p {
+    color: var(--text-color-dark);
 }
 
 #disqus_thread {
     width: 90%;
-    max-width: 500px;
-    margin-top: 20px;
+    max-width: 700px; /* Match container width */
+    margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container, .contact-section, #disqus_thread {
+        padding: 20px;
+        width: 95%;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    nav a {
+        margin: 0 8px;
+        font-size: 0.9em;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    h3 {
+        font-size: 1.3em;
+    }
+
+    p, li {
+        font-size: 1em;
+    }
+
+    button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    #generate, #generate-sentiment, #checkResult {
+        font-size: 1.1em;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container, .contact-section, #disqus_thread {
+        padding: 15px;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav a {
+        margin: 5px 0;
+    }
+
+    .theme-switcher-container {
+        position: static;
+        margin-bottom: 10px;
+    }
+
+    body {
+        padding: 0;
+    }
 }

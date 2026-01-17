@@ -57,23 +57,27 @@
         </div>
         <h1><a href="/">오늘 저녁 뭐 먹지?</a></h1>
         <nav>
-            <a href="/insect.html" style="margin-left: 20px;">곤충상 테스트</a>
-            <a href="/about-insect.html" style="margin-left: 20px;">곤충상이란?</a>
+            <a href="/insect.html">곤충상 테스트</a>
+            <a href="/about-insect.html">곤충상이란?</a>
         </nav>
     </header>
 
     <main class="container">
         <article>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%238BC34A'/%3E%3Ctext x='50' y='55' font-size='30' text-anchor='middle' fill='%23FFFFFF'%3EUPLOAD%3C/text%3E%3C/svg%3E" alt="곤충 이미지 업로드 영역" id="insectUploadPlaceholder" style="max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px;">
             <h2>나는 어떤 곤충상일까?</h2>
             <p>AI가 당신의 얼굴 사진을 분석하여 당신의 곤충상을 찾아드립니다. 지금 바로 테스트해보세요!</p>
-            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-            <button onclick="document.getElementById('imageUpload').click()">사진 업로드</button>
-            <button id="checkResult" style="margin-left: 10px;">결과 확인하기</button>
             
-            <div id="result" style="margin-top: 20px; font-size: 1.2em; font-weight: bold;">
+            <div class="button-group">
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button onclick="document.getElementById('imageUpload').click()">사진 업로드</button>
+                <button id="checkResult" style="margin-left: 10px;">결과 확인하기</button>
+            </div>
+            
+            <div id="result" style="margin-top: 20px; font-size: 1.8em; font-weight: bold; min-height: 50px; display: flex; align-items: center; justify-content: center;">
                 여기에 결과가 표시됩니다.
             </div>
-            <div id="imagePreview" style="margin-top: 20px; max-width: 100%; height: auto;">
+            <div id="imagePreview" style="margin-top: 20px; max-width: 100%; height: auto; border-radius: 10px; overflow: hidden;">
                 <!-- Uploaded image preview will be displayed here -->
             </div>
         </article>
