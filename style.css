@@ -1,8 +1,15 @@
 :root {
-    --primary-color: #4CAF50; /* Green */
-    --light-color: #81C784; /* Light Green */
-    --dark-color: #2E7D32; /* Dark Green */
-    --background-light: #E8F5E9; /* Very light green background */
+    --primary-green: #4CAF50; /* Green */
+    --light-green: #81C784; /* Light Green */
+    --dark-green: #2E7D32; /* Dark Green */
+    --primary-blue: #2196F3; /* Blue */
+    --light-blue: #64B5F6; /* Light Blue */
+    --dark-blue: #1976D2; /* Dark Blue */
+
+    --background-color-light: linear-gradient(135deg, var(--background-light-start), var(--background-light-end));
+    --background-light-start: #E8F5E9; /* Very light green */
+    --background-light-end: #E3F2FD; /* Very light blue */
+
     --container-background-light: #FFFFFF; /* White for containers */
     --text-color-dark: #212121; /* Dark text */
     --text-color-light: #F1F8E9; /* Light text for dark backgrounds */
@@ -13,14 +20,24 @@
 }
 
 body.dark-mode {
-    --background-color: #121212;
+    --background-color-dark: linear-gradient(135deg, #121212, #1a2a3a);
+    --background-light-start: #121212;
+    --background-light-end: #1a2a3a;
     --container-background-light: #1e1e1e;
     --text-color-dark: #e0e0e0;
-    --primary-color: #2E7D32; /* Darker green for dark mode primary */
-    --light-color: #4CAF50; /* Regular green */
-    --dark-color: #1B5E20; /* Even darker green */
-    --button-background: var(--primary-color);
-    --button-hover-background: var(--light-color);
+    
+    --primary-green: #2E7D32;
+    --light-green: #4CAF50;
+    --dark-green: #1B5E20;
+    --primary-blue: #1976D2;
+    --light-blue: #2196F3;
+    --dark-blue: #0D47A1;
+
+    --button-background-start: var(--primary-green);
+    --button-background-end: var(--primary-blue);
+    --button-background-hover-start: var(--dark-green);
+    --button-background-hover-end: var(--dark-blue);
+    
     --input-border-color: #444;
     --table-border-color: #444;
     --shadow-color: rgba(255, 255, 255, 0.1);
@@ -28,7 +45,7 @@ body.dark-mode {
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: var(--background-light);
+    background: var(--background-color-light); /* Apply gradient */
     color: var(--text-color-dark);
     display: flex;
     flex-direction: column;
@@ -40,6 +57,10 @@ body {
     line-height: 1.6;
 }
 
+body.dark-mode {
+    background: var(--background-color-dark);
+}
+
 .container {
     position: relative;
     text-align: center;
@@ -49,24 +70,29 @@ body {
     box-shadow: 0 4px 8px var(--shadow-color);
     transition: background-color 0.3s;
     width: 90%;
-    max-width: 700px; /* Increased max-width for content */
+    max-width: 700px;
     margin-bottom: 20px;
 }
 
 header.container {
     padding-bottom: 20px;
-    margin-bottom: 0; /* Adjust margin for header */
+    margin-bottom: 0;
 }
 
 header h1 {
     font-size: 2.5em;
-    color: var(--primary-color);
+    color: var(--primary-green);
     margin-bottom: 15px;
 }
 
 header h1 a {
     text-decoration: none;
-    color: var(--primary-color);
+    color: var(--primary-green);
+    transition: color 0.3s;
+}
+
+header h1 a:hover {
+    color: var(--primary-blue);
 }
 
 nav {
@@ -74,7 +100,7 @@ nav {
 }
 
 nav a {
-    color: var(--dark-color);
+    color: var(--dark-green);
     text-decoration: none;
     font-weight: bold;
     margin: 0 15px;
@@ -82,7 +108,7 @@ nav a {
 }
 
 nav a:hover {
-    color: var(--primary-color);
+    color: var(--dark-blue);
 }
 
 .theme-switcher-container {
@@ -92,18 +118,19 @@ nav a:hover {
 }
 
 #theme-switcher {
-    background-color: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
     color: var(--button-text-color);
     border: none;
     padding: 8px 12px;
     font-size: 0.9em;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 #theme-switcher:hover {
-    background-color: var(--dark-color);
+    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
+    transform: translateY(-1px);
 }
 
 h1, h2, h3, p, th, td, li, span {
@@ -112,14 +139,14 @@ h1, h2, h3, p, th, td, li, span {
 
 h2 {
     font-size: 2em;
-    color: var(--dark-color);
+    color: var(--dark-green);
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
 h3 {
     font-size: 1.5em;
-    color: var(--primary-color);
+    color: var(--primary-green);
     margin-top: 25px;
     margin-bottom: 15px;
 }
@@ -136,49 +163,44 @@ ul {
 }
 
 ul li {
-    background-color: var(--background-light);
-    border-left: 5px solid var(--primary-color);
+    background-color: var(--background-light-start);
+    border-left: 5px solid var(--primary-green);
     margin-bottom: 10px;
     padding: 10px 15px;
     text-align: left;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px var(--shadow-color);
 }
-
 
 /* Buttons General */
 button {
-    background-color: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
     color: var(--button-text-color);
     border: none;
     padding: 15px 30px;
     font-size: 1.1em;
-    border-radius: 25px; /* Rounded buttons */
+    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: all 0.3s ease;
     box-shadow: 0 2px 4px var(--shadow-color);
     margin-top: 20px;
 }
 
 button:hover {
-    background-color: var(--dark-color);
+    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
     transform: translateY(-2px);
 }
 
 /* Specific button styles for generate/check result */
 #generate, #generate-sentiment, #checkResult {
-    background-color: var(--primary-color);
-    color: white;
     font-size: 1.2em;
     padding: 15px 30px;
     border-radius: 30px;
 }
 
-#generate:hover, #generate-sentiment:hover, #checkResult:hover {
-    background-color: var(--dark-color);
-}
-
 /* Image Upload Specific */
 .file-upload-area {
-    border: 2px dashed var(--primary-color);
+    border: 2px dashed var(--primary-green);
     border-radius: 10px;
     padding: 30px;
     margin-top: 20px;
@@ -187,12 +209,12 @@ button:hover {
 }
 
 .file-upload-area:hover {
-    background-color: var(--background-light);
+    background-color: var(--background-light-start);
 }
 
 .file-upload-area p {
     font-size: 1.1em;
-    color: var(--dark-color);
+    color: var(--dark-green);
     margin-bottom: 10px;
 }
 
@@ -200,7 +222,7 @@ button:hover {
     margin-top: 20px;
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -215,7 +237,7 @@ button:hover {
     margin-top: 30px;
     font-size: 1.8em;
     font-weight: bold;
-    color: var(--dark-color);
+    color: var(--dark-green);
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -234,7 +256,7 @@ button:hover {
 #menu-recommendation, #market-sentiment {
     font-size: 24px;
     font-weight: bold;
-    color: var(--primary-color); /* Adjusted to primary green */
+    color: var(--primary-green);
     min-height: 30px;
 }
 
@@ -264,7 +286,7 @@ button:hover {
 
 .contact-section input,
 .contact-section textarea {
-    background-color: var(--background-light);
+    background-color: var(--background-light-start);
     color: var(--text-color-dark);
     border: 1px solid var(--input-border-color);
     border-radius: 5px;
@@ -274,26 +296,28 @@ button:hover {
 }
 
 .contact-section button {
-    background-color: var(--dark-color);
+    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
     color: white;
     border: none;
     padding: 15px;
     font-size: 1.1em;
     border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .contact-section button:hover {
-    background-color: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
 }
 
 /* Table Styling */
 table {
-    width: 100%; /* Make table full width of its container */
+    width: 100%;
     margin: 20px auto;
     border-collapse: collapse;
     border: 1px solid var(--table-border-color);
+    border-radius: 8px; /* Added border-radius for table */
+    overflow: hidden; /* Ensures border-radius applies to cells */
 }
 
 th, td {
@@ -303,9 +327,9 @@ th, td {
 }
 
 th {
-    background-color: var(--background-light);
+    background-color: var(--background-light-start);
     font-weight: bold;
-    color: var(--dark-color);
+    color: var(--dark-green);
 }
 
 /* Footer Styling */
@@ -314,8 +338,8 @@ footer.container {
     padding: 20px;
     font-size: 0.9em;
     color: var(--text-color-dark);
-    box-shadow: none; /* No shadow for footer */
-    background-color: transparent; /* Transparent background */
+    box-shadow: none;
+    background-color: transparent;
 }
 
 footer p {
@@ -324,7 +348,7 @@ footer p {
 
 #disqus_thread {
     width: 90%;
-    max-width: 700px; /* Match container width */
+    max-width: 700px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
