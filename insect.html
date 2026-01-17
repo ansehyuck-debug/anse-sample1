@@ -224,6 +224,16 @@
 
         document.getElementById('imageUpload').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const resultDiv = document.getElementById('result');
+            const predictionGraphDiv = document.getElementById('predictionGraph');
+            const insectFeaturesDiv = document.getElementById('insectFeatures');
+
+            // Clear previous results
+            resultDiv.textContent = '여기에 결과가 표시됩니다.'; // Reset to initial text
+            predictionGraphDiv.innerHTML = '';
+            insectFeaturesDiv.innerHTML = '';
+            insectFeaturesDiv.style.display = 'none';
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
