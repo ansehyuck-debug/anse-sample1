@@ -49,6 +49,8 @@
       "browserRequirements": "Requires HTML5 support"
     }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 </head>
 <body>
     <header class="container">
@@ -99,7 +101,28 @@
     </footer>
 
     <script src="main.js"></script>
-    <script>
+    <script type="text/javascript">
+        const URL = "https://teachablemachine.withgoogle.com/models/_oRwiza95/";
+        let model, maxPredictions;
+
+        // Load the image model
+        async function initModel() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            try {
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                console.log("Teachable Machine model loaded successfully.");
+            } catch (error) {
+                console.error("Failed to load Teachable Machine model:", error);
+                document.getElementById('result').textContent = '모델 로드 실패. 콘솔을 확인하세요.';
+            }
+        }
+
+        // Call initModel when the window loads
+        window.addEventListener('load', initModel);
+
         document.getElementById('imageUpload').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -116,23 +139,54 @@
             }
         });
 
-        document.getElementById('checkResult').addEventListener('click', function() {
+        document.getElementById('checkResult').addEventListener('click', async function() {
             const resultDiv = document.getElementById('result');
-            const uploadedImage = document.getElementById('imageUpload').files[0];
+            const imagePreviewDiv = document.getElementById('imagePreview');
+            const uploadedImageElement = imagePreviewDiv.querySelector('img');
 
-            if (!uploadedImage) {
+            if (!uploadedImageElement) {
                 resultDiv.textContent = '사진을 먼저 업로드해주세요!';
                 return;
             }
 
+            if (!model) {
+                resultDiv.textContent = 'AI 모델 로딩 중입니다. 잠시 후 다시 시도해주세요.';
+                // Try to re-initialize if not loaded (this might be too late if network is slow)
+                await initModel(); 
+                if (!model) {
+                    resultDiv.textContent = 'AI 모델 로드에 실패했습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.';
+                    return;
+                }
+            }
+
             resultDiv.textContent = 'AI가 당신의 곤충상을 분석 중입니다...';
 
-            // Simulate AI analysis
-            setTimeout(() => {
-                const insects = ["개미상", "벌상", "나비상", "사마귀상", "장수풍뎅이상", "무당벌레상"];
-                const randomInsect = insects[Math.floor(Math.random() * insects.length)];
-                resultDiv.textContent = `당신은 ${randomInsect}입니다!`;
-            }, 2000); // Simulate a 2-second delay for AI analysis
+            try {
+                // Create a canvas from the uploaded image for prediction
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = uploadedImageElement.naturalWidth;
+                canvas.height = uploadedImageElement.naturalHeight;
+                ctx.drawImage(uploadedImageElement, 0, 0);
+
+                const prediction = await model.predict(canvas);
+                
+                let highestProbability = 0;
+                let predictedInsect = '알 수 없음';
+
+                for (let i = 0; i < maxPredictions; i++) {
+                    if (prediction[i].probability > highestProbability) {
+                        highestProbability = prediction[i].probability;
+                        predictedInsect = prediction[i].className;
+                    }
+                }
+                
+                resultDiv.textContent = `당신은 ${predictedInsect}입니다! (정확도: ${(highestProbability * 100).toFixed(2)}%)`;
+
+            } catch (error) {
+                console.error("Prediction failed:", error);
+                resultDiv.textContent = '분석 중 오류가 발생했습니다. 콘솔을 확인하세요.';
+            }
         });
         
         // Disqus configuration (remains unchanged)
