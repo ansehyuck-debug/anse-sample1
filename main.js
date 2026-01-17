@@ -1,5 +1,6 @@
 const generateBtn = document.getElementById('generate');
 const menuRecommendation = document.getElementById('menu-recommendation');
+const menuImage = document.getElementById('menu-image'); // New: Get reference to the image element
 const themeSwitcher = document.getElementById('theme-switcher');
 const body = document.body;
 
@@ -9,10 +10,25 @@ const menus = [
     '냉면', '국밥', '스테이크', '햄버거'
 ];
 
+// New: Map menu items to image paths
+const menuImageMap = {
+    "탕수육": "images/tang-su-yuk.jpg",
+    // Add other menu images here if available
+};
+
 function recommendMenu() {
     const randomIndex = Math.floor(Math.random() * menus.length);
     const recommendedMenu = menus[randomIndex];
     menuRecommendation.textContent = recommendedMenu;
+
+    // New: Handle image display
+    if (menuImageMap[recommendedMenu]) {
+        menuImage.src = menuImageMap[recommendedMenu];
+        menuImage.style.display = 'block'; // Show the image
+    } else {
+        menuImage.src = ''; // Clear source
+        menuImage.style.display = 'none'; // Hide the image
+    }
 }
 
 // --- Theme Switcher Logic ---
