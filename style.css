@@ -309,6 +309,16 @@ button:hover {
     min-height: 30px;
 }
 
+/* Styling for sentiment display heading to match proverb heading */
+.sentiment-display h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-green);
+    margin-top: 0; /* Override default h2 margin */
+    margin-bottom: 10px; /* Space between heading and content */
+    min-height: 30px;
+}
+
 /* Styling for proverb display container */
 .proverb-display {
     margin-top: 30px; /* Match .sentiment-display for consistent spacing */
