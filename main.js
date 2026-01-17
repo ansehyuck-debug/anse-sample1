@@ -89,24 +89,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 generateBtn.addEventListener('click', recommendMenu);
-
-themeSwitcher.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark-mode');
-    } else {
-        localStorage.removeItem('theme');
-    }
-});
-
-// 페이지 로드 시 저장된 테마를 확인하고 적용합니다.
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        body.classList.add(savedTheme);
-    }
-    // 페이지가 처음 로드될 때 메뉴를 추천합니다.
-    recommendMenu();
-});
-
-generateBtn.addEventListener('click', recommendMenu);
