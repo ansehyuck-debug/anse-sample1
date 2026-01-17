@@ -6,11 +6,13 @@
     --button-hover-background: #005f7a;
     --menu-text-color: #4CAF50;
     --input-border-color: #ccc;
+    --table-border-color: #ddd;
 }
 
 body {
     font-family: 'Arial', sans-serif;
     background-color: var(--background-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column; /* Align items vertically */
     align-items: center;
@@ -28,9 +30,10 @@ body.dark-mode {
     --button-hover-background: #008CBA;
     --menu-text-color: #81C784;
     --input-border-color: #444;
+    --table-border-color: #444;
 }
 
-.container {
+.container, .contact-section {
     position: relative;
     text-align: center;
     background-color: var(--container-background);
@@ -64,8 +67,11 @@ body.dark-mode {
     background-color: var(--button-hover-background);
 }
 
-h1 {
+h1, h2, h3, p, th, td {
     color: var(--text-color);
+}
+
+h1 {
     margin-bottom: 30px;
 }
 
@@ -98,17 +104,6 @@ h1 {
 
 #generate:hover {
     background-color: var(--button-hover-background);
-}
-
-.contact-section {
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    background-color: var(--container-background);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: var(--text-color);
 }
 
 .contact-section h2 {
@@ -146,8 +141,27 @@ h1 {
     background-color: var(--button-hover-background);
 }
 
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border: 1px solid var(--table-border-color);
+}
+
+th, td {
+    border: 1px solid var(--table-border-color);
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: var(--background-color);
+}
+
 #disqus_thread {
     width: 90%;
     max-width: 500px;
     margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
