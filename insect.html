@@ -160,7 +160,8 @@
             <div id="result" style="margin-top: 20px; font-size: 1.8em; font-weight: bold; min-height: 50px; display: flex; align-items: center; justify-content: center;">
                 여기에 결과가 표시됩니다.
             </div>
-            <p style="text-align: center; font-size: 0.9em; color: var(--text-color-dark); margin-top: 10px;">사진은 저장되지 않습니다.</p>
+            <p style="text-align: center; font-size: 0.9em; color: var(--text-color-dark); margin-top: 10px;">※사진은 저장되지 않습니다.</p>
+            <button id="resetButton" style="margin-top: 10px;">다시하기</button>
 
 
             <div id="predictionGraph" class="prediction-graph">
@@ -330,6 +331,26 @@
             }
         });
         
+        document.getElementById('resetButton').addEventListener('click', function() {
+            const imagePreviewDiv = document.getElementById('imagePreview');
+            const resultDiv = document.getElementById('result');
+            const predictionGraphDiv = document.getElementById('predictionGraph');
+            const insectFeaturesDiv = document.getElementById('insectFeatures');
+            const imageUploadInput = document.getElementById('imageUpload');
+
+            // Clear image preview
+            imagePreviewDiv.innerHTML = '';
+            
+            // Clear results
+            resultDiv.textContent = '여기에 결과가 표시됩니다.';
+            predictionGraphDiv.innerHTML = '';
+            insectFeaturesDiv.innerHTML = '';
+            insectFeaturesDiv.style.display = 'none';
+
+            // Reset file input value
+            imageUploadInput.value = '';
+        });
+
         // Disqus configuration (remains unchanged)
         var disqus_config = function () {
             this.page.url = 'https://anse-sample1.pages.dev/insect.html';
