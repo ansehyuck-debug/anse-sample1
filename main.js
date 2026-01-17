@@ -39,15 +39,17 @@ function recommendMenu() {
     const randomIndex = Math.floor(Math.random() * menus.length);
     const recommendedMenu = menus[randomIndex];
     menuRecommendation.textContent = recommendedMenu;
+    menuRecommendation.style.display = 'none'; // Hide text until image loads
 
     // Show loading indicator and hide image before setting src
     menuImage.style.display = 'none';
     if (menuImageMap[recommendedMenu]) {
-        loadingIndicator.style.display = 'block';
+        loadingIndicator.style.display = 'flex'; // Use flex for centering content inside loading indicator
         menuImage.src = menuImageMap[recommendedMenu];
     } else {
         menuImage.src = ''; // Clear source
         loadingIndicator.style.display = 'none'; // Ensure loading indicator is hidden if no image
+        menuRecommendation.style.display = 'block'; // Show text if no image to load
     }
 }
 
@@ -55,16 +57,39 @@ function recommendMenu() {
 menuImage.addEventListener('load', () => {
     loadingIndicator.style.display = 'none';
     menuImage.style.display = 'block';
+    menuRecommendation.style.display = 'block'; // Show text after image loads
 });
 
 menuImage.addEventListener('error', () => {
     loadingIndicator.style.display = 'none';
     menuImage.src = ''; // Clear source to prevent broken image icon
     menuImage.style.display = 'none'; // Ensure image remains hidden
+    menuRecommendation.style.display = 'block'; // Show text even if image fails
     console.error("Failed to load image for: " + menuRecommendation.textContent);
 });
 
 // --- Theme Switcher Logic ---
+themeSwitcher.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark-mode');
+    } else {
+        localStorage.removeItem('theme');
+    }
+});
+
+// 페이지 로드 시 저장된 테마를 확인하고 적용합니다.
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        body.classList.add(savedTheme);
+    }
+    // 페이지가 처음 로드될 때 메뉴를 추천합니다.
+    recommendMenu();
+});
+
+generateBtn.addEventListener('click', recommendMenu);
+
 themeSwitcher.addEventListener('click', () => {
     body.classList.toggle('dark-mode');
     if (body.classList.contains('dark-mode')) {
