@@ -92,33 +92,60 @@
 
     <script src="main.js"></script>
     <script>
-        let currentSentimentScore = null; // Initialize a variable to hold the score
+        document.getElementById('generate-sentiment').addEventListener('click', function() {
+            const sentimentSpan = document.getElementById('market-sentiment');
+            const scoreSpan = document.getElementById('market-score');
+            const functionUrl = 'https://us-central1-anse-sample1-46739525-2d1c0.cloudfunctions.net/getMarketVolatility';
 
-        function generateAndDisplaySentiment() {
-            if (currentSentimentScore === null) {
-                // Generate a new score only if it hasn't been generated yet (e.g., on first click)
-                currentSentimentScore = Math.floor(Math.random() * 101);
-            }
+            sentimentSpan.textContent = '데이터를 불러오는 중...';
+            scoreSpan.textContent = '';
 
-            let sentimentMessage = "";
+            fetch(functionUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('네트워크 응답이 올바르지 않습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const volatilityScore = parseFloat(data.score);
+                    let sentimentScore = 0;
 
-            if (currentSentimentScore >= 0 && currentSentimentScore <= 20) {
-                sentimentMessage = "시장 분위기가 상당히 위축돼 있습니다.";
-            } else if (currentSentimentScore >= 21 && currentSentimentScore <= 40) {
-                sentimentMessage = "시장에 조심스러운 분위기가 감지됩니다.";
-            } else if (currentSentimentScore >= 41 && currentSentimentScore <= 60) {
-                sentimentMessage = "시장 분위기는 비교적 중립적인 상태입니다.";
-            } else if (currentSentimentScore >= 61 && currentSentimentScore <= 75) {
-                sentimentMessage = "시장에 다소 낙관적인 기류가 형성돼 있습니다.";
-            } else if (currentSentimentScore >= 76 && currentSentimentScore <= 100) {
-                sentimentMessage = "시장 전반에 과열 신호가 나타나고 있습니다.";
-            }
+                    // Map volatility to sentiment score (Example mapping, can be adjusted)
+                    if (volatilityScore > 40) {
+                        sentimentScore = 10; // "상당히 위축"
+                    } else if (volatilityScore > 30) {
+                        sentimentScore = 30; // "조심스러운 분위기"
+                    } else if (volatilityScore > 20) {
+                        sentimentScore = 50; // "비교적 중립적"
+                    } else if (volatilityScore > 10) {
+                        sentimentScore = 70; // "다소 낙관적"
+                    } else {
+                        sentimentScore = 90; // "과열 신호"
+                    }
 
-            document.getElementById('market-sentiment').textContent = sentimentMessage;
-            document.getElementById('market-score').textContent = `(점수: ${currentSentimentScore}점, 참고용 지표)`;
-        }
+                    let sentimentMessage = "";
+                    if (sentimentScore <= 20) {
+                        sentimentMessage = "시장 분위기가 상당히 위축돼 있습니다.";
+                    } else if (sentimentScore <= 40) {
+                        sentimentMessage = "시장에 조심스러운 분위기가 감지됩니다.";
+                    } else if (sentimentScore <= 60) {
+                        sentimentMessage = "시장 분위기는 비교적 중립적인 상태입니다.";
+                    } else if (sentimentScore <= 75) {
+                        sentimentMessage = "시장에 다소 낙관적인 기류가 형성돼 있습니다.";
+                    } else {
+                        sentimentMessage = "시장 전반에 과열 신호가 나타나고 있습니다.";
+                    }
 
-        document.getElementById('generate-sentiment').addEventListener('click', generateAndDisplaySentiment);
+                    sentimentSpan.textContent = sentimentMessage;
+                    scoreSpan.textContent = `(변동성 점수: ${data.score}, 참고용 지표)`;
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                    sentimentSpan.textContent = '점수를 불러오는 데 실패했습니다.';
+                    scoreSpan.textContent = 'Cloud Function이 배포되었는지 확인하세요.';
+                });
+        });
 
         // Disqus configuration (remains unchanged)
         var disqus_config = function () {
