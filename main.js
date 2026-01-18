@@ -70,6 +70,7 @@ menuImage.addEventListener('error', () => {
 
 // --- Theme Switcher Logic ---
 themeSwitcher.addEventListener('click', () => {
+    console.log('Toggle Theme button clicked!');
     body.classList.toggle('dark-mode');
     if (body.classList.contains('dark-mode')) {
         localStorage.setItem('theme', 'dark-mode');
@@ -78,6 +79,11 @@ themeSwitcher.addEventListener('click', () => {
     }
 });
 
+
+
+
+
+
 // 페이지 로드 시 저장된 테마를 확인하고 적용합니다.
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
@@ -85,7 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.add(savedTheme);
     }
     // 페이지가 처음 로드될 때 메뉴를 추천합니다.
-    recommendMenu();
+    if (generateBtn) { // Only call if on the main menu page
+        recommendMenu();
+    }
+
+
 });
 
-generateBtn.addEventListener('click', recommendMenu);
+if (generateBtn) {
+    generateBtn.addEventListener('click', recommendMenu);
+}
+
+

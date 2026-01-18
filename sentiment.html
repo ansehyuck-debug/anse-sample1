@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,6 +48,26 @@
       }
     }
     </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      // IMPORTANT: Replace with your actual Firebase project configuration
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
+        projectId: "anse-sample1-46739525-2d1c0",
+        storageBucket: "anse-sample1-46739525-2d1c0.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      // Initialize Firebase
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
+    </script>
 </head>
 <body>
     <header class="container">
@@ -57,13 +75,13 @@
             <button id="theme-switcher">Toggle Theme</button>
         </div>
         <h1><a href="/">오늘 저녁 뭐 먹지?</a></h1>
-        <nav>
+        <nav style="display:flex; justify-content: center;"">
             <a href="/insect.html">곤충상 테스트</a>
-            <a href="/about-insect.html" style="margin-left: 20px;">곤충상이란?</a>
-            <a href="/sentiment.html" style="margin-left: 20px;">금융 시장 심리</a>
+            <a href="/about-insect.html">곤충상이란?</a>
+            <a href="/sentiment.html">금융 시장 심리</a>
         </nav>
     </header>
-
+    <p style="font-size:5px"> </p>
     <main class="container">
         <article>
             <h2>금융 시장 심리를 알아봅시다.</h2>
@@ -85,9 +103,9 @@
 
             <div class="sentiment-display">
                 <h2>오늘의 금융 시장 심리를 확인해 보세요.</h2>
-                <p style="margin-top: 10px; font-size: 1.2em; font-weight: bold;">준비중입니다.</p>
+                <button id="generate-sentiment">심리 확인하기</button>
+                <p id="sentiment-text" style="margin-top: 10px; font-size: 1.2em; font-weight: bold;"></p>
             </div>
-            <button id="generate-sentiment">심리 확인하기</button>
 
             <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
                 <strong>면책 조항:</strong> 본 페이지에서 제공하는 금융 시장 심리 정보는 참고용이며, 어떠한 투자 조언으로도 해석될 수 없습니다. 투자 결정은 개인의 판단과 책임 하에 이루어져야 하며, 항상 전문가와 상의하시기 바랍니다. 시장의 변동성은 매우 크며, 과거의 성과가 미래의 결과를 보장하지 않습니다.
@@ -175,61 +193,22 @@
     </script>
     <script>
         document.getElementById('generate-sentiment').addEventListener('click', function() {
-            const sentimentSpan = document.getElementById('market-sentiment');
-            const scoreSpan = document.getElementById('market-score');
-            // const functionUrl = 'https://us-central1-anse-sample1-46739525-2d1c0.cloudfunctions.net/getMarketVolatility';
+            const sentimentText = document.getElementById('sentiment-text');
+            sentimentText.textContent = '데이터를 불러오는 중...';
 
-            sentimentSpan.textContent = '준비중입니다.';
-            scoreSpan.textContent = ''; // Clear previous score as well
-
-            // The following fetch logic is commented out as per user's request
-            /*
-            fetch(functionUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('네트워크 응답이 올바르지 않습니다.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const volatilityScore = parseFloat(data.score);
-                    let sentimentScore = 0;
-
-                    // Map volatility to sentiment score (Example mapping, can be adjusted)
-                    if (volatilityScore > 40) {
-                        sentimentScore = 10; // "상당히 위축"
-                    } else if (volatilityScore > 30) {
-                        sentimentScore = 30; // "조심스러운 분위기"
-                    } else if (volatilityScore > 20) {
-                        sentimentScore = 50; // "비교적 중립적"
-                    } else if (volatilityScore > 10) {
-                        sentimentScore = 70; // "다소 낙관적"
+            db.collection('market_sentiment').doc('cnn_fng').get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        sentimentText.textContent = `현재 탐욕 지수는 ${data.value}이며, 시장의 상태는 ${data.description}입니다.`;
                     } else {
-                        sentimentScore = 90; // "과열 신호"
+                        sentimentText.textContent = '아직 데이터가 없습니다. GitHub Actions를 실행해주세요.';
                     }
-
-                    let sentimentMessage = "";
-                    if (sentimentScore <= 20) {
-                        sentimentMessage = "시장 분위기가 상당히 위축돼 있습니다.";
-                    } else if (sentimentScore <= 40) {
-                        sentimentMessage = "시장에 조심스러운 분위기가 감지됩니다.";
-                    } else if (sentimentScore <= 60) {
-                        sentimentMessage = "시장 분위기는 비교적 중립적인 상태입니다.";
-                    } else if (sentimentScore <= 75) {
-                        sentimentMessage = "시장에 다소 낙관적인 기류가 형성돼 있습니다.";
-                    } else {
-                        sentimentMessage = "시장 전반에 과열 신호가 나타나고 있습니다.";
-                    }
-
-                    sentimentSpan.textContent = sentimentMessage;
-                    scoreSpan.textContent = `(변동성 점수: ${data.score}, 참고용 지표)`;
                 })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                    sentimentSpan.textContent = '점수를 불러오는 데 실패했습니다.';
-                    scoreSpan.textContent = 'Cloud Function이 배포되었는지 확인하세요.';
+                .catch((error) => {
+                    console.error("Error getting document:", error);
+                    sentimentText.textContent = '데이터를 불러오는 데 실패했습니다.';
                 });
-            */
         });
 
         // Disqus configuration (remains unchanged)

@@ -1,5 +1,7 @@
 {
-  "projects": {},
+  "projects": {
+    "default": "anse-sample1-46739525-2d1c0"
+  },
   "targets": {},
   "etags": {}
 }
