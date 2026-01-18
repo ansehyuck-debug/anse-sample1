@@ -104,8 +104,8 @@
             <div class="sentiment-display">
                 <h2>오늘의 금융 시장 심리를 확인해 보세요.</h2>
                 <button id="generate-sentiment">심리 확인하기</button>
-                <div id="sentiment-result" style="margin-top: 20px; text-align: center;">
-                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto; display: none;">
+                <div id="sentiment-result" style="margin-top: 20px; text-align: center; display: none;">
+                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto;">
                     <p id="sentiment-quote" style="font-style: italic; margin-top: 10px;"></p>
                 </div>
             </div>
@@ -196,8 +196,11 @@
     </script>
     <script>
         document.getElementById('generate-sentiment').addEventListener('click', function() {
+            const sentimentResult = document.getElementById('sentiment-result');
             const sentimentImage = document.getElementById('sentiment-image');
             const sentimentQuote = document.getElementById('sentiment-quote');
+            
+            sentimentResult.style.display = 'block'; // Make the container visible
             sentimentQuote.textContent = '데이터를 불러오는 중...';
             sentimentImage.style.display = 'none';
 
