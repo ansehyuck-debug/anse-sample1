@@ -104,7 +104,10 @@
             <div class="sentiment-display">
                 <h2>오늘의 금융 시장 심리를 확인해 보세요.</h2>
                 <button id="generate-sentiment">심리 확인하기</button>
-                <p id="sentiment-text" style="margin-top: 10px; font-size: 1.2em; font-weight: bold;"></p>
+                <div id="sentiment-result" style="margin-top: 20px; text-align: center;">
+                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto; display: none;">
+                    <p id="sentiment-quote" style="font-style: italic; margin-top: 10px;"></p>
+                </div>
             </div>
 
             <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
@@ -193,21 +196,55 @@
     </script>
     <script>
         document.getElementById('generate-sentiment').addEventListener('click', function() {
-            const sentimentText = document.getElementById('sentiment-text');
-            sentimentText.textContent = '데이터를 불러오는 중...';
+            const sentimentImage = document.getElementById('sentiment-image');
+            const sentimentQuote = document.getElementById('sentiment-quote');
+            sentimentQuote.textContent = '데이터를 불러오는 중...';
+            sentimentImage.style.display = 'none';
+
+            const sentimentMap = {
+                "Extreme Fear": {
+                    image: "images/extremefear.png",
+                    quote: "“모두가 무서울 때, 기회는 조용히 옵니다.”"
+                },
+                "Fear": {
+                    image: "images/fear.png",
+                    quote: "“불안할수록, 서두르지 마세요.”"
+                },
+                "Neutral": {
+                    image: "images/neutral.png",
+                    quote: "“지금은 결정보다 관찰의 시간.”"
+                },
+                "Greed": {
+                    image: "images/greed.png",
+                    quote: "“욕심이 생길수록, 팔 이유를 점검하세요.”"
+                },
+                "Extreme Greed": {
+                    image: "images/extremegreed.png",
+                    quote: "“안 사면 불안할 때가 가장 위험합니다.”"
+                }
+            };
 
             db.collection('market_sentiment').doc('cnn_fng').get()
                 .then((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
-                        sentimentText.textContent = `현재 탐욕 지수는 ${data.value}이며, 시장의 상태는 ${data.description}입니다.`;
+                        const sentiment = data.description;
+                        const sentimentData = sentimentMap[sentiment];
+
+                        if (sentimentData) {
+                            sentimentImage.src = sentimentData.image;
+                            sentimentImage.style.display = 'block';
+                            sentimentQuote.textContent = sentimentData.quote;
+                        } else {
+                            sentimentQuote.textContent = '알 수 없는 시장 상태입니다.';
+                        }
                     } else {
-                        sentimentText.textContent = '아직 데이터가 없습니다. GitHub Actions를 실행해주세요.';
+                        sentimentQuote.textContent = '아직 데이터가 없습니다. GitHub Actions를 실행해주세요.';
                     }
                 })
                 .catch((error) => {
                     console.error("Error getting document:", error);
-                    sentimentText.textContent = '데이터를 불러오는 데 실패했습니다.';
+                    sentimentQuote.textContent = '데이터를 불러오는 데 실패했습니다.';
                 });
         });
 
