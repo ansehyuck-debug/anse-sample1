@@ -16,7 +16,7 @@ jobs:
           python-version: '3.9'
       - name: Install dependencies
         run: |
-          pip install firebase-admin fear-and-greed-index
+          pip install firebase-admin fear-and-greed
       - name: Run script
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
