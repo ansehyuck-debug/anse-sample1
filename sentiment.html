@@ -106,9 +106,8 @@
                 <button id="generate-sentiment">심리 확인하기</button>
                 <div id="sentiment-result" style="margin-top: 20px; text-align: center; display: none;">
                     <p style="font-size: 1.5em; font-weight: bold; margin-bottom: 10px;">현재 지수: <span id="sentiment-value"></span></p>
-                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto;">
                     <p id="sentiment-quote" style="font-style: italic; margin-top: 10px;"></p>
-                    <p class="disclaimer-text" style="font-size: 0.8em; color: grey; margin-top: 10px;">본 지수는 CNN Business의 데이터를 바탕으로 제공되며, 실제 투자 결과에 대한 책임을 지지 않습니다.</p>
                 </div>
             </div>
 
@@ -232,12 +231,18 @@
                         } else if (fngValue >= 76 && fngValue <= 100) {
                             imageSrc = "images/extremegreed.png";
                             quoteText = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다.";
+                        } else {
+                            quoteText = '알 수 없는 시장 상태입니다.';
+                        }
+
+                        }
+
                         if (imageSrc) {
                             sentimentImage.src = imageSrc;
                             sentimentImage.style.display = 'block';
                         }
                         sentimentQuote.textContent = quoteText;
-                        sentimentValueSpan.textContent = fngValue.toFixed(2); // Format to two decimal places
+                        sentimentValueSpan.textContent = fngValue;
 
                     } else {
                         sentimentQuote.textContent = '아직 데이터가 없습니다. GitHub Actions를 실행해주세요.';
