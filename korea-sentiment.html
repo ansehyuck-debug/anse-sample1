@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국내 금융시장 심리 - K-Fear & Greed Index</title>
+    <meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
+    <link rel="canonical" href="https://anse-sample1.pages.dev/korea-sentiment.html">
+
+    <meta property="og:title" content="국내 금융시장 심리 - K-Fear & Greed Index">
+    <meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anse-sample1.pages.dev/korea-sentiment.html">
+    <meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png">
+
+    <link rel="icon" type="image/x-icon" href="fa.ico">
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --card-bg-color: #fff;
+            --accent-color: #4CAF50;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg-color: #1e1e1e;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .header-nav { margin-bottom: 2.5rem; }
+        .header-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .header-nav a:hover { opacity: 1; text-decoration: underline; }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 0.2rem; color: var(--accent-color); }
+        .subtitle { font-size: 1rem; opacity: 0.7; margin-bottom: 2.5rem; }
+
+        #score {
+             font-size: 7rem;
+             font-weight: 800;
+             line-height: 1;
+             margin: 1.5rem 0;
+             letter-spacing: -2px;
+        }
+        #status {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        /* 로딩 애니메이션 */
+        .loader {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .footer-note { font-size: 0.85rem; opacity: 0.5; margin-top: 2rem; }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="container">
+        <div class="header-nav">
+             <a href="/">오늘 저녁 뭐 먹지?</a>
+             <a href="/sentiment.html">미국 금융시장 심리</a>
+        </div>
+        
+        <h1>K-Fear & Greed</h1>
+        <p class="subtitle">한국 주식시장 공포 탐욕 지수</p>
+
+        <div id="index-display">
+            <div id="loader" class="loader"></div>
+            <div id="score" style="display: none;">-</div>
+            <div id="status" style="display: none;">데이터를 불러오는 중...</div>
+        </div>
+
+        <p class="footer-note">본 데이터는 자정 기준이며 투자 참고용입니다.</p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      // 제공해주신 Config 사용
+      const firebaseConfig = {
+        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
+        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
+        projectId: "anse-sample1-46739525-2d1c0",
+        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
+        messagingSenderId: "164266713411",
+        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      async function fetchLatestIndex() {
+          const loader = document.getElementById('loader');
+          const scoreEl = document.getElementById('score');
+          const statusEl = document.getElementById('status');
+
+          try {
+              // 'korea_index' 컬렉션에서 가장 최신 문서 1개 쿼리
+              const q = query(collection(db, "korea_index"), orderBy("timestamp", "desc"), limit(1));
+              const querySnapshot = await getDocs(q);
+
+              if (!querySnapshot.empty) {
+                  const doc = querySnapshot.docs[0].data();
+                  const score = doc.score;
+                  
+                  scoreEl.textContent = score;
+                  statusEl.textContent = doc.status;
+
+                  // 한국 시장 정서에 맞춘 색상 로직 (파랑: 공포 / 빨강: 탐욕)
+                  if (score <= 25) scoreEl.style.color = '#3498db';      // 극심한 공포 (진한 파랑)python korea_fear_greed.py
+                  else if (score <= 45) scoreEl.style.color = '#85c1e9'; // 공포 (연한 파랑)
+                  else if (score <= 55) scoreEl.style.color = '#ecf0f1'; // 중립 (화이트/그레이)
+                  else if (score <= 75) scoreEl.style.color = '#f1948a'; // 탐욕 (연한 빨강)
+                  else scoreEl.style.color = '#e74c3c';                 // 극심한 탐욕 (진한 빨강)
+
+              } else {
+                  statusEl.textContent = "업데이트된 데이터가 없습니다.";
+              }
+          } catch (error) {
+              console.error("Firebase Error: ", error);
+              statusEl.textContent = "연결 오류가 발생했습니다.";
+          } finally {
+              loader.style.display = 'none';
+              scoreEl.style.display = 'block';
+              statusEl.style.display = 'block';
+          }
+      }
+
+      fetchLatestIndex();
+    </script>
+</body>
+</html>
