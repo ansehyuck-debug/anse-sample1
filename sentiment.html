@@ -103,7 +103,7 @@
             <div class="proverb-display">
                 <h2>오늘의 주식 시장 격언을 확인해 보세요.</h2>
                 <p id="proverb-text" style="font-style: italic; margin-top: 10px; min-height: 50px; display: flex; align-items: center; justify-content: center;"></p>
-                <button id="generate-proverb">격언 확인하기</button>
+                <button id="generate-proverb">새 격언 확인하기</button>
             </div>
 
             <div class="sentiment-display">
@@ -200,11 +200,14 @@
         "“투자에서 가장 중요한 단어는 ‘영원히’가 아니라 ‘충분히 오래’다.”\n→ 하워드 막스 (의미 인용)"
         ];
 
-        document.getElementById('generate-proverb').addEventListener('click', function() {
+        function displayRandomProverb() {
             const proverbText = document.getElementById('proverb-text');
             const randomIndex = Math.floor(Math.random() * proverbs.length);
             proverbText.textContent = proverbs[randomIndex];
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', displayRandomProverb); // Display proverb on page load
+        document.getElementById('generate-proverb').addEventListener('click', displayRandomProverb); // Display new proverb on button click
     </script>
     <script>
         document.getElementById('generate-sentiment').addEventListener('click', function() {

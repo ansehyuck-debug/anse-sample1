@@ -1,117 +1,59 @@
-<!DOCTYPE html>
-<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>국내 금융시장 심리 - K-Fear & Greed Index</title>
+    <title>국내 금융시장 심리 - 오늘 저녁 뭐 먹지?</title>
     <meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
     <link rel="canonical" href="https://anse-sample1.pages.dev/korea-sentiment.html">
 
-    <meta property="og:title" content="국내 금융시장 심리 - K-Fear & Greed Index">
+    <meta property="og:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?">
     <meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://anse-sample1.pages.dev/korea-sentiment.html">
     <meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png">
 
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?">
+    <meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
+    <meta name="twitter:image" content="https://anse-sample1.pages.dev/images/neutral.png">
+
+    <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="fa.ico">
-    <style>
-        :root {
-            --bg-color: #f0f0f0;
-            --text-color: #333;
-            --card-bg-color: #fff;
-            --accent-color: #4CAF50;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .dark-mode {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --card-bg-color: #1e1e1e;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 2.5rem 2rem;
-            background-color: var(--card-bg-color);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-        .header-nav { margin-bottom: 2.5rem; }
-        .header-nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin: 0 12px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        .header-nav a:hover { opacity: 1; text-decoration: underline; }
-        
-        h1 { font-size: 2.2rem; margin-bottom: 0.2rem; color: var(--accent-color); }
-        .subtitle { font-size: 1rem; opacity: 0.7; margin-bottom: 2.5rem; }
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-        #score {
-             font-size: 7rem;
-             font-weight: 800;
-             line-height: 1;
-             margin: 1.5rem 0;
-             letter-spacing: -2px;
-        }
-        #status {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 2rem;
-        }
+  gtag('config', 'G-C8QR98TVTB');
+</script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "v2qmp0i82b");
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "국내 금융시장 심리 알아보기",
+      "url": "https://anse-sample1.pages.dev/korea-sentiment.html",
+      "description": "한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.",
+      "datePublished": "2026-01-17",
+      "author": {
+        "@type": "Person",
+        "name": "anse"
+      }
+    }
+    </script>
 
-        /* 로딩 애니메이션 */
-        .loader {
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid var(--accent-color);
-            border-radius: 50%;
-            width: 50px; height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 40px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .footer-note { font-size: 0.85rem; opacity: 0.5; margin-top: 2rem; }
-    </style>
-</head>
-<body class="dark-mode">
-
-    <div class="container">
-        <div class="header-nav">
-             <a href="/">오늘 저녁 뭐 먹지?</a>
-             <a href="/sentiment.html">미국 금융시장 심리</a>
-        </div>
-        
-        <h1>K-Fear & Greed</h1>
-        <p class="subtitle">한국 주식시장 공포 탐욕 지수</p>
-
-        <div id="index-display">
-            <div id="loader" class="loader"></div>
-            <div id="score" style="display: none;">-</div>
-            <div id="status" style="display: none;">데이터를 불러오는 중...</div>
-        </div>
-
-        <p class="footer-note">본 데이터는 자정 기준이며 투자 참고용입니다.</p>
-    </div>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-      // 제공해주신 Config 사용
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+      // Your web app's Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
         authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
@@ -121,8 +63,74 @@
         appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+      // Initialize Firebase
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <header class="container">
+        <div class="theme-switcher-container">
+            <button id="theme-switcher">Toggle Theme</button>
+        </div>
+        <h1><a href="/">오늘 저녁 뭐 먹지?</a></h1>
+        <nav style="display:flex; justify-content: center;"">
+            <a href="/insect.html">곤충상 테스트</a>
+            <a href="/about-insect.html">곤충상이란?</a>
+            <a href="/sentiment.html">미국 금융 시장 심리</a>
+            <a href="/korea-sentiment.html">한국 금융시장 심리</a>
+        </nav>
+    </header>
+    <p style="font-size:5px"> </p>
+    <main class="container">
+        <article>
+            <h2>한국 금융 시장 심리를 알아봅시다.</h2>
+            <p>K-Fear & Greed 지수는 한국 주식시장의 심리를 파악하기 위해 여러 지표를 종합한 지수입니다. 투자자들의 공포와 탐욕 수준을 측정하여 시장의 과열 또는 침체 상태를 가늠할 수 있습니다.</p>
+            
+            <div class="sentiment-display">
+                <h2>오늘의 한국 금융 시장 심리를 확인해 보세요.</h2>
+                <div id="index-display" style="margin-top: 20px; text-align: center;">
+                    <div id="loader" class="loader"></div>
+                    <p id="score" style="font-size: 4em; font-weight: bold; margin-bottom: 10px; display: none;">-</p>
+                    <p id="status" style="font-size: 1.5em; display: none;">데이터를 불러오는 중...</p>
+                </div>
+                 <p class="footer-note" style="font-size: 0.75em; color: var(--text-color-dark); margin-top: 20px;">본 데이터는 자정 기준이며 투자 참고용입니다. 실제 투자 결과에 대한 책임을 지지 않습니다.</p>
+            </div>
+            <hr/>
+            <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
+                <strong>면책 조항:</strong> 본 페이지에서 제공하는 금융 시장 심리 정보는 참고용이며, 어떠한 투자 조언으로도 해석될 수 없습니다. 투자 결정은 개인의 판단과 책임 하에 이루어져야 하며, 항상 전문가와 상의하시기 바랍니다. 시장의 변동성은 매우 크며, 과거의 성과가 미래의 결과를 보장하지 않습니다.
+            </p>
+        </article>
+    </main>
+
+    <div class="contact-section">
+        <h2>제휴 문의</h2>
+        <form action="https://formspree.io/f/mlggrwrk" method="POST">
+            <input type="text" name="name" placeholder="이름" required>
+            <input type="email" name="email" placeholder="이메일" required>
+            <textarea name="message" placeholder="내용" required></textarea>
+            <button type="submit">보내기</button>
+        </form>
+    </div>
+
+    <div id="disqus_thread"></div>
+
+    <footer class="container">
+        <p>Last updated: 2026년 1월 17일</p>
+        <p><a href="/privacy.html">개인정보처리방침</a></p>
+    </footer>
+
+    <script>
+        const proverbs = [
+            "“시장은 단기적으로 투표기계지만 장기적으로 저울이다.”\n→ 벤저민 그레이엄 (Benjamin Graham)",
+        ];
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        fetchLatestIndex();
+      });
 
       async function fetchLatestIndex() {
           const loader = document.getElementById('loader');
@@ -130,9 +138,8 @@
           const statusEl = document.getElementById('status');
 
           try {
-              // 'korea_index' 컬렉션에서 가장 최신 문서 1개 쿼리
-              const q = query(collection(db, "korea_index"), orderBy("timestamp", "desc"), limit(1));
-              const querySnapshot = await getDocs(q);
+              const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
+              const querySnapshot = await q.get();
 
               if (!querySnapshot.empty) {
                   const doc = querySnapshot.docs[0].data();
@@ -141,12 +148,12 @@
                   scoreEl.textContent = score;
                   statusEl.textContent = doc.status;
 
-                  // 한국 시장 정서에 맞춘 색상 로직 (파랑: 공포 / 빨강: 탐욕)
-                  if (score <= 25) scoreEl.style.color = '#3498db';      // 극심한 공포 (진한 파랑)python korea_fear_greed.py
-                  else if (score <= 45) scoreEl.style.color = '#85c1e9'; // 공포 (연한 파랑)
-                  else if (score <= 55) scoreEl.style.color = '#ecf0f1'; // 중립 (화이트/그레이)
-                  else if (score <= 75) scoreEl.style.color = '#f1948a'; // 탐욕 (연한 빨강)
-                  else scoreEl.style.color = '#e74c3c';                 // 극심한 탐욕 (진한 빨강)
+                  // Update score color based on sentiment
+                  if (score <= 25) scoreEl.style.color = '#3498db';      // Extreme Fear (dark blue)
+                  else if (score <= 45) scoreEl.style.color = '#85c1e9'; // Fear (light blue)
+                  else if (score <= 55) scoreEl.style.color = '#95a5a6'; // Neutral (grey)
+                  else if (score <= 75) scoreEl.style.color = '#f1948a'; // Greed (light red)
+                  else scoreEl.style.color = '#e74c3c';                 // Extreme Greed (dark red)
 
               } else {
                   statusEl.textContent = "업데이트된 데이터가 없습니다.";
@@ -155,13 +162,25 @@
               console.error("Firebase Error: ", error);
               statusEl.textContent = "연결 오류가 발생했습니다.";
           } finally {
-              loader.style.display = 'none';
-              scoreEl.style.display = 'block';
-              statusEl.style.display = 'block';
+              if(loader) loader.style.display = 'none';
+              if(scoreEl) scoreEl.style.display = 'block';
+              if(statusEl) statusEl.style.display = 'block';
           }
       }
-
-      fetchLatestIndex();
     </script>
+    <script>
+        // Disqus configuration
+        var disqus_config = function () {
+            this.page.url = 'https://anse-sample1.pages.dev/korea-sentiment.html';
+            this.page.identifier = 'https://anse-sample1.pages.dev/korea-sentiment.html';
+        };
+        (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ansebooktv.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
