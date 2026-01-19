@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pykrx FinanceDataReader beautifulsoup4 lxml requests firebase-admin pandas
+          pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas
 
       - name: Run Python script
         env:
