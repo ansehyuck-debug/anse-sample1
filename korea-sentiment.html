@@ -82,7 +82,7 @@
             <a href="/korea-sentiment.html">한국 금융시장 심리</a>
         </nav>
     </header>
-
+    <p style="font-size:5px"> </p>
     <main class="container">
         <article>
             <h2>한국 금융 시장 심리를 알아봅시다.</h2>
@@ -96,10 +96,13 @@
             
             <div class="sentiment-display">
                 <h2>오늘의 한국 금융 시장 심리를 확인해 보세요.</h2>
-                <div id="index-display" style="margin-top: 10px; text-align: center;">
+                <button id="generate-sentiment2">심리 확인하기</button>
+
+                <div id="index-display" style="margin-top: 0; text-align: center; display:none">
                     <div id="loader" class="loader"></div>
-                    <p id="score" style="font-size: 4em; font-weight: bold; margin-bottom: 5px; display: none;">-</p>
-                    <p id="status" style="font-size: 1.5em; display: none;">데이터를 불러오는 중...</p>
+                    <p id="score" style="font-size: 4em; font-weight: bold; line-height:1.4em; margin-bottom: 0; margin-top:20px; display: none;">-</p>
+                    <p id="last-updated-time" style="font-size: 0.8em; color: var(--text-color-dark); margin-top: 0; display: none;">업데이트 시간: -</p>
+                    <p id="status" style="font-size: 1.1em; font-style: italic; margin-top:20px; display: none;">데이터를 불러오는 중...</p>
                     <p class="footer-note" style="font-size: 0.75em; color: var(--text-color-dark); margin-top: 20px;">본 데이터는 자정 기준이며 투자 참고용입니다. 실제 투자 결과에 대한 책임을 지지 않습니다.</p>
                     <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto; margin:0 auto; display: none;">
                 </div>                 
@@ -184,6 +187,7 @@
             const scoreEl = document.getElementById('score');
             const statusEl = document.getElementById('status');
             const sentimentImage = document.getElementById('sentiment-image');
+            const lastUpdatedTimeEl = document.getElementById('last-updated-time');
 
             try {
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
@@ -192,9 +196,12 @@
                 if (!querySnapshot.empty) {
                     const doc = querySnapshot.docs[0].data();
                     const score = doc.score;
+                    const timestamp = doc.timestamp.toDate(); // Convert Firestore Timestamp to JavaScript Date
+                    const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
                     
                     scoreEl.textContent = score;
                     statusEl.textContent = doc.status;
+                    lastUpdatedTimeEl.textContent = '업데이트 시간: ' + formattedTime;
 
                     let imageSrc = "";
                     if (score <= 25) {
@@ -223,14 +230,23 @@
                 if(loader) loader.style.display = 'none';
                 if(scoreEl) scoreEl.style.display = 'block';
                 if(statusEl) statusEl.style.display = 'block';
+                if(lastUpdatedTimeEl) lastUpdatedTimeEl.style.display = 'block';
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             displayRandomProverb();
-            fetchLatestIndex();
+            // fetchLatestIndex(); Removed to be triggered by button click
         });
         document.getElementById('generate-proverb').addEventListener('click', displayRandomProverb);
+        document.getElementById('generate-sentiment2').addEventListener('click', () => {
+            const indexDisplay = document.getElementById('index-display');
+            if (indexDisplay) {
+                indexDisplay.style.display = 'block'; // Make the index-display div visible
+            }
+            fetchLatestIndex(); // Call the function to fetch and display sentiment data
+        });
+
     </script>
 
     <script>

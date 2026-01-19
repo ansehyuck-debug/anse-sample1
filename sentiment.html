@@ -91,15 +91,8 @@
         <article>
             <h2>금융 시장 심리를 알아봅시다.</h2>
             <p>금융 시장의 심리는 투자자들의 전반적인 태도와 기대를 반영하는 중요한 지표입니다. 시장 심리는 주식, 채권, 원자재 등 다양한 자산의 가격 움직임에 영향을 미치며, 때로는 예상치 못한 시장 변동성을 초래하기도 합니다.</p>
-            <p>이 페이지는 외부 데이터를 기반으로 한 변동성 점수를 통해 현재 금융 시장의 심리 상태를 간접적으로 파악할 수 있도록 돕습니다. 투자 결정을 내리기 전에 시장 심리를 이해하는 것은 중요한 요소가 될 수 있습니다.</p>
-
-            <h3>시장 심리 분석의 중요성</h3>
-            <ul>
-                <li><strong>트렌드 파악:</strong> 시장 심리는 단기 및 중기적인 시장 트렌드를 예측하는 데 도움을 줍니다. 낙관적인 심리는 상승장으로, 비관적인 심리는 하락장으로 이어질 수 있습니다.</li>
-                <li><strong>위험 관리:</strong> 과도한 낙관론이나 비관론은 시장 거품이나 패닉 셀링과 같은 극단적인 상황을 유발할 수 있습니다. 시장 심리를 이해하면 이러한 위험에 대비할 수 있습니다.</li>
-                <li><strong>정보 보완:</strong> 기업의 실적이나 경제 지표와 같은 정량적 데이터 외에, 시장 심리라는 정성적 데이터를 함께 고려하면 보다 균형 잡힌 투자 판단이 가능합니다.</li>
-            </ul>
-
+     
+     
             <div class="proverb-display">
                 <h2>오늘의 주식 시장 격언을 확인해 보세요.</h2>
                 <p id="proverb-text" style="font-style: italic; margin-top: 10px; min-height: 50px; display: flex; align-items: center; justify-content: center;"></p>
@@ -113,6 +106,7 @@
 
                 <div id="sentiment-result" style="margin-top: 0; text-align: center; display: none;">
                     <p style="font-size: 1.5em; font-weight: bold; margin-bottom: 20px;">현재 지수: <span id="sentiment-value"></span></p>
+                    <p id="last-updated-time" style="font-size: 0.8em; color: var(--text-color-dark); margin-top: 5px; display: none;">업데이트 시간: -</p>
                     <p id="sentiment-quote" style="font-style: italic; margin-top: 10px;"></p>
                     <p style="margin-top: 20px; font-size: 0.75em; color: var(--text-color-dark);">
                         본 지수는 CNN Business의 데이터를 바탕으로 제공되며, 실제 투자 결과에 대한 책임을 지지 않습니다.
@@ -122,6 +116,14 @@
                 </div>
             </div>
 <hr/>
+
+<h3>시장 심리 분석의 중요성</h3>
+<ul>
+    <li><strong>트렌드 파악:</strong> 시장 심리는 단기 및 중기적인 시장 트렌드를 예측하는 데 도움을 줍니다. 낙관적인 심리는 상승장으로, 비관적인 심리는 하락장으로 이어질 수 있습니다.</li>
+    <li><strong>위험 관리:</strong> 과도한 낙관론이나 비관론은 시장 거품이나 패닉 셀링과 같은 극단적인 상황을 유발할 수 있습니다. 시장 심리를 이해하면 이러한 위험에 대비할 수 있습니다.</li>
+    <li><strong>정보 보완:</strong> 기업의 실적이나 경제 지표와 같은 정량적 데이터 외에, 시장 심리라는 정성적 데이터를 함께 고려하면 보다 균형 잡힌 투자 판단이 가능합니다.</li>
+</ul>
+
             <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
                 <strong>면책 조항:</strong> 본 페이지에서 제공하는 금융 시장 심리 정보는 참고용이며, 어떠한 투자 조언으로도 해석될 수 없습니다. 투자 결정은 개인의 판단과 책임 하에 이루어져야 하며, 항상 전문가와 상의하시기 바랍니다. 시장의 변동성은 매우 크며, 과거의 성과가 미래의 결과를 보장하지 않습니다.
             </p>
@@ -230,6 +232,7 @@
                 if (doc.exists) {
                     const data = doc.data();
                     fngValue = data.value;
+
 
                     if (fngValue >= 0 && fngValue <= 24) {
                         imageSrc = "images/extremefear.png";
