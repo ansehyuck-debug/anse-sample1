@@ -1,0 +1,3 @@
+firebase-admin
+Flask
+fear-and-greed

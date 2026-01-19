@@ -16,8 +16,8 @@ jobs:
           python-version: '3.9'
       - name: Install dependencies
         run: |
-          pip install firebase-admin fear-and-greed
+          pip install -r requirements.txt
       - name: Run script
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
-        run: python main.py
+        run: python -c 'from main import update_fng; update_fng()'

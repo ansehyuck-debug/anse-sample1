@@ -3,7 +3,7 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 from flask import Flask, request, jsonify
-# import fear_and_greed # Assuming this is an external package or was a local file
+import fear_and_greed # Assuming this is an external package or was a local file
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -34,10 +34,10 @@ else:
 def update_fng():
     if db:
         # 2. 지수 가져오기 - Temporarily disabled as fear_and_greed is not found
-        # index_data = fear_and_greed.get()
+        index_data = fear_and_greed.get()
         print("Skipping FNG update: fear_and_greed module not available or FIREBASE_KEY not set.")
         # Placeholder for index_data if fear_and_greed is not used
-        index_data = type('obj', (object,), {'value': 'N/A', 'description': 'N/A', 'last_update': 'N/A'})()
+        # index_data = type('obj', (object,), {'value': 'N/A', 'description': 'N/A', 'last_update': 'N/A'})()
 
         # 3. 파이어베이스 Firestore에 저장
         doc_ref = db.collection('market_sentiment').document('cnn_fng')
@@ -86,5 +86,6 @@ def analyze_sentiment():
 # Original standalone execution, now integrated with Flask app.run()
 if __name__ == "__main__":
     update_fng() # Run the FNG update once on startup
-    # For development, run on http://127.0.0.1:5000/
-    app.run(debug=True, port=5000)
+    # For development, you can run the app with 'flask run'
+    # or by calling app.run() in a separate script.
+    # app.run(debug=True, port=5000)
