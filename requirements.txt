@@ -5,4 +5,5 @@ pykrx
 finance-datareader
 beautifulsoup4
 lxml
-requests    
+requests
+pandas
