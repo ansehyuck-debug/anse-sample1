@@ -195,25 +195,30 @@
 <button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">1Y</button>
 </div>
 </div>
-<div class="h-64 w-full">
-<svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
-<!-- Area background -->
-<path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
-<!-- Line -->
-<path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
-<defs>
-<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-<stop offset="0%" stop-color="#3d84f5"></stop>
-<stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
-</lineargradient>
-</defs>
-</svg>
-<div class="mt-4 flex justify-between text-[11px] font-bold text-[#49699c]">
-<span>30 DAYS AGO</span>
-<span>20 DAYS AGO</span>
-<span>10 DAYS AGO</span>
-<span>TODAY</span>
-</div>
+<div id="index-history-container" class="h-64 w-full relative"> <!-- Added ID and relative for absolute positioning -->
+    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]">
+        Preparing data...
+    </div>
+    <div id="index-history-chart" class="h-full w-full" style="display: none;"> <!-- Added ID and initially hidden -->
+        <svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+        <!-- Area background -->
+        <path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+        <!-- Line -->
+        <path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
+        <defs>
+        <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#3d84f5"></stop>
+        <stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
+        </lineargradient>
+        </defs>
+        </svg>
+        <div class="mt-4 flex justify-between text-[11px] font-bold text-[#49699c]">
+        <span>30 DAYS AGO</span>
+        <span>20 DAYS AGO</span>
+        <span>10 DAYS AGO</span>
+        <span>TODAY</span>
+        </div>
+    </div>
 </div>
 </div>
 </div>
@@ -368,12 +373,18 @@
             const indicatorDetailsEl = document.getElementById('indicator-details');
             const indicatorListEl = document.getElementById('indicator-list');
             const indicatorAvgEl = document.getElementById('indicator-avg');
+
+            // New elements for chart placeholder
+            const chartPlaceholderEl = document.getElementById('chart-placeholder');
+            const indexHistoryChartEl = document.getElementById('index-history-chart');
             
             // 로딩 상태 표시
             statusEl.textContent = "데이터를 불러오는 중..."; 
             // scoreEl.textContent = "-"; // 로딩 중에는 점수 초기화
             // lastUpdatedTimeEl.textContent = "업데이트 시간: -";
             if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+            if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
+            if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
 
             try {
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
@@ -382,7 +393,7 @@
                 if (!querySnapshot.empty) {
                     const doc = querySnapshot.docs[0].data();
                     const score = doc.score;
-                    const timestamp = doc.timestamp.toDate(); // Convert Firestore Timestamp to JavaScript Date
+                    const timestamp = doc.toDate(); // Convert Firestore Timestamp to JavaScript Date
                     const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
                     
                     // Update main score, sentiment, and gauge
@@ -421,14 +432,30 @@
                         indicatorDetailsEl.style.display = 'none'; // Hide if no indicators
                     }
 
+                    // Chart data handling (placeholder for now)
+                    // Assuming doc.historicalChartData will be available eventually
+                    // For now, it will always show "Preparing data..."
+                    if (doc.historicalChartData) { // Placeholder condition for future chart data
+                        chartPlaceholderEl.style.display = 'none';
+                        indexHistoryChartEl.style.display = 'block';
+                        // Render chart here when data is available
+                    } else {
+                        chartPlaceholderEl.style.display = 'flex'; // Use flex for centering
+                        indexHistoryChartEl.style.display = 'none';
+                    }
+
                 } else {
                     statusEl.textContent = "업데이트된 데이터가 없습니다.";
                     if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                    if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
+                    if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
                 }
             } catch (error) {
                 console.error("Firebase 오류: ", error);
                 statusEl.textContent = "연결 오류가 발생했습니다.";
                 if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
+                if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
             } finally {
                 // Main score, sentiment, and last updated time are always displayed
                 scoreEl.style.display = 'block';
