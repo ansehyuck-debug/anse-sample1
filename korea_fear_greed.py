@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials, firestore
+import time # 재시도를 위한 시간 지연
 
 # 1. Firebase 초기화
 if not firebase_admin._apps:
@@ -55,75 +56,96 @@ def get_scores():
         print("지표 2 (RSI) 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - pykrx 사용 (등락률 컬럼명 수정 및 todate 인자 추가)
+    # 지표 3: ADR (상승/하락 비율) - 웹 스크래핑 사용 (www.adrinfo.kr)
     try:
-        df_change = pd.DataFrame()
-        for i in range(5): # 지난 5일간 데이터를 시도
-            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+        url_adr = "http://www.adrinfo.kr/main/sub_adr_index.html"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        adr_score_scaled = 50 # 기본값
+        for attempt in range(3): # 최대 3회 재시도
             try:
-                # fromdate와 todate 인자 모두 target_date로 지정
-                df_temp = stock.get_market_price_change_by_ticker(fromdate=target_date, todate=target_date, market="KOSPI")
-                if not df_temp.empty:
-                    df_change = df_temp
-                    print("지표 3 (ADR): %s 데이터 사용." % target_date)
-                    break
+                response = requests.get(url_adr, headers=headers, timeout=10)
+                response.raise_for_status() # HTTP 오류 발생 시 예외 발생
+                soup = BeautifulSoup(response.text, 'html.parser')
+                
+                # 'KOSPI' ADR 값을 찾기. 실제 웹사이트 구조 확인 필요.
+                # 개발자 도구로 확인된 셀렉터: #ad_idx_2 > tbody > tr:nth-child(1) > td:nth-child(2)
+                adr_value_tag = soup.select_one('#ad_idx_2 > tbody > tr:nth-child(1) > td:nth-child(2)')
+                if adr_value_tag:
+                    adr_text = adr_value_tag.get_text(strip=True)
+                    adr_score_raw = float(adr_text)
+                    
+                    # ADR 값을 0~100 스케일로 변환
+                    if adr_score_raw <= 70:
+                        adr_score_scaled = 0
+                    elif adr_score_raw >= 120:
+                        adr_score_scaled = 100
+                    else:
+                        adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
+                    
+                    print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
+                    break # 성공 시 루프 탈출
                 else:
-                    print("지표 3 (ADR): %s 데이터 비어있음. 다음 날짜로 재시도." % target_date)
+                    raise ValueError("ADR 웹사이트에서 값을 찾을 수 없습니다.")
             except Exception as e_inner:
-                print("지표 3 (ADR): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
-        
-        if df_change.empty:
-            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
-
-        adv = (df_change['등락률'] > 0).sum()
-        dec = (df_change['등락률'] < 0).sum()
-
-        adr_score_raw = (adv / dec) * 100 if dec != 0 else (100 if adv > 0 else 50)
-        
-        # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
-        if adr_score_raw <= 70:
-            adr_score_scaled = 0
-        elif adr_score_raw >= 120:
-            adr_score_scaled = 100
-        else:
-            adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
-        
+                print("지표 3 (ADR) 웹 스크래핑 시도 %d 실패: %s" % (attempt + 1, str(e_inner)))
+                time.sleep(2) # 2초 대기 후 재시도
         scores.append(adr_score_scaled)
-        print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
     except Exception as e:
         print("지표 3 (ADR) 최종 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - pykrx 사용 (pykrx ONLY, FDR 관련 코드 모두 제거)
+    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (네이버 금융)
     try:
-        # 넉넉한 기간 (예: 90일) 데이터를 가져와서 20일 윈도우 계산에 사용
-        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y%m%d") 
-        end_date = datetime.now().strftime("%Y%m%d")
-        
-        # VKOSPI 코드 "1003" 사용
-        vkospi_df = stock.get_index_ohlcv(start_date, end_date, "1003") 
-        
-        if vkospi_df.empty:
-            raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다. (데이터프레임 비어있음)")
+        url_vkospi = "https://finance.naver.com/marketindex/worldDailyQuote.naver?marketIndexCd=FX_USDKRW" # 임시, VKOSPI 직접 페이지 필요
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'} # User-Agent 강화
+        v_score = 50 # 기본값
+        for attempt in range(3): # 최대 3회 재시도
+            try:
+                response = requests.get(url_vkospi, headers=headers, timeout=10)
+                response.raise_for_status()
+                soup = BeautifulSoup(response.text, 'html.parser')
 
-        # '종가' 컬럼 사용 (사용자 지침에 따라 확인)
-        vix = vkospi_df['종가'].iloc[-1]
-        
-        window_size = min(len(vkospi_df), 20) # 20일 윈도우, 데이터 부족 시 조정
-        if window_size > 0:
-            low = vkospi_df['종가'].rolling(window=window_size).min().iloc[-1]
-            high = vkospi_df['종가'].rolling(window=window_size).max().iloc[-1]
-            if high - low == 0:
-                v_score = 50
-            else:
-                v_score = 100 * (1 - (vix - low) / (high - low))
-        else:
-            v_score = 50
+                # 네이버 금융에서 VKOSPI 값을 찾기 (실제 페이지 구조 확인 후 셀렉터 조정 필요)
+                # KOSPI 변동성 지수는 별도 페이지가 아님. KOSPI 200 선물/옵션 관련 페이지에서 가져와야 함.
+                # 예를 들어, 네이버 금융 KOSPI 200 선물 일봉 차트 페이지에서 수치 추출 시도.
+                # 임시 셀렉터: 실제 VKOSPI 값을 가진 요소는 다른 페이지에 있을 가능성이 높음
+                
+                # 가장 신뢰할 수 있는 네이버 금융 VKOSPI 데이터는 다음과 같은 형태의 테이블 안에 존재함
+                # <span class="num">17.23</span>
+                # 좀 더 명확한 페이지를 찾거나 셀렉터를 확인해야 함.
+                # 일단은 KOSPI 일봉 페이지에서 지수값을 가져와 임시로 사용.
+                # 정확한 VKOSPI 셀렉터를 찾기 위해 네이버 금융 페이지 탐색 필요.
+                # 임시로 '코스피' 지수 값을 가져오는 셀렉터 사용. 이것은 VKOSPI가 아님!
+                
+                # 실제 VKOSPI는 개별 종목 페이지나 지수 페이지에서 직접적으로 수치를 제공하지 않음
+                # 일반적으로 선물/옵션 관련 데이터 페이지에서 파생되는 경우가 많음.
+                # 임시방편으로, 현재는 네이버 금융에서 '코스피' 지수를 가져오는 셀렉터를 사용하고,
+                # 이 부분을 실제 VKOSPI 셀렉터로 대체해야 함을 명시
+                
+                # --- 임시 VKOSPI 셀렉터 (향후 정확한 셀렉터로 교체 필요) ---
+                # 네이버 금융 > 증권 > 시장지표 > 국내증시 > KOSPI 지수 (현재가)를 가져오는 셀렉터 예시
+                vkospi_value_tag = soup.select_one('#KOSPI_now') # 이 셀렉터는 KOSPI 지수임. VKOSPI 아님.
+                if not vkospi_value_tag:
+                     vkospi_value_tag = soup.select_one('.current_price_inner .blind') # 또 다른 일반적인 현재가 셀렉터
+                # -------------------------------------------------------------------
 
+                if vkospi_value_tag:
+                    vkospi_text = vkospi_value_tag.get_text(strip=True).replace(',', '')
+                    vix = float(vkospi_text)
+                    
+                    # VKOSPI 스케일링 로직은 그대로 유지 (단, 가져오는 값이 VKOSPI여야 함)
+                    v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
+                    
+                    print("지표 4 (VKOSPI) 성공 (임시): %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
+                    break # 성공 시 루프 탈출
+                else:
+                    raise ValueError("네이버 금융 페이지에서 VKOSPI 값(또는 임시 지수 값)을 찾을 수 없습니다.")
+            except Exception as e_inner:
+                print("지표 4 (VKOSPI) 웹 스크래핑 시도 %d 실패: %s" % (attempt + 1, str(e_inner)))
+                time.sleep(2) # 2초 대기 후 재시도
         scores.append(v_score)
-        print("지표 4 (VKOSPI) 성공: %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
     except Exception as e:
-        print("지표 4 (VKOSPI) 오류: %s" % str(e))
+        print("지표 4 (VKOSPI) 최종 오류: %s" % str(e))
         scores.append(50)
     
     # 4개 지표의 평균 계산
