@@ -54,16 +54,20 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 5일간 조회하여 안정성 강화
+    # 지표 3: ADR (상승/하락 비율) - 5일간 조회, 각 조회마다 예외처리 추가
     try:
         df_adr = pd.DataFrame()
         for i in range(5):
-            day_to_check = datetime.now() - timedelta(days=i)
-            bday = stock.get_nearest_business_day_in_a_week(date=day_to_check.strftime('%Y%m%d'))
-            df_adr = stock.get_market_price_change_by_ticker(bday)
-            if not df_adr.empty:
-                print(f"지표 3 (ADR): {bday} 데이터 사용.")
-                break
+            try:
+                day_to_check = datetime.now() - timedelta(days=i)
+                bday = stock.get_nearest_business_day_in_a_week(date=day_to_check.strftime('%Y%m%d'))
+                df_adr = stock.get_market_price_change_by_ticker(bday)
+                if not df_adr.empty:
+                    print(f"지표 3 (ADR): {bday} 데이터 사용.")
+                    break
+            except Exception as e_inner:
+                print(f"지표 3 (ADR): {day_to_check.strftime('%Y-%m-%d')} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+                continue
         
         if df_adr.empty:
             raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
@@ -74,12 +78,13 @@ def get_scores():
         scores.append(adr_score)
         print(f"지표 3 (ADR) 성공: {adr_score:.2f}")
     except Exception as e:
-        print(f"지표 3 (ADR) 오류: {e}")
+        print(f"지표 3 (ADR) 최종 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - 대체 티커 사용
+    # 지표 4: VKOSPI (변동성) - investing.com 소스 사용
     try:
-        vix = fdr.DataReader('^VIXK').iloc[-1]['Close']
+        df_vix = fdr.DataReader('V-KOSPI 200', data_source='investing', start=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+        vix = df_vix['Close'].iloc[-1]
         v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
         scores.append(v_score)
         print(f"지표 4 (VKOSPI) 성공: {v_score:.2f}")
