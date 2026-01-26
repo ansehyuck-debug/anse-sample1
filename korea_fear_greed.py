@@ -37,7 +37,7 @@ def get_scores():
         score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
         scores.append(score1)
     except Exception as e:
-        print(f"지표 1 오류: {e}")
+        print("지표 1 오류: %s" % str(e))
         scores.append(50)
 
     # 지표 2: KOSPI 14일 RSI (대체 지표)
@@ -50,9 +50,9 @@ def get_scores():
         rsi = 100 - (100 / (1 + rs))
         rsi_score = rsi.iloc[-1]
         scores.append(rsi_score)
-        print(f"지표 2 (RSI) 성공: {rsi_score:.2f}")
+        print("지표 2 (RSI) 성공: %.2f" % rsi_score)
     except Exception as e:
-        print(f"지표 2 (RSI) 오류: {e}")
+        print("지표 2 (RSI) 오류: %s" % str(e))
         scores.append(50)
 
     # 지표 3: ADR (상승/하락 비율) - pykrx 사용 (등락률 컬럼명 수정 및 todate 인자 추가)
@@ -65,12 +65,12 @@ def get_scores():
                 df_temp = stock.get_market_price_change_by_ticker(fromdate=target_date, todate=target_date, market="KOSPI")
                 if not df_temp.empty:
                     df_change = df_temp
-                    print(f"지표 3 (ADR): {target_date} 데이터 사용.")
+                    print("지표 3 (ADR): %s 데이터 사용." % target_date)
                     break
                 else:
-                    print(f"지표 3 (ADR): {target_date} 데이터 비어있음. 다음 날짜로 재시도.")
+                    print("지표 3 (ADR): %s 데이터 비어있음. 다음 날짜로 재시도." % target_date)
             except Exception as e_inner:
-                print(f"지표 3 (ADR): {target_date} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+                print("지표 3 (ADR): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
         
         if df_change.empty:
             raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
@@ -89,9 +89,9 @@ def get_scores():
             adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
         
         scores.append(adr_score_scaled)
-        print(f"지표 3 (ADR) 성공: {adr_score_raw:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
+        print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
     except Exception as e:
-        print(f"지표 3 (ADR) 최종 오류: {e}")
+        print("지표 3 (ADR) 최종 오류: %s" % str(e))
         scores.append(50)
 
     # 지표 4: VKOSPI (변동성) - pykrx 사용 (pykrx ONLY, FDR 관련 코드 모두 제거)
@@ -121,9 +121,9 @@ def get_scores():
             v_score = 50
 
         scores.append(v_score)
-        print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
+        print("지표 4 (VKOSPI) 성공: %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
     except Exception as e:
-        print(f"지표 4 (VKOSPI) 오류: {e}")
+        print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
     
     # 4개 지표의 평균 계산
@@ -135,21 +135,26 @@ def get_status(score):
     elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
     elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
     elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
+    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보벌 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
 status = get_status(score)
 
-data_to_save = {
-    'score': score,
-    'status': status,
-    'timestamp': firestore.SERVER_TIMESTAMP
-}
+# 중괄호를 피하기 위해 dict() 생성자 사용
+data_to_save = dict(
+    score=score,
+    status=status,
+    timestamp=firestore.SERVER_TIMESTAMP
+)
+
 for i, s in enumerate(individual_scores):
-    data_to_save[f'indicator{i+1}'] = s
+    # f-string 대신 문자열 결합 사용
+    key_name = "indicator" + str(i + 1)
+    data_to_save[key_name] = s
+
+print("저장 완료: %d점 (%s)" % (score, status))
+formatted_scores = [format(s, ".2f") for s in individual_scores]
+print("개별 지표: %s" % formatted_scores)
 
 db.collection('korea_index').add(data_to_save)
-
-print(f"저장 완료: {score}점 ({status})")
-print(f"개별 지표: {[f'{s:.2f}' for s in individual_scores]}")
