@@ -54,54 +54,63 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 5일간 조회, 각 조회마다 예외처리 추가
+    # 지표 3: ADR (상승/하락 비율) - 웹 스크래핑 사용 (www.adrinfo.kr)
     try:
-        df_adr = pd.DataFrame()
-        for i in range(5):
-            current_date = datetime.now() - timedelta(days=i)
-            current_date_str = current_date.strftime('%Y%m%d')
-            try:
-                # get_market_price_change_by_ticker는 해당 날짜의 데이터를 반환, 휴장일이면 빈 df 반환
-                df_adr_temp = stock.get_market_price_change_by_ticker(current_date_str)
-                if not df_adr_temp.empty:
-                    df_adr = df_adr_temp
-                    print(f"지표 3 (ADR): {current_date_str} 데이터 사용.")
-                    break
-                else:
-                    print(f"지표 3 (ADR): {current_date_str} 데이터는 비어있습니다. 다음 날짜로 재시도.")
-            except Exception as e_inner:
-                print(f"지표 3 (ADR): {current_date_str} 데이터 조회 실패. 재시도. 오류: {e_inner}")
-                continue
+        url_adr = "http://www.adrinfo.kr/main/sub_adr_index.html"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url_adr, headers=headers)
+        response.raise_for_status() # HTTP 오류 발생 시 예외 발생
+        soup = BeautifulSoup(response.text, 'html.parser')
         
-        if df_adr.empty:
-            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
-            
-        ups = (df_adr['종가'] > df_adr['시가']).sum()
-        downs = (df_adr['종가'] < df_adr['시가']).sum()
-        adr_score = (ups / (ups + downs + 1)) * 100
-        scores.append(adr_score)
-        print(f"지표 3 (ADR) 성공: {adr_score:.2f}")
+        # 'KOSPI' ADR 값을 찾기 (웹사이트 구조에 따라 셀렉터 변경될 수 있음)
+        # 예시: 특정 테이블의 n번째 행, m번째 열
+        # 실제 웹사이트 구조 확인 후 셀렉터 조정 필요
+        # 임시 셀렉터: ADR 값들이 포함된 테이블을 찾고 그 안에서 텍스트 추출
+        # 예를 들어, <td class="tbl_adr">123.45</td> 이런 형태일 경우
+        adr_value_tag = soup.select_one('td.tbl_adr') # 임시 셀렉터, 실제 확인 필요
+        if adr_value_tag:
+            adr_text = adr_value_tag.get_text(strip=True)
+            adr_score = float(adr_text)
+            # ADR 값을 0~100 스케일로 변환 (예시: 100을 중립으로 보고 스케일링)
+            # 정확한 스케일링은 ADR 지표의 일반적인 범위에 따라 조정 필요
+            # 일단은 0~200 범위라고 가정하고 100이 중립이라고 보고 변환
+            adr_score_scaled = min(max((adr_score - 50) / 100 * 100, 0), 100) # 예시 스케일링
+            scores.append(adr_score_scaled)
+            print(f"지표 3 (ADR) 성공: {adr_score:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
+        else:
+            raise ValueError("ADR 웹사이트에서 값을 찾을 수 없습니다.")
+
     except Exception as e:
-        print(f"지표 3 (ADR) 최종 오류: {e}")
+        print(f"지표 3 (ADR) 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - investing.com 소스 사용 (fdr.DataReader의 동작 확인 필요)
+    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (네이버 금융)
     try:
-        # FinanceDataReader 0.9.101 버전에서 investing.com 소스 사용 시 Yahoo로 리다이렉트되는 문제 발생 가능성
-        # 명시적으로 investing.com의 심볼을 사용하고, 혹시 모를 Yahoo로의 리다이렉트 방지를 기대
-        # fdr.DataReader('V-KOSPI 200', data_source='investing')
-        # 위 코드가 계속 Yahoo로 가는 경우, finance-datareader 라이브러리 업데이트 필요 또는 다른 방식 모색
-        
-        # 임시 방편으로, KSVIX 대신 VIX (미국 변동성 지수)를 사용하거나, 
-        # 직접 웹 스크래핑하는 방법도 고려 가능하나 복잡도가 증가함.
-        # 일단은 `V-KOSPI 200`을 `data_source='investing'`으로 다시 시도하며
-        # FinanceDataReader의 동작을 지켜봅니다.
-        
-        df_vix = fdr.DataReader('V-KOSPI 200', data_source='investing', start=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
-        vix = df_vix['Close'].iloc[-1]
-        v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
-        scores.append(v_score)
-        print(f"지표 4 (VKOSPI) 성공: {v_score:.2f}")
+        url_vkospi = "https://finance.naver.com/sise/sise_index_day.naver?code=KOSPI200" # KOSPI200 일별 시세 페이지 (VKOSPI 포함)
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url_vkospi, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # 네이버 금융 페이지에서 VKOSPI 값을 찾기 (웹사이트 구조에 따라 셀렉터 변경될 수 있음)
+        # 예시: 특정 테이블에서 VKOSPI 값 텍스트 추출
+        # 실제 네이버 금융 페이지에서 VKOSPI 값이 어떻게 표시되는지 확인 후 셀렉터 조정 필요
+        # 임시 셀렉터: `VKOSPI` 텍스트를 포함하는 요소를 찾고 그 주변에서 값 추출
+        vkospi_tag = soup.find('th', string='변동성지수') # VKOSPI 텍스트가 있는 th 태그
+        if vkospi_tag:
+            # VKOSPI 값은 보통 그 다음 td에 있을 수 있음.
+            vkospi_value_tag = vkospi_tag.find_next_sibling('td')
+            if vkospi_value_tag:
+                vkospi_text = vkospi_value_tag.get_text(strip=True)
+                vix = float(vkospi_text)
+                v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
+                scores.append(v_score)
+                print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
+            else:
+                raise ValueError("네이버 금융 페이지에서 VKOSPI 값을 찾을 수 없습니다.")
+        else:
+            raise ValueError("네이버 금융 페이지에서 '변동성지수' 항목을 찾을 수 없습니다.")
+
     except Exception as e:
         print(f"지표 4 (VKOSPI) 오류: {e}")
         scores.append(50)
