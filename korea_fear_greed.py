@@ -27,6 +27,60 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
+def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
+    auth_key = os.environ.get(auth_key_env_var)
+    if not auth_key:
+        raise ValueError("환경 변수 '%s'가 KRX API 키로 설정되지 않았습니다." % auth_key_env_var)
+    
+    headers = {
+        "AUTH_KEY": auth_key,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    # KRX Open API의 기본 URL이 data-dbg.krx.co.kr 이므로 이를 사용
+    url = "https://data-dbg.krx.co.kr/svc/apis/idx/" + endpoint # 파생상품지수 시세정보는 idx 엔드포인트 사용
+
+    try:
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response.raise_for_status() # HTTP 오류 발생 시 예외 발생
+        return response.json()
+    except requests.exceptions.HTTPError as http_err:
+        print("HTTP 오류 발생: %s" % http_err)
+        print("응답 내용: %s" % response.text)
+        raise
+    except requests.exceptions.ConnectionError as conn_err:
+        print("연결 오류 발생: %s" % conn_err)
+        raise
+    except requests.exceptions.Timeout as timeout_err:
+        print("요청 시간 초과: %s" % timeout_err)
+        raise
+    except requests.exceptions.RequestException as req_err:
+        print("요청 오류 발생: %s" % req_err)
+        raise
+
+def get_vkospi_from_krx_api(date_str):
+    endpoint = "drvprod_dd_trd" # 파생상품지수 시세정보
+    params = {"basDd": date_str}
+    
+    data = _call_krx_api(endpoint, params)
+    
+    vkospi_value = None
+    if "OutBlock_1" in data:
+        for item in data["OutBlock_1"]:
+            # VKOSPI의 지수명을 정확히 확인해야 함. "VKOSPI" 또는 "코스피200 변동성지수" 등이 될 수 있음.
+            # 일단 "VKOSPI"로 가정하고, 없으면 로그로 모든 지수명 출력하여 디버깅.
+            if item.get("IDX_NM") == "VKOSPI": 
+                vkospi_value = float(item.get("CLSPRC_IDX").replace('-', '')) # '-' 제거 후 float 변환
+                break
+        if vkospi_value is None:
+            all_idx_names = [item.get("IDX_NM") for item in data["OutBlock_1"]]
+            print("KRX API에서 VKOSPI를 찾지 못했습니다. 확인된 지수명: %s" % str(all_idx_names))
+            raise ValueError("VKOSPI 데이터를 찾을 수 없습니다 (IDX_NM not 'VKOSPI').")
+    else:
+        raise ValueError("KRX API 응답에 OutBlock_1이 없습니다.")
+        
+    return vkospi_value
+
+
 def get_scores():
     scores = []
     
@@ -56,96 +110,48 @@ def get_scores():
         print("지표 2 (RSI) 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 웹 스크래핑 사용 (www.adrinfo.kr)
+    # 지표 3: ADR (상승/하락 비율) - pykrx 사용은 실패, KRX API 또는 다른 소스 필요
+    # 현재는 오류가 나고 있으므로 임시로 50 처리
+    print("지표 3 (ADR) 현재 KRX API 구현 대기 중이므로 50 처리.")
+    scores.append(50)
+
+
+    # 지표 4: VKOSPI (변동성) - KRX API 사용
     try:
-        url_adr = "http://www.adrinfo.kr/main/sub_adr_index.html"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        adr_score_scaled = 50 # 기본값
-        for attempt in range(3): # 최대 3회 재시도
+        vkospi_value = None
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
-                response = requests.get(url_adr, headers=headers, timeout=10)
-                response.raise_for_status() # HTTP 오류 발생 시 예외 발생
-                soup = BeautifulSoup(response.text, 'html.parser')
-                
-                # 'KOSPI' ADR 값을 찾기. 실제 웹사이트 구조 확인 필요.
-                # 개발자 도구로 확인된 셀렉터: #ad_idx_2 > tbody > tr:nth-child(1) > td:nth-child(2)
-                adr_value_tag = soup.select_one('#ad_idx_2 > tbody > tr:nth-child(1) > td:nth-child(2)')
-                if adr_value_tag:
-                    adr_text = adr_value_tag.get_text(strip=True)
-                    adr_score_raw = float(adr_text)
-                    
-                    # ADR 값을 0~100 스케일로 변환
-                    if adr_score_raw <= 70:
-                        adr_score_scaled = 0
-                    elif adr_score_raw >= 120:
-                        adr_score_scaled = 100
-                    else:
-                        adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
-                    
-                    print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
-                    break # 성공 시 루프 탈출
-                else:
-                    raise ValueError("ADR 웹사이트에서 값을 찾을 수 없습니다.")
+                vkospi_value = get_vkospi_from_krx_api(target_date)
+                if vkospi_value is not None:
+                    print("지표 4 (VKOSPI): %s 데이터 사용." % target_date)
+                    break
             except Exception as e_inner:
-                print("지표 3 (ADR) 웹 스크래핑 시도 %d 실패: %s" % (attempt + 1, str(e_inner)))
-                time.sleep(2) # 2초 대기 후 재시도
-        scores.append(adr_score_scaled)
-    except Exception as e:
-        print("지표 3 (ADR) 최종 오류: %s" % str(e))
-        scores.append(50)
+                print("지표 4 (VKOSPI): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                time.sleep(1) # 짧은 지연
 
-    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (네이버 금융)
-    try:
-        url_vkospi = "https://finance.naver.com/marketindex/worldDailyQuote.naver?marketIndexCd=FX_USDKRW" # 임시, VKOSPI 직접 페이지 필요
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'} # User-Agent 강화
-        v_score = 50 # 기본값
-        for attempt in range(3): # 최대 3회 재시도
-            try:
-                response = requests.get(url_vkospi, headers=headers, timeout=10)
-                response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'html.parser')
+        if vkospi_value is None:
+            raise ValueError("VKOSPI 데이터를 5일 동안 찾지 못했습니다.")
 
-                # 네이버 금융에서 VKOSPI 값을 찾기 (실제 페이지 구조 확인 후 셀렉터 조정 필요)
-                # KOSPI 변동성 지수는 별도 페이지가 아님. KOSPI 200 선물/옵션 관련 페이지에서 가져와야 함.
-                # 예를 들어, 네이버 금융 KOSPI 200 선물 일봉 차트 페이지에서 수치 추출 시도.
-                # 임시 셀렉터: 실제 VKOSPI 값을 가진 요소는 다른 페이지에 있을 가능성이 높음
-                
-                # 가장 신뢰할 수 있는 네이버 금융 VKOSPI 데이터는 다음과 같은 형태의 테이블 안에 존재함
-                # <span class="num">17.23</span>
-                # 좀 더 명확한 페이지를 찾거나 셀렉터를 확인해야 함.
-                # 일단은 KOSPI 일봉 페이지에서 지수값을 가져와 임시로 사용.
-                # 정확한 VKOSPI 셀렉터를 찾기 위해 네이버 금융 페이지 탐색 필요.
-                # 임시로 '코스피' 지수 값을 가져오는 셀렉터 사용. 이것은 VKOSPI가 아님!
-                
-                # 실제 VKOSPI는 개별 종목 페이지나 지수 페이지에서 직접적으로 수치를 제공하지 않음
-                # 일반적으로 선물/옵션 관련 데이터 페이지에서 파생되는 경우가 많음.
-                # 임시방편으로, 현재는 네이버 금융에서 '코스피' 지수를 가져오는 셀렉터를 사용하고,
-                # 이 부분을 실제 VKOSPI 셀렉터로 대체해야 함을 명시
-                
-                # --- 임시 VKOSPI 셀렉터 (향후 정확한 셀렉터로 교체 필요) ---
-                # 네이버 금융 > 증권 > 시장지표 > 국내증시 > KOSPI 지수 (현재가)를 가져오는 셀렉터 예시
-                vkospi_value_tag = soup.select_one('#KOSPI_now') # 이 셀렉터는 KOSPI 지수임. VKOSPI 아님.
-                if not vkospi_value_tag:
-                     vkospi_value_tag = soup.select_one('.current_price_inner .blind') # 또 다른 일반적인 현재가 셀렉터
-                # -------------------------------------------------------------------
-
-                if vkospi_value_tag:
-                    vkospi_text = vkospi_value_tag.get_text(strip=True).replace(',', '')
-                    vix = float(vkospi_text)
-                    
-                    # VKOSPI 스케일링 로직은 그대로 유지 (단, 가져오는 값이 VKOSPI여야 함)
-                    v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
-                    
-                    print("지표 4 (VKOSPI) 성공 (임시): %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
-                    break # 성공 시 루프 탈출
-                else:
-                    raise ValueError("네이버 금융 페이지에서 VKOSPI 값(또는 임시 지수 값)을 찾을 수 없습니다.")
-            except Exception as e_inner:
-                print("지표 4 (VKOSPI) 웹 스크래핑 시도 %d 실패: %s" % (attempt + 1, str(e_inner)))
-                time.sleep(2) # 2초 대기 후 재시도
+        vix = vkospi_value
+        
+        # 20일 윈도우 min/max 기반 스케일링
+        # KRX API는 일별 데이터만 제공하므로, 20일치 데이터를 얻으려면 여러 번 호출 필요
+        # 아니면 한 번에 긴 기간을 요청하는 API를 찾아야 함.
+        # 일단은 현재 가져온 1일치 VKOSPI 값으로 직접 스케일링
+        # VKOSPI의 일반적인 범위는 10~40.
+        # 10 이하: 극심한 탐욕 (100점), 40 이상: 극심한 공포 (0점)
+        if vix <= 10:
+            v_score = 100
+        elif vix >= 40:
+            v_score = 0
+        else:
+            v_score = 100 - (vix - 10) / (40 - 10) * 100 # 선형 스케일링
+        
         scores.append(v_score)
+        print("지표 4 (VKOSPI) 성공: %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
     except Exception as e:
-        print("지표 4 (VKOSPI) 최종 오류: %s" % str(e))
+        print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
     
     # 4개 지표의 평균 계산
