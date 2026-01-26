@@ -23,8 +23,8 @@ jobs:
         run: |
           pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas
 
-      - name: Print korea_fear_greed.py content
-        run: cat korea_fear_greed.py
+      # - name: Print korea_fear_greed.py content # 문제 진단 후 해당 라인 제거
+      #   run: cat korea_fear_greed.py
 
       - name: Run Python script
         env:
