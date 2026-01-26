@@ -29,8 +29,14 @@ def get_scores():
     scores = []
     
     # 휴장일 처리를 위해 가장 최근의 영업일 조회
-    today_str = datetime.now().strftime("%Y%m%d")
-    recent_bday = stock.get_nearest_business_day_in_a_week(date=today_str)
+    try:
+        today_str = datetime.now().strftime("%Y%m%d")
+        recent_bday = stock.get_nearest_business_day_in_a_week(date=today_str)
+    except IndexError:
+        # pykrx가 비어있는 DataFrame을 반환하여 IndexError가 발생하는 경우에 대한 예외 처리
+        yesterday = datetime.now() - timedelta(days=1)
+        recent_bday = yesterday.strftime("%Y%m%d")
+        print(f"경고: 가장 가까운 영업일을 찾지 못했습니다. {recent_bday}를 기준으로 계산합니다.")
     
     # 지표 1: KOSPI vs 125일 이평선 이격도
     try:
@@ -78,7 +84,7 @@ def get_status(score):
     elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
     elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
     elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
+    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보ويل 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
