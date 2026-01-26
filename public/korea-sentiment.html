@@ -221,32 +221,55 @@
 <div class="space-y-4">
     <div class="flex flex-col gap-1">
     <div class="flex justify-between text-xs font-bold">
-    <span>Stock Price Strength</span>
+    <span>Market Momentum</span>
     <span class="text-primary">Very Strong</span>
     </div>
     <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
     <div class="h-full w-[85%] rounded-full bg-primary"></div>
     </div>
     </div>
+ 
     <div class="flex flex-col gap-1">
     <div class="flex justify-between text-xs font-bold">
-    <span>Market Volatility</span>
+    <span>Stock Price Strength</span>
     <span class="text-emerald-500">Low</span>
     </div>
     <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
     <div class="h-full w-[25%] rounded-full bg-emerald-500"></div>
     </div>
     </div>
+
     <div class="flex flex-col gap-1">
     <div class="flex justify-between text-xs font-bold">
-    <span>Safe Haven Demand</span>
+    <span>Market Breadth</span>
     <span class="text-red-400">Low</span>
     </div>
     <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
     <div class="h-full w-[15%] rounded-full bg-red-400"></div>
     </div>
     </div>
+
+    <div class="flex flex-col gap-1">
+    <div class="flex justify-between text-xs font-bold">
+    <span>Market Volatility</span>
+    <span class="text-red-400">Low</span>
     </div>
+    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
+    </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+    <div class="flex justify-between text-xs font-bold">
+    <span>Options Put/Call Ratio</span>
+    <span class="text-red-400">Low</span>
+    </div>
+    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
+    </div>
+    </div>
+    
+   </div>
     </div>
     
 <div id="indicator-details" class="space-y-4">
@@ -337,13 +360,13 @@
             else if (score <= 55) { textColorClass = "text-yellow-500"; }
             else if (score <= 75) { textColorClass = "text-emerald-500"; }
             else { textColorClass = "text-blue-500"; }
-            
-            // Apply color to score display
-            scoreDisplay.className = scoreDisplay.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+
+            // Apply color to score display, preserving font size and other text styles
+            scoreDisplay.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
             scoreDisplay.classList.add(textColorClass);
             
-            // Apply color to sentiment text
-            sentimentText.className = sentimentText.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+            // Apply color to sentiment text, preserving font size and other text styles
+            sentimentText.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
             sentimentText.classList.add(textColorClass);
         }
 
