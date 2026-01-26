@@ -54,13 +54,14 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - pykrx 사용 (등락률 컬럼명 수정)
+    # 지표 3: ADR (상승/하락 비율) - pykrx 사용 (등락률 컬럼명 수정 및 todate 인자 추가)
     try:
         df_change = pd.DataFrame()
         for i in range(5): # 지난 5일간 데이터를 시도
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
-                df_temp = stock.get_market_price_change_by_ticker(target_date, market="KOSPI")
+                # fromdate와 todate 인자 모두 target_date로 지정
+                df_temp = stock.get_market_price_change_by_ticker(target_date, target_date, market="KOSPI")
                 if not df_temp.empty:
                     df_change = df_temp
                     print(f"지표 3 (ADR): {target_date} 데이터 사용.")
@@ -79,7 +80,6 @@ def get_scores():
         adr_score_raw = (adv / dec) * 100 if dec != 0 else (100 if adv > 0 else 50)
         
         # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
-        # 예시 스케일링: 70 이하 공포(0), 120 이상 탐욕(100), 그 사이 선형.
         if adr_score_raw <= 70:
             adr_score_scaled = 0
         elif adr_score_raw >= 120:
@@ -93,15 +93,16 @@ def get_scores():
         print(f"지표 3 (ADR) 최종 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - pykrx 사용 (pykrx ONLY)
+    # 지표 4: VKOSPI (변동성) - pykrx 사용 (데이터 조회 범위 확장 및 빈 데이터 처리 강화)
     try:
-        start_date = (datetime.now() - timedelta(days=60)).strftime("%Y%m%d") # 20일 윈도우 계산에 충분하도록 넉넉히 가져옴
+        # 넉넉한 기간 (예: 90일) 데이터를 가져와서 20일 윈도우 계산에 사용
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y%m%d") 
         end_date = datetime.now().strftime("%Y%m%d")
         
         vkospi_df = stock.get_index_ohlcv(start_date, end_date, "1003") # VKOSPI 코드 "1003"
         
         if vkospi_df.empty:
-            raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다.")
+            raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다. (데이터프레임 비어있음)")
 
         vix = vkospi_df['종가'].iloc[-1]
         
@@ -131,7 +132,7 @@ def get_status(score):
     elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
     elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
     elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보를 주식이라면 지금이 기회."
+    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
