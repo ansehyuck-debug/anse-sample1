@@ -195,6 +195,15 @@
             const indicatorListEl = document.getElementById('indicator-list');
             const indicatorAvgEl = document.getElementById('indicator-avg');
 
+            // Define indicator names
+            const indicatorNames = {
+                1: "시장의 모멘텀",
+                2: "주가 강도",
+                3: "시장의 폭",
+                4: "시장 변동성",
+                5: "옵션 풋콜 비율"
+            };
+
             try {
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
                 const querySnapshot = await q.get();
@@ -209,33 +218,36 @@
                     statusEl.textContent = doc.status;
                     lastUpdatedTimeEl.textContent = '업데이트 시간: ' + formattedTime;
 
-                                const indicators = [];
-                                // Dynamically add indicators based on available data
-                                for (let i = 1; i <= 5; i++) { // Loop up to 5 indicators
-                                    const indicatorKey = `indicator${i}`;
-                                    if (doc[indicatorKey] !== undefined) {
-                                        indicators.push({
-                                            id: i,
-                                            value: doc[indicatorKey]
-                                        });
-                                    }
-                                }
-                    
-                                if (indicators.length > 0) {
-                                    const indicatorTexts = indicators.map(item => {
-                                        if (item.value === 50) {
-                                            return `지표 ${item.id}: 50 (수집 준비중, 현재는 평균값)`;
-                                        } else {
-                                            return `지표 ${item.id}: ${item.value.toFixed(2)}`;
-                                        }
-                                    });
-                                    indicatorListEl.innerHTML = indicatorTexts.join('<br>');
-                    
-                                    const avg = indicators.reduce((a, b) => a + b.value, 0) / indicators.length;
-                                    indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
-                    
-                                    indicatorDetailsEl.style.display = 'block';
-                                }
+                    const indicators = [];
+                    // Dynamically add indicators based on available data
+                    for (let i = 1; i <= 5; i++) { // Loop up to 5 indicators
+                        const indicatorKey = `indicator${i}`;
+                        if (doc[indicatorKey] !== undefined) {
+                            indicators.push({
+                                id: i,
+                                name: indicatorNames[i], // Add name to item
+                                value: doc[indicatorKey]
+                            });
+                        }
+                    }
+
+                    if (indicators.length > 0) {
+                        const indicatorTexts = indicators.map(item => {
+                            if (item.id === 5 && item.value === 50) {
+                                return `지표 ${item.id}(${item.name}) : 준비중`;
+                            } else if (item.value === 50) {
+                                return `지표 ${item.id}(${item.name}) : 50 (수집 준비중, 현재는 평균값)`;
+                            } else {
+                                return `지표 ${item.id}(${item.name}) : ${item.value.toFixed(2)}`;
+                            }
+                        });
+                        indicatorListEl.innerHTML = indicatorTexts.join('<br>');
+
+                        const avg = indicators.reduce((a, b) => a + b.value, 0) / indicators.length;
+                        indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
+
+                        indicatorDetailsEl.style.display = 'block';
+                    }
 
                     let imageSrc = "";
                     if (score <= 25) {
