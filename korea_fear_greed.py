@@ -279,20 +279,34 @@ def get_scores():
     return int(final_score), scores
 
 def get_status(score):
-    if score <= 25: return "극심한 공포 : 무섭게 떨어지네요.\n모두가 도망칠 때, 오히려 기회가 숨어 있다는데?!"
-    elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
-    elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
-    elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
+    phase = ""
+    description = ""
+    if score <= 25: 
+        phase = "극심한 공포"
+        description = "무섭게 떨어지네요.\n모두가 도망칠 때, 오히려 기회가 숨어 있다는데?!"
+    elif score <= 45: 
+        phase = "공포"
+        description = "점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
+    elif score <= 55: 
+        phase = "중립"
+        description = "팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
+    elif score <= 75: 
+        phase = "탐욕"
+        description = "사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
+    else: 
+        phase = "극심한 탐욕"
+        description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
+    return {"phase": phase, "description": description}
+
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
-status = get_status(score)
+status_obj = get_status(score) # Changed to status_obj
 
 # 중괄호를 피하기 위해 dict() 생성자 사용
 data_to_save = dict(
     score=score,
-    status=status,
+    status=status_obj, # Save the object
     timestamp=firestore.SERVER_TIMESTAMP
 )
 
@@ -301,7 +315,7 @@ for i, s in enumerate(individual_scores):
     key_name = "indicator" + str(i + 1)
     data_to_save[key_name] = s
 
-print("저장 완료: %d점 (%s)" % (score, status))
+print("저장 완료: %d점 (%s)" % (score, status_obj["phase"])) # Print phase
 formatted_scores = [format(s, ".2f") for s in individual_scores]
 print("개별 지표: %s" % formatted_scores)
 
