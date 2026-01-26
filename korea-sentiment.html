@@ -1,35 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>국내 금융시장 심리 - 오늘 저녁 뭐 먹지?</title>
-    <meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
-    <link rel="canonical" href="https://anse-sample1.pages.dev/korea-sentiment.html">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>국내 금융시장 심리 - 오늘 저녁 뭐 먹지?</title> <!-- Keep original title -->
+<meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/> <!-- Keep original description -->
+<link rel="canonical" href="https://anse-sample1.pages.dev/korea-sentiment.html"/> <!-- Keep original canonical -->
 
-    <meta property="og:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?">
-    <meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://anse-sample1.pages.dev/korea-sentiment.html">
-    <meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png">
+<meta property="og:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?"/> <!-- Keep original og tags -->
+<meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://anse-sample1.pages.dev/korea-sentiment.html"/>
+<meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?">
-    <meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.">
-    <meta name="twitter:image" content="https://anse-sample1.pages.dev/images/neutral.png">
+<meta name="twitter:card" content="summary"/> <!-- Keep original twitter tags -->
+<meta name="twitter:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?"/>
+<meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta name="twitter:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="fa.ico">
+<!-- Existing styles and icons -->
+<link rel="stylesheet" href="style.css"/> <!-- Keep this for now, will remove later if Tailwind replaces all -->
+<link rel="icon" type="image/x-icon" href="fa.ico"/>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
-    <script>
+<!-- Tailwind CSS and Fonts from code.html -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3d84f5",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .gauge-gradient {
+            background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
+        }
+    </style>
+
+<!-- Existing Google Analytics and Clarity scripts -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
+<script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-C8QR98TVTB');
     </script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -37,7 +69,8 @@
         })(window, document, "clarity", "script", "v2qmp0i82b");
     </script>
 
-    <script type="application/ld+json">
+<!-- Existing ld+json -->
+<script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Article",
@@ -52,9 +85,10 @@
     }
     </script>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
+<!-- Existing Firebase scripts -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
       const firebaseConfig = {
         apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
         authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
@@ -70,141 +104,276 @@
     </script>
 </head>
 <body>
-    <header class="container">
-        <h1><a href="/">오늘 저녁 뭐 먹지?</a></h1>
-        <nav style="display:flex; justify-content: center;">
-            <a href="/insect.html">곤충상 테스트</a>
-            <a href="/about-insect.html">곤충상이란?</a>
-            <a href="/sentiment.html">미국 금융 시장 심리</a>
-            <a href="/korea-sentiment.html">한국 금융시장 심리</a>
-        </nav>
-    </header>
-    <p style="font-size:5px"> </p>
-    <main class="container">
-        <article>
-            <h2>한국 금융 시장 심리를 알아봅시다.</h2>
-            <p>K-Fear & Greed 지수는 한국 주식시장의 심리를 파악하기 위해 여러 지표를 종합한 지수입니다. 투자자들의 공포와 탐욕 수준을 측정하여 시장의 과열 또는 침체 상태를 가늠할 수 있습니다.</p>
-            
-            <div class="proverb-display">
-                <h2>오늘의 주식 시장 격언을 확인해 보세요.</h2>
-                <p id="proverb-text" style="font-style: italic; margin-top: 10px; min-height: 50px; display: flex; align-items: center; justify-content: center;"></p>
-                <button id="generate-proverb">새 격언 확인하기</button>
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">leaderboard</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">KOSPI Fear &amp; Greed</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-semibold text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="#">Market Analysis</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="#">Portfolio</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="#">Indices</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49699c] text-[20px]">search</span>
+<input class="h-10 w-64 rounded-lg border-none bg-[#f0f3f9] dark:bg-slate-800 pl-10 text-sm focus:ring-2 focus:ring-primary" placeholder="Search markets..." type="text"/>
+</div>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
+</div>
+</div>
+</header>
+<main class="mx-auto max-w-[1200px] px-6 py-8">
+<!-- Page Heading -->
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
+<p class="text-base text-[#49699c] dark:text-slate-400">Real-time KOSPI fear and greed analysis based on market momentum and volatility.</p>
+</div>
+<div class="flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+<span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                MARKET OPEN
             </div>
-            
-            <div class="sentiment-display">
-                <h2>오늘의 한국 금융 시장 심리를 확인해 보세요.</h2>
-                <button id="generate-sentiment2">심리 확인하기</button>
-
-                <div id="index-display" style="margin-top: 0; text-align: center; display:none">
-                    <div id="loader" class="loader"></div>
-                    <p id="score" style="font-size: 4em; font-weight: bold; line-height:1.4em; margin-bottom: 0; margin-top:20px; display: none;">-</p>
-                    <p id="last-updated-time" style="font-size: 0.8em; color: var(--text-color-dark); margin-top: 0; display: none;">업데이트 시간: -</p>
-                    <div id="indicator-details" style="display: none; margin-top: 15px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-                        <h4 style="margin: 0 0 10px 0;">지표별 점수</h4>
-                        <p id="indicator-list" style="font-size: 0.9em; line-height: 1.6;"></p>
-                        <p id="indicator-avg" style="font-size: 0.9em; font-weight: bold; margin-top: 10px;"></p>
-                    </div>
-                    <p id="status" style="font-size: 1.1em; font-style: italic; margin-top:20px; display: none;">데이터를 불러오는 중...</p>
-                    <p class="footer-note" style="font-size: 0.75em; color: var(--text-color-dark); margin-top: 20px;">본 데이터는 자정 기준이며 투자 참고용입니다. 실제 투자 결과에 대한 책임을 지지 않습니다.</p>
-                    <img id="sentiment-image" src="" alt="시장 심리 이미지" style="max-width: 100%; height: auto; margin:0 auto; display: none;">
-                </div>                 
-            </div>
-
-            <hr/>
-
-            <div class="fgi-explanation">
-                <h3>📊 한국형 공포-탐욕 지수 (KR-FGI) 산출 근거</h3>
-                <p>본 지표는 시장의 심리를 계량화하기 위해 다음 4가지 핵심 데이터를 종합하여 0~100점으로 산출합니다.</p>
-                <ul>
-                    <li>
-                        <h4>1. 시장의 모멘텀 (Market Momentum)</h4>
-                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> KOSPI 지수 vs 125일 이동평균선</p>
-                        <p style="font-size:0.85em;"><strong>설명:</strong> 주가가 125일 평균선보다 위에 있으면 시장이 에너지가 있는 상태(탐욕)로, 아래에 있으면 침체된 상태(공포)로 판단합니다.</p>
-                    </li>
-                    <li>
-                        <h4>2. 주가 강도 (Stock Price Strength)</h4>
-                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> 52주 신고가 및 신저가 종목 수</p>
-                        <p style="font-size:0.85em;"><strong>설명:</strong> 실제로 신고가를 경신하는 종목이 많은지(탐욕) 아니면 바닥을 치는 종목이 많은지(공포)를 분석합니다.</p>
-                    </li>
-                    <li>
-                        <h4>3. 시장의 폭 (Market Breadth)</h4>
-                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> ADR (Advance Decline Ratio)</p>
-                        <p style="font-size:0.85em;"><strong>설명:</strong> 상승/하락 종목 비율을 통해 시장 전체가 골고루 오르는지를 측정합니다.</p>
-                    </li>
-                    <li>
-                        <h4>4. 시장 변동성 (Market Volatility)</h4>
-                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> VKOSPI (코스피 200 변동성 지수)</p>
-                        <p style="font-size:0.85em;"><strong>설명:</strong> 한국판 VIX 지수입니다. 투자자들이 미래 시장을 불안해할수록 지수가 급등합니다.</p>
-                    </li>
-                    <!-- NEW INDICATOR 5 DESCRIPTION -->
-                    <li>
-                        <h4>5. 옵션 풋콜 비율 (Put-Call Ratio)</h4>
-                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> 풋옵션 거래량 / 콜옵션 거래량</p>
-                        <p style="font-size:0.85em;"><strong>설명:</strong> 투자자들이 풋옵션(하락 예상)과 콜옵션(상승 예상) 중 어느 쪽에 더 많은 자금을 거는지 보여줍니다. 비율이 높으면 시장에 대한 비관적인 시각(공포)이, 낮으면 낙관적인 시각(탐욕)이 강하다고 해석할 수 있습니다.</p>
-                    </li>
-                </ul>
-            </div>
-            <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
-                <strong>면책 조항 :</strong> 본 페이지에서 제공하는 금융 시장 심리 정보는 참고용이며, 어떠한 투자 조언으로도 해석될 수 없습니다. 투자 결정은 개인의 판단과 책임 하에 이루어져야 하며, 항상 전문가와 상의하시기 바랍니다. 시장의 변동성은 매우 크며, 과거의 성과가 미래의 결과를 보장하지 않습니다.
-            </p>
-        </article>
-    </main>
-
-    <div class="contact-section">
-        <h2>제휴 문의</h2>
-        <form action="https://formspree.io/f/mlggrwrk" method="POST">
-            <input type="text" name="name" placeholder="이름" required>
-            <input type="email" name="email" placeholder="이메일" required>
-            <textarea name="message" placeholder="내용" required></textarea>
-            <button type="submit">보내기</button>
-        </form>
-    </div>
-
-    <div id="disqus_thread"></div>
-
-    <footer class="container">
-        <p>Last updated: 2026년 1월 19일</p>
-        <p><a href="/privacy.html">개인정보처리방침</a></p>
-    </footer>
-
+</div>
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+<!-- Main Gauge Section -->
+<div class="lg:col-span-8">
+<div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
+<div class="mb-4 flex items-center justify-between">
+<h3 class="text-lg font-bold">Current Sentiment</h3>
+<span id="last-updated-time" class="text-sm font-medium text-[#49699c]">Last updated: 14:30 KST</span>
+</div>
+<div class="relative flex flex-col items-center py-10">
+<!-- Gauge visualization -->
+<div class="relative h-48 w-80 overflow-hidden rounded-t-full bg-slate-100 dark:bg-slate-800">
+<!-- Gauge segments colored with conic gradient simulated as a semicircular background -->
+<div class="absolute inset-0 gauge-gradient opacity-80" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+<div class="absolute bottom-0 left-1/2 h-32 w-64 -translate-x-1/2 rounded-t-full bg-white dark:bg-[#161f2c]"></div>
+<!-- Needle -->
+<div class="absolute bottom-0 left-1/2 h-40 w-1 -translate-x-1/2 origin-bottom transition-transform duration-1000 ease-out" id="gauge-needle" style="transform: translateX(-50%) rotate(54deg);">
+<div class="h-full w-full bg-slate-900 dark:bg-white rounded-full"></div>
+<div class="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-slate-900 dark:bg-white"></div>
+</div>
+</div>
+<div class="mt-6 flex flex-col items-center gap-1">
+<span id="score" class="text-5xl font-black text-primary">72</span>
+<span id="status" class="text-2xl font-bold tracking-tight text-primary">GREED</span>
+</div>
+<div class="mt-10 flex w-full justify-between px-4">
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-red-400"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Fear</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-yellow-400"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Neutral</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-primary"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Greed</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 30-Day Trend Chart -->
+<div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+<div class="mb-6 flex items-center justify-between">
+<h3 class="text-lg font-bold">30-Day Index History</h3>
+<div class="flex gap-2">
+<button class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">30D</button>
+<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">90D</button>
+<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">1Y</button>
+</div>
+</div>
+<div class="h-64 w-full">
+<svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+<!-- Area background -->
+<path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+<!-- Line -->
+<path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#3d84f5"></stop>
+<stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="mt-4 flex justify-between text-[11px] font-bold text-[#49699c]">
+<span>30 DAYS AGO</span>
+<span>20 DAYS AGO</span>
+<span>10 DAYS AGO</span>
+<span>TODAY</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Historical Comparisons & Side Metrics -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Comparison Cards -->
+<div class="grid grid-cols-1 gap-4">
+<div class="flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+<h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider">Historical Context</h4>
+<div class="flex items-center justify-between border-b border-[#f0f3f9] dark:border-slate-800 pb-4">
+<div>
+<p class="text-xs font-medium text-[#49699c]">Previous Close</p>
+<p class="text-lg font-bold">68 <span class="text-sm font-normal text-[#49699c]">(Greed)</span></p>
+</div>
+<div class="flex items-center text-emerald-500">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+<span class="text-sm font-bold ml-1">+4</span>
+</div>
+</div>
+<div class="flex items-center justify-between border-b border-[#f0f3f9] dark:border-slate-800 pb-4">
+<div>
+<p class="text-xs font-medium text-[#49699c]">1 Week Ago</p>
+<p class="text-lg font-bold">52 <span class="text-sm font-normal text-[#49699c]">(Neutral)</span></p>
+</div>
+<div class="flex items-center text-emerald-500">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+<span class="text-sm font-bold ml-1">+20</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-medium text-[#49699c]">1 Month Ago</p>
+<p class="text-lg font-bold">24 <span class="text-sm font-normal text-[#49699c]">(Fear)</span></p>
+</div>
+<div class="flex items-center text-emerald-500">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+<span class="text-sm font-bold ml-1">+48</span>
+</div>
+</div>
+</div>
+<!-- Market Indicators section -->
+<div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+<h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
+<div id="indicator-details" class="space-y-4">
+    <!-- Indicators will be injected here by JavaScript -->
+    <p id="indicator-list" class="text-sm text-[#49699c] dark:text-slate-400"></p>
+    <p id="indicator-avg" class="text-sm font-bold text-[#49699c] dark:text-slate-400"></p>
+</div>
+</div>
+<!-- Market Indices Quick View -->
+<div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-primary text-white p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-sm font-bold uppercase tracking-wider">KOSPI 200</h4>
+<span class="material-symbols-outlined">insights</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-3xl font-black">2,654.32</p>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded">+1.24%</span>
+<span class="text-sm text-white/80">▲ 32.50</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Data Source -->
+<footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
+<div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium">Data provided by KRX (Korea Exchange) and KOFIA.</p>
+<p class="max-w-md text-xs leading-relaxed">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+                        How it's calculated
+                    </button>
+<button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export Data
+                    </button>
+</div>
+</div>
+</footer>
+</main>
     <script>
-        const proverbs = [
-            "“시장은 단기적으로 투표기계지만 장기적으로 저울이다.”\n→ 벤저민 그레이엄",
-            "“잃지 않는 것이 버는 것보다 중요하다.”\n→ 워런 버핏",
-            "“공포 속에서 사고 탐욕 속에서 팔아라.”\n→ 월가 격언",
-            "“추세는 당신의 친구다.”\n→ 제시 리버모어",
-            "“이번엔 다르다는 말이 가장 위험하다.”\n→ 존 템플턴",
-            "“기다리는 것도 포지션이다.”\n→ 월가 격언",
-            "“칼 떨어질 때 잡지 마라.”\n→ 월가 격언",
-            "“소문에 사고 뉴스에 팔아라.”\n→ 월가 격언"
-        ];
+      // Firebase initialization (from old head)
+      const firebaseConfig = {
+        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
+        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
+        projectId: "anse-sample1-46739525-2d1c0",
+        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
+        messagingSenderId: "164266713411",
+        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
 
-        function displayRandomProverb() {
-            const proverbText = document.getElementById('proverb-text');
-            const randomIndex = Math.floor(Math.random() * proverbs.length);
-            proverbText.textContent = proverbs[randomIndex];
+        // Define indicator names
+        const indicatorNames = {
+            1: "시장의 모멘텀",
+            2: "주가 강도",
+            3: "시장의 폭",
+            4: "시장 변동성",
+            5: "옵션 풋콜 비율"
+        };
+
+        // Function to update gauge needle rotation and sentiment text/color
+        function updateGauge(score) {
+            const needle = document.getElementById('gauge-needle');
+            const sentimentText = document.getElementById('status');
+            const scoreDisplay = document.getElementById('score');
+
+            // Map score 0-100 to rotation 0-180 degrees
+            // Gauge is semi-circular, from left to right (0 to 180 degrees)
+            const rotationDegree = score * 1.8; // 180 / 100 = 1.8
+            needle.style.transform = `translateX(-50%) rotate(${rotationDegree}deg)`;
+
+            // Update sentiment text and color
+            let statusMessage = "";
+            let textColorClass = "";
+
+            if (score <= 25) {
+                statusMessage = "EXTREME FEAR"; textColorClass = "text-red-500";
+            } else if (score <= 45) {
+                statusMessage = "FEAR"; textColorClass = "text-orange-500";
+            } else if (score <= 55) {
+                statusMessage = "NEUTRAL"; textColorClass = "text-yellow-500";
+            } else if (score <= 75) {
+                statusMessage = "GREED"; textColorClass = "text-emerald-500";
+            } else {
+                statusMessage = "EXTREME GREED"; textColorClass = "text-blue-500"; // Changed from 'text-primary' to an explicit Tailwind class for better dark mode compatibility. Primary is usually blue-500
+            }
+            
+            sentimentText.textContent = statusMessage;
+            scoreDisplay.textContent = score;
+
+            // Remove previous color classes and add new one
+            sentimentText.className = sentimentText.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+            sentimentText.classList.add(textColorClass);
+            scoreDisplay.className = scoreDisplay.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+            scoreDisplay.classList.add(textColorClass); // Apply color to score as well
         }
 
         async function fetchLatestIndex() {
-            const loader = document.getElementById('loader');
             const scoreEl = document.getElementById('score');
             const statusEl = document.getElementById('status');
-            const sentimentImage = document.getElementById('sentiment-image');
             const lastUpdatedTimeEl = document.getElementById('last-updated-time');
-            const indicatorDetailsEl = document.getElementById('indicator-details');
-            const indicatorListEl = document.getElementById('indicator-list');
-            const indicatorAvgEl = document.getElementById('indicator-avg');
-
-            // Define indicator names
-            const indicatorNames = {
-                1: "시장의 모멘텀",
-                2: "주가 강도",
-                3: "시장의 폭",
-                4: "시장 변동성",
-                5: "옵션 풋콜 비율"
-            };
-
+            const indicatorDetailsEl = document.getElementById('indicator-details'); // New ID
+            const indicatorListEl = document.getElementById('indicator-list'); // New ID
+            const indicatorAvgEl = document.getElementById('indicator-avg'); // New ID
+            
             try {
+                // For loader, assuming a basic text message for now as code.html doesn't have a direct loader element
+                statusEl.textContent = "데이터를 불러오는 중..."; 
+                statusEl.style.display = 'block'; // Show status text for loading
+
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
                 const querySnapshot = await q.get();
 
@@ -214,18 +383,17 @@
                     const timestamp = doc.timestamp.toDate(); // Convert Firestore Timestamp to JavaScript Date
                     const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
                     
-                    scoreEl.textContent = score;
-                    statusEl.textContent = doc.status;
-                    lastUpdatedTimeEl.textContent = '업데이트 시간: ' + formattedTime;
+                    // Update main score, sentiment, and gauge
+                    updateGauge(score);
+                    lastUpdatedTimeEl.textContent = `Last updated: ${formattedTime}`; // Use template literal
 
                     const indicators = [];
-                    // Dynamically add indicators based on available data
-                    for (let i = 1; i <= 5; i++) { // Loop up to 5 indicators
+                    for (let i = 1; i <= 5; i++) {
                         const indicatorKey = `indicator${i}`;
                         if (doc[indicatorKey] !== undefined) {
                             indicators.push({
                                 id: i,
-                                name: indicatorNames[i], // Add name to item
+                                name: indicatorNames[i],
                                 value: doc[indicatorKey]
                             });
                         }
@@ -247,65 +415,27 @@
                         indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
 
                         indicatorDetailsEl.style.display = 'block';
-                    }
-
-                    let imageSrc = "";
-                    if (score <= 25) {
-                        scoreEl.style.color = '#3498db'; imageSrc = "images/extremefear.png";
-                    } else if (score <= 45) {
-                        scoreEl.style.color = '#85c1e9'; imageSrc = "images/fear.png";
-                    } else if (score <= 55) {
-                        scoreEl.style.color = '#95a5a6'; imageSrc = "images/neutral.png";
-                    } else if (score <= 75) {
-                        scoreEl.style.color = '#f1948a'; imageSrc = "images/greed.png";
                     } else {
-                        scoreEl.style.color = '#e74c3c'; imageSrc = "images/extremegreed.png";
+                        indicatorDetailsEl.style.display = 'none'; // Hide if no indicators
                     }
 
-                    if (imageSrc) {
-                        sentimentImage.src = imageSrc;
-                        sentimentImage.style.display = 'block';
-                    }
                 } else {
                     statusEl.textContent = "업데이트된 데이터가 없습니다.";
+                    if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
                 }
             } catch (error) {
-                console.error("Firebase Error: ", error);
+                console.error("Firebase 오류: ", error);
                 statusEl.textContent = "연결 오류가 발생했습니다.";
+                if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
             } finally {
-                if(loader) loader.style.display = 'none';
-                if(scoreEl) scoreEl.style.display = 'block';
-                if(statusEl) statusEl.style.display = 'block';
-                if(lastUpdatedTimeEl) lastUpdatedTimeEl.style.display = 'block';
+                // scoreEl.style.display = 'block'; // Always visible in new design
+                // statusEl.style.display = 'block'; // Always visible in new design
+                lastUpdatedTimeEl.style.display = 'block';
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            displayRandomProverb();
-            // fetchLatestIndex(); Removed to be triggered by button click
+            fetchLatestIndex(); // Call on page load
         });
-        document.getElementById('generate-proverb').addEventListener('click', displayRandomProverb);
-        document.getElementById('generate-sentiment2').addEventListener('click', () => {
-            const indexDisplay = document.getElementById('index-display');
-            if (indexDisplay) {
-                indexDisplay.style.display = 'block'; // Make the index-display div visible
-            }
-            fetchLatestIndex(); // Call the function to fetch and display sentiment data
-        });
-
-    </script>
-
-    <script>
-        var disqus_config = function () {
-            this.page.url = 'https://anse-sample1.pages.dev/korea-sentiment.html';
-            this.page.identifier = 'korea-sentiment';
-        };
-        (function() {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://ansebooktv.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
     </script>
 </body>
-</html>
