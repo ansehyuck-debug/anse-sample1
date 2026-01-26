@@ -136,7 +136,12 @@
                         <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> VKOSPI (코스피 200 변동성 지수)</p>
                         <p style="font-size:0.85em;"><strong>설명:</strong> 한국판 VIX 지수입니다. 투자자들이 미래 시장을 불안해할수록 지수가 급등합니다.</p>
                     </li>
-
+                    <!-- NEW INDICATOR 5 DESCRIPTION -->
+                    <li>
+                        <h4>5. 옵션 풋콜 비율 (Put-Call Ratio)</h4>
+                        <p style="font-size:0.85em; line-height:0.5em;"><strong>참고 지표:</strong> 풋옵션 거래량 / 콜옵션 거래량</p>
+                        <p style="font-size:0.85em;"><strong>설명:</strong> 투자자들이 풋옵션(하락 예상)과 콜옵션(상승 예상) 중 어느 쪽에 더 많은 자금을 거는지 보여줍니다. 비율이 높으면 시장에 대한 비관적인 시각(공포)이, 낮으면 낙관적인 시각(탐욕)이 강하다고 해석할 수 있습니다.</p>
+                    </li>
                 </ul>
             </div>
             <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-color-dark);">
@@ -204,22 +209,33 @@
                     statusEl.textContent = doc.status;
                     lastUpdatedTimeEl.textContent = '업데이트 시간: ' + formattedTime;
 
-                    const indicators = [];
-                    if (doc.indicator1) indicators.push(doc.indicator1);
-                    if (doc.indicator2) indicators.push(doc.indicator2);
-                    if (doc.indicator3) indicators.push(doc.indicator3);
-                    if (doc.indicator4) indicators.push(doc.indicator4);
-
-                    if (indicators.length > 0) {
-                        const indicatorTexts = indicators.map((val, i) => `지표 ${i+1}: ${val.toFixed(2)}`);
-                        indicatorListEl.innerHTML = indicatorTexts.join('<br>');
-
-                        const avg = indicators.reduce((a, b) => a + b, 0) / indicators.length;
-                        indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
-
-                        indicatorDetailsEl.style.display = 'block';
-                    }
-
+                                const indicators = [];
+                                // Dynamically add indicators based on available data
+                                for (let i = 1; i <= 5; i++) { // Loop up to 5 indicators
+                                    const indicatorKey = `indicator${i}`;
+                                    if (doc[indicatorKey] !== undefined) {
+                                        indicators.push({
+                                            id: i,
+                                            value: doc[indicatorKey]
+                                        });
+                                    }
+                                }
+                    
+                                if (indicators.length > 0) {
+                                    const indicatorTexts = indicators.map(item => {
+                                        if (item.value === 50) {
+                                            return `지표 ${item.id}: 50 (수집 준비중, 현재는 평균값)`;
+                                        } else {
+                                            return `지표 ${item.id}: ${item.value.toFixed(2)}`;
+                                        }
+                                    });
+                                    indicatorListEl.innerHTML = indicatorTexts.join('<br>');
+                    
+                                    const avg = indicators.reduce((a, b) => a + b.value, 0) / indicators.length;
+                                    indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
+                    
+                                    indicatorDetailsEl.style.display = 'block';
+                                }
 
                     let imageSrc = "";
                     if (score <= 25) {
