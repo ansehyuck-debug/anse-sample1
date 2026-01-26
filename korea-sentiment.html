@@ -85,23 +85,7 @@
     }
     </script>
 
-<!-- Existing Firebase scripts -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
-        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
-        projectId: "anse-sample1-46739525-2d1c0",
-        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
-        messagingSenderId: "164266713411",
-        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
-      };
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      const db = firebase.firestore();
-    </script>
+
 </head>
 <body>
 <!-- Top Navigation Bar -->
@@ -112,7 +96,7 @@
 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
 <span class="material-symbols-outlined text-[20px]">leaderboard</span>
 </div>
-<h2 class="text-lg font-bold tracking-tight">KOSPI Fear &amp; Greed</h2>
+<h2 class="text-lg font-bold tracking-tight dark:text-white">KOSPI Fear &amp; Greed</h2>
 </div>
 <nav class="hidden md:flex items-center gap-6">
 <a class="text-sm font-semibold text-primary" href="/korea-sentiment.html">한국 금융시장 심리</a>
@@ -123,10 +107,7 @@
 </nav>
 </div>
 <div class="flex items-center gap-4">
-<div class="relative hidden sm:block">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49699c] text-[20px]">search</span>
-<input class="h-10 w-64 rounded-lg border-none bg-[#f0f3f9] dark:bg-slate-800 pl-10 text-sm focus:ring-2 focus:ring-primary" placeholder="Search markets..." type="text"/>
-</div>
+
 <button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">notifications</span>
 </button>
@@ -228,41 +209,46 @@
 <!-- Comparison Cards -->
 <div class="grid grid-cols-1 gap-4">
 <div class="flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-<h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider">Historical Context</h4>
-<div class="flex items-center justify-between border-b border-[#f0f3f9] dark:border-slate-800 pb-4">
-<div>
-<p class="text-xs font-medium text-[#49699c]">Previous Close</p>
-<p class="text-lg font-bold">68 <span class="text-sm font-normal text-[#49699c]">(Greed)</span></p>
-</div>
-<div class="flex items-center text-emerald-500">
-<span class="material-symbols-outlined text-[20px]">trending_up</span>
-<span class="text-sm font-bold ml-1">+4</span>
-</div>
-</div>
-<div class="flex items-center justify-between border-b border-[#f0f3f9] dark:border-slate-800 pb-4">
-<div>
-<p class="text-xs font-medium text-[#49699c]">1 Week Ago</p>
-<p class="text-lg font-bold">52 <span class="text-sm font-normal text-[#49699c]">(Neutral)</span></p>
-</div>
-<div class="flex items-center text-emerald-500">
-<span class="material-symbols-outlined text-[20px]">trending_up</span>
-<span class="text-sm font-bold ml-1">+20</span>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<div>
-<p class="text-xs font-medium text-[#49699c]">1 Month Ago</p>
-<p class="text-lg font-bold">24 <span class="text-sm font-normal text-[#49699c]">(Fear)</span></p>
-</div>
-<div class="flex items-center text-emerald-500">
-<span class="material-symbols-outlined text-[20px]">trending_up</span>
-<span class="text-sm font-bold ml-1">+48</span>
-</div>
-</div>
+    <div class="proverb-display">
+        <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4">오늘의 주식 시장 격언</h4>
+        <p id="proverb-text" class="italic text-base text-gray-700 dark:text-gray-300 min-h-[50px] flex items-center justify-center text-center"></p>
+        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors">새 격언 확인하기</button>
+    </div>
 </div>
 <!-- Market Indicators section -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
 <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
+<div class="space-y-4">
+    <div class="flex flex-col gap-1">
+    <div class="flex justify-between text-xs font-bold">
+    <span>Stock Price Strength</span>
+    <span class="text-primary">Very Strong</span>
+    </div>
+    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+    <div class="h-full w-[85%] rounded-full bg-primary"></div>
+    </div>
+    </div>
+    <div class="flex flex-col gap-1">
+    <div class="flex justify-between text-xs font-bold">
+    <span>Market Volatility</span>
+    <span class="text-emerald-500">Low</span>
+    </div>
+    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+    <div class="h-full w-[25%] rounded-full bg-emerald-500"></div>
+    </div>
+    </div>
+    <div class="flex flex-col gap-1">
+    <div class="flex justify-between text-xs font-bold">
+    <span>Safe Haven Demand</span>
+    <span class="text-red-400">Low</span>
+    </div>
+    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
 <div id="indicator-details" class="space-y-4">
     <!-- Indicators will be injected here by JavaScript -->
     <p id="indicator-list" class="text-sm text-[#49699c] dark:text-slate-400"></p>
@@ -307,60 +293,7 @@
 </footer>
 </main>
     <script>
-      // Firebase initialization (from old head)
-      const firebaseConfig = {
-        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
-        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
-        projectId: "anse-sample1-46739525-2d1c0",
-        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
-        messagingSenderId: "164266713411",
-        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
-      };
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      const db = firebase.firestore();
-
-        // Define indicator names
-        const indicatorNames = {
-            1: "시장의 모멘텀",
-            2: "주가 강도",
-            3: "시장의 폭",
-            4: "시장 변동성",
-            5: "옵션 풋콜 비율"
-        };
-
-        // Function to update gauge needle rotation and sentiment text/color
-        function updateGauge(score) {
-            const needle = document.getElementById('gauge-needle');
-            const scoreDisplay = document.getElementById('score');
-            const sentimentText = document.getElementById('status'); // Ref to sentiment text for color update
-
-            // Map score 0-100 to rotation 0-180 degrees
-            const rotationDegree = score * 1.8; // 180 / 100 = 1.8
-            needle.style.transform = `translateX(-50%) rotate(${rotationDegree}deg)`;
-
-            scoreDisplay.textContent = score;
-
-            // Determine color based on score
-            let textColorClass = "";
-            if (score <= 25) { textColorClass = "text-red-500"; }
-            else if (score <= 45) { textColorClass = "text-orange-500"; }
-            else if (score <= 55) { textColorClass = "text-yellow-500"; }
-            else if (score <= 75) { textColorClass = "text-emerald-500"; }
-            else { textColorClass = "text-blue-500"; }
-            
-            // Apply color to score display
-            scoreDisplay.className = scoreDisplay.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
-            scoreDisplay.classList.add(textColorClass);
-            
-            // Apply color to sentiment text
-            sentimentText.className = sentimentText.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
-            sentimentText.classList.add(textColorClass);
-        }
-
-    <script>
-      // Firebase initialization (from old head)
+      // Firebase initialization
       const firebaseConfig = {
         apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
         authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
@@ -448,7 +381,7 @@
                     const doc = querySnapshot.docs[0].data();
                     const score = doc.score;
                     const statusFromFirestore = doc.status; // This will be the object
-                    const timestamp = doc.toDate(); // Convert Firestore Timestamp to JavaScript Date
+                    const timestamp = doc.timestamp.toDate(); // Corrected line
                     const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
                     
                     // Update main score, sentiment, and gauge
@@ -506,7 +439,7 @@
                         indexHistoryChartEl.style.display = 'none';
                     }
 
-                    // Fetch KOSPI 200 data from Yahoo Finance (client-side, might be flaky)
+                    // Fetch KOSPI 200 data from Yahoo Finance (client-client, might be flaky)
                     try {
                         const response = await fetch('https://query1.finance.yahoo.com/v7/finance/download/^KS200?period1=1609459200&period2=' + Math.floor(Date.now() / 1000) + '&interval=1d&events=history');
                         const text = await response.text();
@@ -595,4 +528,77 @@
                 lastUpdatedTimeEl.style.display = 'block';
             }
         }
+
+        const proverbs = [
+        "“시장은 단기적으로 투표기계지만 장기적으로 저울이다.”\n→ 벤저민 그레이엄 (Benjamin Graham)",
+        "“잃지 않는 것이 버는 것보다 중요하다.”\n→ 워런 버핏 (Warren Buffett)",
+        "“첫 번째 규칙은 돈을 잃지 않는 것이다. 두 번째 규칙은 첫 번째 규칙을 잊지 않는 것이다.”\n→ 워런 버핏",
+        "“훌륭한 기업을 적당한 가격에 사라.”\n→ 워런 버핏 / 찰리 멍거",
+        "“위험은 자신이 무엇을 하고 있는지 모를 때 생긴다.”\n→ 워런 버핏",
+        "“공포 속에서 사고 탐욕 속에서 팔아라.”\n→ 워런 버핏 / 월가 격언",
+        "“시장은 인내심 없는 사람의 돈을 인내심 있는 사람에게서 옮겨준다.”\n→ 워런 버핏",
+        "“가격은 지불하는 것이고 가치는 얻는 것이다.”\n→ 워런 버핏",
+        "“이해하지 못하는 사업에는 투자하지 마라.”\n→ 워런 버핏",
+        "“10년 이상 보유할 생각이 없다면 10분도 보유하지 마라.”\n→ 워런 버핏",
+        "“추세는 당신의 친구다.”\n→ 제시 리버모어 (Jesse Livermore)",
+        "“손실은 짧게, 이익은 길게 가져가라.”\n→ 제시 리버모어",
+        "“시장은 항상 옳다.”\n→ 제시 리버모어 (의미상 격언)",
+        "“강세장은 비관 속에서 태어나 회의 속에서 자라고 낙관 속에서 성숙하며 도취 속에서 죽는다.”\n→ 존 템플턴 (John Templeton)",
+        "“이번엔 다르다는 말이 가장 위험하다.”\n→ 존 템플턴",
+        "“기다리는 것도 포지션이다.”\n→ 월가 격언",
+        "“현금도 투자다.”\n→ 월가 격언",
+        "“절대 바닥에서 못 사고 꼭대기에서 못 판다.”\n→ 월가 격언",
+        "“칼 떨어질 때 잡지 마라.”\n→ 월가 격언",
+        "“소문에 사고 뉴스에 팔아라.”\n→ 월가 격언",
+        "“모두가 같은 방향을 볼 때 위험은 커진다.”\n→ 월가 격언",
+        "“시장은 당신의 감정을 시험한다.”\n→ 월가 격언",
+        "“확신이 클수록 조심하라.”\n→ 월가 격언",
+        "“거래가 잦을수록 수익률은 낮아진다.”\n→ 브래드 바버 & 테런스 오딘 (행동재무학 연구)",
+        "“시장에 머무는 시간이 시장을 맞추는 것보다 중요하다.”\n→ 투자 격언 (Bogle 계열 인용)",
+        "“복리는 세계 8대 불가사의다.”\n→ 알버트 아인슈타인 (투자 격언으로 인용)",
+        "“시간은 좋은 기업의 편이다.”\n→ 워런 버핏",
+        "“숫자를 보지 않고 주식을 사는 것은 계기판 없는 비행기를 타는 것과 같다.”\n→ 피터 린치 (Peter Lynch)",
+        "“스토리가 아니라 실적을 사라.”\n→ 피터 린치 (의미 요약)",
+        "“가장 위험한 시점은 모두가 안심할 때다.”\n→ 하워드 막스 (Howard Marks)",
+        "“리스크는 변동성이 아니라 영구적 자본 손실이다.”\n→ 하워드 막스",
+        "“좋은 투자란 나쁜 시나리오에서도 버티는 것이다.”\n→ 하워드 막스",
+        "“높은 수익은 높은 불편함에서 나온다.”\n→ 하워드 막스",
+        "“시장은 과잉 반응한다.”\n→ 로버트 실러 (Robert Shiller)",
+        "“분산투자는 무지를 인정하는 행위다.”\n→ 워런 버핏",
+        "“가장 좋은 매수 시점은 모두가 팔고 싶을 때다.”\n→ 월가 격언",
+        "“싸게 사는 것이 수익의 절반이다.”\n→ 벤저민 그레이엄",
+        "“시장은 언제나 과도하게 낙관적이거나 비관적이다.”\n→ 벤저민 그레이엄",
+        "“손절은 선택이 아니라 생존이다.”\n→ 트레이더 격언",
+        "“포트폴리오는 수익이 아니라 리스크로 관리하라.”\n→ 레이 달리오 (Ray Dalio)",
+        "“미래를 예측하지 말고 대비하라.”\n→ 레이 달리오",
+        "“좋은 투자자는 예측보다 원칙에 의존한다.”\n→ 레이 달리오",
+        "“시장은 합리적이지 않을 수 있다, 하지만 오래 비합리적이진 않다.”\n→ 존 메이너드 케인즈 (John M. Keynes)",
+        "“시장은 당신이 파산하기 전에 비이성적으로 남아 있을 수 있다.”\n→ 존 메이너드 케인즈",
+        "“레버리지는 실수를 치명적으로 만든다.”\n→ 월가 격언",
+        "“수익은 인내에서 나오고 손실은 조급함에서 나온다.”\n→ 월가 격언",
+        "“완벽한 타이밍은 없다.”\n→ 투자 격언",
+        "“하락장은 나쁜 기업을 드러낸다.”\n→ 월가 격언",
+        "“좋은 기업은 위기에서 더 강해진다.”\n→ 워런 버핏 (의미 인용)",
+        "“투자에서 가장 중요한 단어는 ‘영원히’가 아니라 ‘충분히 오래’다.”\n→ 하워드 막스 (의미 인용)"
+        ];
+
+        function displayRandomProverb() {
+            const proverbText = document.getElementById('proverb-text');
+            if (proverbText) { // Check if element exists before updating
+                const randomIndex = Math.floor(Math.random() * proverbs.length);
+                proverbText.textContent = proverbs[randomIndex];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchLatestIndex(); // Call fetchLatestIndex first
+            displayRandomProverb(); // Then display proverb
+            const generateProverbButton = document.getElementById('generate-proverb');
+            if (generateProverbButton) {
+                generateProverbButton.addEventListener('click', displayRandomProverb); // Set up button listener
+            }
+        });
+    </script>
+
+</body>
 </html>

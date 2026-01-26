@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,17 +18,48 @@
     <meta name="twitter:description" content="금융 시장의 심리를 알아보고 투자 결정에 참고하세요.">
     <meta name="twitter:image" content="https://anse-sample1.pages.dev/favicon.svg">
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="fa.ico">
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Styles from korea-sentiment.html -->
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
 
-  gtag('config', 'G-C8QR98TVTB');
-</script>
+    <!-- Tailwind CSS and Fonts from korea-sentiment.html -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#3d84f5",
+                            "background-light": "#f5f7f8",
+                            "background-dark": "#101722",
+                        },
+                        fontFamily: {
+                            "display": ["Inter", "sans-serif"]
+                        },
+                        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    },
+                },
+            }
+        </script>
+    <style>
+            body { font-family: 'Inter', sans-serif; }
+            .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24; }
+            .gauge-gradient {
+                background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
+            }
+        </style>
+    <!-- Google Analytics and Clarity scripts from korea-sentiment.html -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-C8QR98TVTB');
+    </script>
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -34,6 +67,7 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "v2qmp0i82b");
     </script>
+    <!-- LD+JSON script from sentiment.html -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -74,16 +108,33 @@
     </script>
 </head>
 <body>
-    <header class="container">
-        <h1><a href="/">오늘 저녁 뭐 먹지?</a></h1>
-        <nav style="display:flex; justify-content: center;"">
-            <a href="/insect.html">곤충상 테스트</a>
-            <a href="/about-insect.html">곤충상이란?</a>
-            <a href="/sentiment.html">미국 금융 시장 심리</a>
-            <a href="/korea-sentiment.html">한국 금융시장 심리</a>
-        </nav>
-    </header>
-    <p style="font-size:5px"> </p>
+<!-- Header from korea-sentiment.html, adjusted for sentiment.html -->
+<header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">미국 금융 시장 심리</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">오늘 저녁 뭐 먹지?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/about-insect.html">곤충상이란?</a>
+<a class="text-sm font-semibold text-primary" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+
+<button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
+</div>
+</div>
+</header>
     <main class="container">
         <article>
             <h2>금융 시장 심리를 알아봅시다.</h2>
@@ -139,11 +190,21 @@
 
     <div id="disqus_thread"></div>
 
-    <footer class="container">
-        <p>Last updated: 2026년 1월 17일</p>
-        <p><a href="/privacy.html">개인정보처리방침</a></p>
-    </footer>
-
+<!-- Footer from korea-sentiment.html, adjusted for sentiment.html -->
+<footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
+<div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium">금융 시장의 심리를 알아보고 투자 결정에 참고하세요.</p>
+<p class="max-w-md text-xs leading-relaxed">본 페이지에서 제공하는 금융 시장 심리 정보는 참고용이며, 어떠한 투자 조언으로도 해석될 수 없습니다.</p>
+</div>
+<div class="flex gap-4">
+<a href="/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+<span class="material-symbols-outlined text-[18px]">policy</span>
+                        개인정보처리방침
+                    </a>
+</div>
+</div>
+</footer>
 
     <script>
         const proverbs = [

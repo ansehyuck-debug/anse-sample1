@@ -1,181 +1,135 @@
 :root {
-    --primary-green: #4CAF50; /* Green */
-    --light-green: #81C784; /* Light Green */
-    --dark-green: #2E7D32; /* Dark Green */
-    --primary-blue: #2196F3; /* Blue */
-    --light-blue: #64B5F6; /* Light Blue */
-    --dark-blue: #1976D2; /* Dark Blue */
-
-    --background-color-light: linear-gradient(135deg, var(--background-light-start), var(--background-light-end));
-    --background-light-start: #E8F5E9; /* Very light green */
-    --background-light-end: #E3F2FD; /* Very light blue */
-
-    --container-background-light: #FFFFFF; /* White for containers */
-    --text-color-dark: #212121; /* Dark text */
-    --text-color-light: #F1F8E9; /* Light text for dark backgrounds */
-    --button-text-color: white;
-    --input-border-color: #ccc;
-    --table-border-color: #ddd;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-green: #3d84f5; /* Primary blue from korea-sentiment.html */
+    --light-green: #64B5F6; /* Light Blue, from a sample, not from anse-sample1 */
+    --dark-green: #1976D2; /* Dark Blue, from a sample, not from anse-sample1 */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* General shadow */
+    --prediction-bar-background: #e0e0e0; /* Default light background for prediction bar */
+    --text-color-dark: #212121; /* Dark text for light mode */
+    --background-light-start: #f5f7f8; /* Background light start for light mode */
 }
 
+/* Dark mode variables for theming, overriding root */
 body.dark-mode {
-    --background-color-dark: linear-gradient(135deg, #121212, #1a2a3a);
-    --background-light-start: #121212;
-    --background-light-end: #1a2a3a;
-    --container-background-light: #1e1e1e;
-    --text-color-dark: #e0e0e0;
-    
-    --primary-green: #2E7D32;
-    --light-green: #4CAF50;
-    --dark-green: #1B5E20;
-    --primary-blue: #1976D2;
-    --light-blue: #2196F3;
-    --dark-blue: #0D47A1;
-
-    --button-background-start: var(--primary-green);
-    --button-background-end: var(--primary-blue);
-    --button-background-hover-start: var(--dark-green);
-    --button-background-hover-end: var(--dark-blue);
-    
-    --input-border-color: #444;
-    --table-border-color: #444;
-    --shadow-color: rgba(255, 255, 255, 0.1);
+    --text-color-dark: #e0e0e0; /* Light text for dark mode */
+    --background-light-start: #101722; /* Background light start for dark mode */
+    --shadow-color: rgba(255, 255, 255, 0.1); /* Dark mode shadow */
+    --prediction-bar-background: #444; /* Dark background for prediction bar */
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: var(--background-color-light); /* Apply gradient */
-    color: var(--text-color-dark);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
     margin: 0;
-    padding: 20px 0;
-    transition: background-color 0.3s, color 0.3s;
-    line-height: 1.6;
-}
-
-body.dark-mode {
-    background: var(--background-color-dark);
-}
-
-.container {
-    position: relative;
-    text-align: center;
-    background-color: var(--container-background-light);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px var(--shadow-color);
-    transition: background-color 0.3s;
-    width: 90%;
-    max-width: 700px;
-    margin-bottom: 20px;
-}
-
-header.container {
-    padding-bottom: 20px;
-    margin-bottom: 0;
-}
-
-header h1 {
-    font-size: 2.5em;
-    color: var(--primary-green);
-    margin-bottom: 15px;
-}
-
-header h1 a {
-    text-decoration: none;
-    color: var(--primary-green);
-    transition: color 0.3s;
-}
-
-header h1 a:hover {
-    color: var(--primary-blue);
-}
-
-nav {
-    margin-top: 15px;
-}
-
-nav a {
-    color: var(--dark-green);
-    text-decoration: none;
-    font-weight: bold;
-    margin: 0 15px;
-    transition: color 0.3s;
-}
-
-nav a:hover {
-    color: var(--dark-blue);
-}
-
-.theme-switcher-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-#theme-switcher {
-    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
-    color: var(--button-text-color);
-    border: none;
-    padding: 8px 12px;
-    font-size: 0.9em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#theme-switcher:hover {
-    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
-    transform: translateY(-1px);
-}
-
-h1, h2, h3, p, th, td, li, span {
+    padding: 0;
+    /* Set a default background color. This will be overridden by Tailwind's bg-white/80 or bg-background-dark/80 */
+    background-color: var(--background-light-start); 
     color: var(--text-color-dark);
 }
 
-h2 {
-    font-size: 2em;
-    color: var(--dark-green);
-    margin-top: 30px;
-    margin-bottom: 20px;
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
 }
 
-h3 {
-    font-size: 1.5em;
-    color: var(--primary-green);
-    margin-top: 25px;
-    margin-bottom: 15px;
+.gauge-gradient {
+    background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
 }
 
-p, li {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-ul li {
+/* Styles specific to insect.html */
+.image-preview-container {
+    max-width: 100%;
+    width: 20em;
+    height: 20em;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: var(--background-light-start);
-    border-left: 5px solid var(--primary-green);
-    margin-bottom: 10px;
-    padding: 10px 15px;
+}
+.image-preview-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.prediction-graph {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 500px;
     text-align: left;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px var(--shadow-color);
+    margin-left: auto;
+    margin-right: auto;
+}
+.prediction-bar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: var(--text-color-dark);
+}
+.prediction-bar-label {
+    flex-basis: 120px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+.prediction-bar {
+    flex-grow: 1;
+    height: 20px;
+    background-color: var(--prediction-bar-background);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.prediction-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--light-green), var(--primary-green));
+    transition: width 0.5s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 5px;
+    color: var(--text-color-dark);
+    font-size: 0.8em;
+    box-sizing: border-box;
+}
+.insect-features {
+    margin-top: 30px;
+    text-align: left;
+    padding: 20px;
+    background-color: var(--background-light-start);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+.insect-features h3 {
+    text-align: center;
+}
+.insect-features p {
+    font-size: 1em;
+    line-height: 1.8;
 }
 
-/* Buttons General */
+/* Additional styles to make global containers and texts dark mode compliant by default */
+
+
+h1, p, th, td, li, span {
+    color: var(--text-color-dark);
+}
+
+
+a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
 button {
     background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
-    color: var(--button-text-color);
+    color: white; /* Changed to white for consistency */
     border: none;
     padding: 15px 30px;
     font-size: 1.1em;
@@ -190,168 +144,12 @@ button:hover {
     background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
     transform: translateY(-2px);
 }
-
 /* Specific button styles for generate/check result */
 #generate, #generate-sentiment, #checkResult {
     font-size: 1.2em;
     padding: 15px 30px;
     border-radius: 30px;
 }
-
-/* Update #menu-image for consistent sizing */
-#menu-image {
-    display: none;
-    width:30em;
-    max-width: 100%;
-    height: auto;
-    min-height: 22.5em; /* Reserve space for image */
-    margin-bottom: 15px;
-    border-radius: 8px;
-    background-color: var(--background-light-start); /* Placeholder background */
-}
-
-/* Loading Indicator Styling */
-#loading-indicator {
-    display: flex; /* Use flexbox for centering content */
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically */
-    width:30em; /* Match image width */
-    max-width: 100%;
-    min-height: 22.5em; /* Match image reserved height */
-    margin-bottom: 15px;
-    border-radius: 8px;
-    background-color: var(--background-light-start); /* Placeholder background */
-    color: var(--text-color-dark);
-}
-
-.loader {
-    border: 4px solid var(--input-border-color); /* Light grey */
-    border-top: 4px solid var(--primary-green); /* Green spinner */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Center loading text */
-#loading-indicator p {
-    color: var(--text-color-dark);
-    font-size: 1.2em;
-    margin-top: 10px;
-}
-
-/* Image Upload Specific */
-.file-upload-area {
-    border: 2px dashed var(--primary-green);
-    border-radius: 10px;
-    padding: 30px;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.file-upload-area:hover {
-    background-color: var(--background-light-start);
-}
-
-.file-upload-area p {
-    font-size: 1.1em;
-    color: var(--dark-green);
-    margin-bottom: 10px;
-}
-
-#imagePreview {
-    margin-top: 20px;
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-#imagePreview img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Result Display */
-#result {
-    margin-top: 30px;
-    font-size: 1.8em;
-    font-weight: bold;
-    color: var(--dark-green);
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-display, .sentiment-display {
-    margin-top: 35px;
-    margin-bottom: 20px;
-    min-height: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#menu-recommendation, #market-sentiment {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-green);
-    min-height: 30px;
-}
-
-/* Styling for sentiment display heading to match proverb heading */
-.sentiment-display h2 {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-green);
-    margin-top: 0; /* Override default h2 margin */
-    margin-bottom: 10px; /* Space between heading and content */
-    min-height: 30px;
-}
-
-/* Styling for proverb display container */
-.proverb-display {
-    margin-top: 30px; /* Match .sentiment-display for consistent spacing */
-    margin-bottom: 25px;
-    display: flex; /* Apply flexbox for internal alignment */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Styling for proverb display heading */
-.proverb-display h2 {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-green);
-    margin-top: 0; /* Override default h2 margin */
-    margin-bottom: 10px; /* Space between heading and proverb text */
-    min-height: 30px;
-}
-
-/* Contact Section */
-.contact-section {
-    width: 90%;
-    max-width: 700px;
-    text-align: center;
-    background-color: var(--container-background-light);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px var(--shadow-color);
-    color: var(--text-color-dark);
-    margin-top: 20px;
-}
-
 .contact-section h2 {
     margin-bottom: 20px;
 }
@@ -375,7 +173,7 @@ button:hover {
 }
 
 .contact-section button {
-    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
+    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
     color: white;
     border: none;
     padding: 15px;
@@ -383,20 +181,21 @@ button:hover {
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    margin-top: 20px;
 }
 
-.contact-section button:hover {
-    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
+button:hover {
+    background: linear-gradient(45deg, var(--dark-green), var(--dark-blue));
+    transform: translateY(-2px);
 }
-
-/* Table Styling */
 table {
     width: 100%;
     margin: 20px auto;
     border-collapse: collapse;
     border: 1px solid var(--table-border-color);
-    border-radius: 8px; /* Added border-radius for table */
-    overflow: hidden; /* Ensures border-radius applies to cells */
+    padding: 12px;
+    text-align: center;
 }
 
 th, td {
@@ -409,97 +208,4 @@ th {
     background-color: var(--background-light-start);
     font-weight: bold;
     color: var(--dark-green);
-}
-
-/* Footer Styling */
-footer.container {
-    margin-top: 40px;
-    padding: 20px;
-    font-size: 0.9em;
-    color: var(--text-color-dark);
-    box-shadow: none;
-    background-color: transparent;
-}
-
-footer p {
-    color: var(--text-color-dark);
-}
-
-#disqus_thread {
-    width: 90%;
-    max-width: 700px;
-    margin-top: 40px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .container, .contact-section, #disqus_thread {
-        padding: 20px;
-        width: 95%;
-    }
-
-    header h1 {
-        font-size: 2em;
-    }
-
-    nav a {
-        margin: 0 8px;
-        font-size: 0.9em;
-    }
-
-    h2 {
-        font-size: 1.8em;
-    }
-
-    h3 {
-        font-size: 1.3em;
-    }
-
-    p, li {
-        font-size: 1em;
-    }
-
-    button {
-        padding: 12px 20px;
-        font-size: 1em;
-    }
-
-    #generate, #generate-sentiment, #checkResult {
-        font-size: 1.1em;
-        padding: 12px 25px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container, .contact-section, #disqus_thread {
-        padding: 15px;
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    header h1 {
-        font-size: 1.8em;
-    }
-
-    nav {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    nav a {
-        margin: 5px 0;
-    }
-
-    .theme-switcher-container {
-        position: static;
-        margin-bottom: 10px;
-    }
-
-    body {
-        padding: 0;
-    }
 }
