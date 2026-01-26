@@ -365,15 +365,17 @@
             const scoreEl = document.getElementById('score');
             const statusEl = document.getElementById('status');
             const lastUpdatedTimeEl = document.getElementById('last-updated-time');
-            const indicatorDetailsEl = document.getElementById('indicator-details'); // New ID
-            const indicatorListEl = document.getElementById('indicator-list'); // New ID
-            const indicatorAvgEl = document.getElementById('indicator-avg'); // New ID
+            const indicatorDetailsEl = document.getElementById('indicator-details');
+            const indicatorListEl = document.getElementById('indicator-list');
+            const indicatorAvgEl = document.getElementById('indicator-avg');
             
-            try {
-                // For loader, assuming a basic text message for now as code.html doesn't have a direct loader element
-                statusEl.textContent = "데이터를 불러오는 중..."; 
-                statusEl.style.display = 'block'; // Show status text for loading
+            // 로딩 상태 표시
+            statusEl.textContent = "데이터를 불러오는 중..."; 
+            // scoreEl.textContent = "-"; // 로딩 중에는 점수 초기화
+            // lastUpdatedTimeEl.textContent = "업데이트 시간: -";
+            if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
 
+            try {
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
                 const querySnapshot = await q.get();
 
@@ -428,8 +430,9 @@
                 statusEl.textContent = "연결 오류가 발생했습니다.";
                 if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
             } finally {
-                // scoreEl.style.display = 'block'; // Always visible in new design
-                // statusEl.style.display = 'block'; // Always visible in new design
+                // Main score, sentiment, and last updated time are always displayed
+                scoreEl.style.display = 'block';
+                statusEl.style.display = 'block';
                 lastUpdatedTimeEl.style.display = 'block';
             }
         }
