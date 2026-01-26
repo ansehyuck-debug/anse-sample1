@@ -138,11 +138,11 @@
 <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
 <div class="flex flex-col gap-1">
 <h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
-<p class="text-base text-[#49699c] dark:text-slate-400">Real-time KOSPI fear and greed analysis based on market momentum and volatility.</p>
+<p class="text-base text-[#49699c] dark:text-slate-400">KOSPI fear and greed analysis based on market momentum and volatility.</p>
 </div>
-<div class="flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-<span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                MARKET OPEN
+<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+<span id="market-status-dot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="market-status-text">MARKET OPEN</span>
             </div>
 </div>
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -436,6 +436,40 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchLatestIndex(); // Call on page load
+            updateMarketStatus(); // Initial status update
+            setInterval(updateMarketStatus, 60000); // Update every minute
         });
+    </script>
+    <script>
+        // Function to update market open/close status
+        function updateMarketStatus() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // UTC time
+            const kstOffset = 9 * 3600000; // KST is UTC+9
+            const kstDate = new Date(utc + kstOffset);
+
+            const dayOfWeek = kstDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            const hours = kstDate.getHours();
+            const minutes = kstDate.getMinutes();
+
+            const isWeekday = (dayOfWeek >= 1 && dayOfWeek <= 5); // Monday to Friday
+            // Market open: 09:00 to 15:30 KST
+            const isOpenHours = (hours > 9 || (hours === 9 && minutes >= 0)) && (hours < 15 || (hours === 15 && minutes <= 30));
+
+            const marketStatusTextEl = document.getElementById('market-status-text');
+            const marketStatusDotEl = document.getElementById('market-status-dot');
+            const marketStatusIndicatorEl = document.getElementById('market-status-indicator');
+
+            if (isWeekday && isOpenHours) {
+                marketStatusTextEl.textContent = "MARKET OPEN";
+                marketStatusIndicatorEl.className = "flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400";
+                marketStatusDotEl.className = "h-2 w-2 rounded-full bg-emerald-500 animate-pulse";
+            } else {
+                marketStatusTextEl.textContent = "MARKET CLOSE";
+                marketStatusIndicatorEl.className = "flex items-center gap-2 rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-xs font-bold text-red-600 dark:text-red-400";
+                marketStatusDotEl.className = "h-2 w-2 rounded-full bg-red-500"; // No pulse when closed
+            }
+        }
+    </script>
     </script>
 </body>
