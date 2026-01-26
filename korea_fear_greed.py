@@ -109,6 +109,39 @@ def get_adr_from_krx_api(date_str):
     
     return adr_score_raw
 
+def get_put_call_ratio_from_krx_api(date_str):
+    endpoint = "drv/opt_bydd_trd" # 옵션 일별매매정보 (주식옵션外)
+    params = {"basDd": date_str}
+
+    data = _call_krx_api(endpoint, params)
+
+    if "OutBlock_1" not in data or not data["OutBlock_1"]:
+        raise ValueError("KRX API 응답에 OutBlock_1이 없거나 비어있습니다.")
+    
+    put_volume = 0
+    call_volume = 0
+    
+    # KOSPI 200 옵션과 같은 관련 상품을 필터링해야 함. 'PROD_NM' 필드 확인 필요.
+    # 일단은 모든 상품에 대해 Put/Call 거래량 합산
+    for item in data["OutBlock_1"]:
+        # 실제 데이터에서 PROD_NM 값이 무엇인지 확인 필요. (예: "KOSPI200")
+        # if item.get("PROD_NM") == "KOSPI200": # 필요시 주석 해제 및 상품명 확인
+        try:
+            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0')) # '-'인 경우 0으로 처리
+            if item.get("RGHT_TP_NM") == "PUT":
+                put_volume += acc_trdvol
+            elif item.get("RGHT_TP_NM") == "CALL":
+                call_volume += acc_trdvol
+        except ValueError as ve:
+            print("거래량 변환 오류: %s (item: %s)" % (str(ve), str(item)))
+            continue # 오류 발생 시 해당 항목 건너뛰기
+    
+    if call_volume == 0:
+        put_call_ratio = 100 if put_volume > 0 else 50 # 콜 거래량이 없으면 풋 거래량에 따라 점수
+    else:
+        put_call_ratio = (put_volume / call_volume) * 100
+    
+    return put_call_ratio
 
 def get_scores():
     scores = []
@@ -208,7 +241,40 @@ def get_scores():
         print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
     
-    # 4개 지표의 평균 계산
+    # 지표 5: 풋콜 비율 - KRX API 사용
+    try:
+        put_call_ratio_raw = None
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            try:
+                put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
+                if put_call_ratio_raw is not None:
+                    print("지표 5 (풋콜 비율): %s 데이터 사용." % target_date)
+                    break
+            except Exception as e_inner:
+                print("지표 5 (풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                time.sleep(1) # 짧은 지연
+        
+        if put_call_ratio_raw is None:
+            raise ValueError("풋콜 비율 데이터를 5일 동안 찾지 못했습니다.")
+
+        # 풋콜 비율을 0~100 스케일로 변환
+        # 일반적으로 풋콜 비율은 0.5~1.5 범위. 1.0이 중립.
+        # 0.5 이하: 탐욕(100점), 1.5 이상: 공포(0점)
+        if put_call_ratio_raw <= 0.5:
+            put_call_score = 100
+        elif put_call_ratio_raw >= 1.5:
+            put_call_score = 0
+        else:
+            put_call_score = 100 - (put_call_ratio_raw - 0.5) / (1.5 - 0.5) * 100 # 선형 스케일링
+        
+        scores.append(put_call_score)
+        print("지표 5 (풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
+    except Exception as e:
+        print("지표 5 (풋콜 비율) 오류: %s" % str(e))
+        scores.append(50)
+    
+    # 5개 지표의 평균 계산 (지표 수가 변경되었으므로 동적으로 계산)
     final_score = sum(scores) / len(scores) if scores else 50
     return int(final_score), scores
 
