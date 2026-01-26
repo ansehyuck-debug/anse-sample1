@@ -19,7 +19,7 @@ if not firebase_admin._apps:
         firebase_admin.initialize_app(cred)
         print("GitHub Secrets 키를 사용하여 인증되었습니다.")
     else:
-        cred = credentials.ApplicationDefault() 
+        cred = credentials.ApplicationDefault()
         firebase_admin.initialize_app(cred)
         print("기존 ApplicationDefault 방식을 사용하여 인증되었습니다.")
 
@@ -54,33 +54,60 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - FinanceDataReader 사용 (ChgRatio 수정)
+    # 지표 3: ADR (상승/하락 비율) - pykrx 사용
     try:
-        df_kospi_listing = fdr.StockListing('KOSPI')
-        # 상승 종목 수: ChangeRatio 대신 ChgRatio 사용
-        ups = len(df_kospi_listing[df_kospi_listing['ChgRatio'] > 0])
-        # 하락 종목 수: ChangeRatio 대신 ChgRatio 사용
-        downs = len(df_kospi_listing[df_kospi_listing['ChgRatio'] < 0])
+        df_change = pd.DataFrame()
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            try:
+                df_temp = stock.get_market_price_change_by_ticker(target_date, market="KOSPI")
+                if not df_temp.empty:
+                    df_change = df_temp
+                    print(f"지표 3 (ADR): {target_date} 데이터 사용.")
+                    break
+                else:
+                    print(f"지표 3 (ADR): {target_date} 데이터 비어있음. 다음 날짜로 재시도.")
+            except Exception as e_inner:
+                print(f"지표 3 (ADR): {target_date} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+        
+        if df_change.empty:
+            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
 
-        adr_score = (ups / (ups + downs + 1)) * 100 if (ups + downs) > 0 else 50
-        # ADR 값은 0~200 사이로 나오므로, 100을 중립으로 보고 스케일링
-        adr_score_scaled = min(max((adr_score - 50) / 100 * 100, 0), 100)
+        adv = (df_change['등락률'] > 0).sum()
+        dec = (df_change['등락률'] < 0).sum()
+
+        adr_score_raw = (adv / dec) * 100 if dec != 0 else (100 if adv > 0 else 50)
+        
+        # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
+        # 예시 스케일링: 70 이하 공포(0), 120 이상 탐욕(100), 그 사이 선형.
+        if adr_score_raw <= 70:
+            adr_score_scaled = 0
+        elif adr_score_raw >= 120:
+            adr_score_scaled = 100
+        else:
+            adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
         
         scores.append(adr_score_scaled)
-        print(f"지표 3 (ADR) 성공: {adr_score:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
+        print(f"지표 3 (ADR) 성공: {adr_score_raw:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
     except Exception as e:
-        print(f"지표 3 (ADR) 오류: {e}")
+        print(f"지표 3 (ADR) 최종 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - FinanceDataReader KSVIX 심볼 사용 및 Investing.com 폴백
+    # 지표 4: VKOSPI (변동성) - pykrx 사용
     try:
-        vkospi_df = fdr.DataReader('KSVIX', start=datetime.now() - timedelta(days=30))
-        vix = vkospi_df['Close'].iloc[-1]
+        today = datetime.now().strftime("%Y%m%d")
+        # 최근 30일치 데이터로 20일 윈도우 계산에 충분하도록 가져옴
+        vkospi_df = stock.get_index_ohlcv((datetime.now() - timedelta(days=60)).strftime("%Y%m%d"), today, "1003")
         
-        window_size = min(len(vkospi_df), 20)
+        if vkospi_df.empty:
+            raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다.")
+
+        vix = vkospi_df['종가'].iloc[-1]
+        
+        window_size = min(len(vkospi_df), 20) # 20일 윈도우, 데이터 부족 시 조정
         if window_size > 0:
-            low = vkospi_df['Close'].rolling(window=window_size).min().iloc[-1]
-            high = vkospi_df['Close'].rolling(window=window_size).max().iloc[-1]
+            low = vkospi_df['종가'].rolling(window=window_size).min().iloc[-1]
+            high = vkospi_df['종가'].rolling(window=window_size).max().iloc[-1]
             if high - low == 0:
                 v_score = 50
             else:
@@ -90,29 +117,9 @@ def get_scores():
 
         scores.append(v_score)
         print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
-    except Exception as e_ksvix:
-        print(f"지표 4 (VKOSPI) KSVIX 오류: {e_ksvix}. Investing.com 폴백 시도.")
-        try:
-            # Investing.com 소스 사용 (fdr.DataReader의 동작 확인 필요)
-            df_vix_investing = fdr.DataReader('V-KOSPI 200', data_source='investing', start=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
-            vix_investing = df_vix_investing['Close'].iloc[-1]
-            
-            window_size_inv = min(len(df_vix_investing), 20)
-            if window_size_inv > 0:
-                low_inv = df_vix_investing['Close'].rolling(window=window_size_inv).min().iloc[-1]
-                high_inv = df_vix_investing['Close'].rolling(window=window_size_inv).max().iloc[-1]
-                if high_inv - low_inv == 0:
-                    v_score_inv = 50
-                else:
-                    v_score_inv = 100 * (1 - (vix_investing - low_inv) / (high_inv - low_inv))
-            else:
-                v_score_inv = 50
-
-            scores.append(v_score_inv)
-            print(f"지표 4 (VKOSPI) Investing.com 성공: {vix_investing:.2f} (원시값), {v_score_inv:.2f} (스케일된 값)")
-        except Exception as e_investing:
-            print(f"지표 4 (VKOSPI) Investing.com 폴백 오류: {e_investing}")
-            scores.append(50)
+    except Exception as e:
+        print(f"지표 4 (VKOSPI) 오류: {e}")
+        scores.append(50)
     
     # 4개 지표의 평균 계산
     final_score = sum(scores) / len(scores) if scores else 50
