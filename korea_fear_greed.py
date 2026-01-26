@@ -54,27 +54,13 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - FinanceDataReader 사용
+    # 지표 3: ADR (상승/하락 비율) - FinanceDataReader 사용 (ChgRatio 수정)
     try:
-        # 오늘 날짜를 기준으로 코스피 전 종목의 등락률 가져오기
-        today_date = datetime.now().strftime('%Y%m%d')
-        # pykrx의 get_market_price_change_by_ticker는 해당 날짜의 등락 정보 제공
-        # fdr.StockListing은 현재 시점의 등락률이기에 과거 데이터와의 일관성을 위해 pykrx 사용
-        # 단, pykrx가 안정적이지 않으므로, 5일간 반복 로직은 유지하되, pykrx 대신 fdr.StockListing을 활용
-        
-        # NOTE: fdr.StockListing()은 실시간 데이터에 가깝고, 과거 특정일의 등락 종목 수를 제공하지 않음.
-        # ADR 계산은 일반적으로 과거 일정 기간(예: 20일)의 상승/하락 종목 수 누적값을 사용함.
-        # pykrx의 get_market_price_change_by_ticker가 지속적으로 실패하는 문제가 있으므로,
-        # ADR 지표를 FinanceDataReader를 이용해 계산할 수 있는 다른 방식으로 대체하거나,
-        # ADR 지표 자체를 단순화해야 함.
-        # 일단은 사용자 제안처럼 '오늘'의 상승/하락 종목수를 기반으로 ADR을 계산.
-        # 이 방법은 ADR 지표의 본래 의미와 다소 차이가 있을 수 있음.
-
         df_kospi_listing = fdr.StockListing('KOSPI')
-        # 상승 종목 수: ChangeRate가 0보다 큰 종목 (즉, 상승)
-        ups = len(df_kospi_listing[df_kospi_listing['ChangeRatio'] > 0])
-        # 하락 종목 수: ChangeRate가 0보다 작은 종목 (즉, 하락)
-        downs = len(df_kospi_listing[df_kospi_listing['ChangeRatio'] < 0])
+        # 상승 종목 수: ChangeRatio 대신 ChgRatio 사용
+        ups = len(df_kospi_listing[df_kospi_listing['ChgRatio'] > 0])
+        # 하락 종목 수: ChangeRatio 대신 ChgRatio 사용
+        downs = len(df_kospi_listing[df_kospi_listing['ChgRatio'] < 0])
 
         adr_score = (ups / (ups + downs + 1)) * 100 if (ups + downs) > 0 else 50
         # ADR 값은 0~200 사이로 나오므로, 100을 중립으로 보고 스케일링
@@ -86,32 +72,47 @@ def get_scores():
         print(f"지표 3 (ADR) 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - FinanceDataReader KSVIX 심볼 사용
+    # 지표 4: VKOSPI (변동성) - FinanceDataReader KSVIX 심볼 사용 및 Investing.com 폴백
     try:
-        # FinanceDataReader의 KSVIX 심볼 사용
         vkospi_df = fdr.DataReader('KSVIX', start=datetime.now() - timedelta(days=30))
         vix = vkospi_df['Close'].iloc[-1]
         
-        # 사용자 제안처럼 과거 252일 (약 1년) 동안의 최소/최대값 대비 현재 위치 계산
-        # 다만, 30일치 데이터만 가져왔으므로 window를 20일 정도로 조정
-        window_size = min(len(vkospi_df), 20) # 데이터가 20개 미만일 경우 데이터 길이에 맞춤
-
+        window_size = min(len(vkospi_df), 20)
         if window_size > 0:
             low = vkospi_df['Close'].rolling(window=window_size).min().iloc[-1]
             high = vkospi_df['Close'].rolling(window=window_size).max().iloc[-1]
-            if high - low == 0: # 분모가 0이 되는 경우 방지
+            if high - low == 0:
                 v_score = 50
             else:
-                # 수치가 높을수록 공포이므로 반전 처리 (0~100으로 스케일링)
                 v_score = 100 * (1 - (vix - low) / (high - low))
         else:
-            v_score = 50 # 데이터가 부족할 경우 중립값
+            v_score = 50
 
         scores.append(v_score)
         print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
-    except Exception as e:
-        print(f"지표 4 (VKOSPI) 오류: {e}")
-        scores.append(50)
+    except Exception as e_ksvix:
+        print(f"지표 4 (VKOSPI) KSVIX 오류: {e_ksvix}. Investing.com 폴백 시도.")
+        try:
+            # Investing.com 소스 사용 (fdr.DataReader의 동작 확인 필요)
+            df_vix_investing = fdr.DataReader('V-KOSPI 200', data_source='investing', start=(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+            vix_investing = df_vix_investing['Close'].iloc[-1]
+            
+            window_size_inv = min(len(df_vix_investing), 20)
+            if window_size_inv > 0:
+                low_inv = df_vix_investing['Close'].rolling(window=window_size_inv).min().iloc[-1]
+                high_inv = df_vix_investing['Close'].rolling(window=window_size_inv).max().iloc[-1]
+                if high_inv - low_inv == 0:
+                    v_score_inv = 50
+                else:
+                    v_score_inv = 100 * (1 - (vix_investing - low_inv) / (high_inv - low_inv))
+            else:
+                v_score_inv = 50
+
+            scores.append(v_score_inv)
+            print(f"지표 4 (VKOSPI) Investing.com 성공: {vix_investing:.2f} (원시값), {v_score_inv:.2f} (스케일된 값)")
+        except Exception as e_investing:
+            print(f"지표 4 (VKOSPI) Investing.com 폴백 오류: {e_investing}")
+            scores.append(50)
     
     # 4개 지표의 평균 계산
     final_score = sum(scores) / len(scores) if scores else 50
