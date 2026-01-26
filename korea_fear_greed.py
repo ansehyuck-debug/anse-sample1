@@ -28,19 +28,9 @@ db = firestore.client()
 def get_scores():
     scores = []
     
-    # 휴장일 처리를 위해 가장 최근의 영업일 조회
-    try:
-        today_str = datetime.now().strftime("%Y%m%d")
-        recent_bday = stock.get_nearest_business_day_in_a_week(date=today_str)
-    except IndexError as e:
-        print(f"가장 가까운 영업일 조회 중 오류: {e}")
-        yesterday = datetime.now() - timedelta(days=1)
-        recent_bday = yesterday.strftime("%Y%m%d")
-        print(f"경고: 가장 가까운 영업일을 찾지 못했습니다. {recent_bday}를 기준으로 계산합니다.")
-    
     # 지표 1: KOSPI vs 125일 이평선 이격도
     try:
-        df = fdr.DataReader('KS11')
+        df = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=200))
         ma125 = df['Close'].rolling(window=125).mean().iloc[-1]
         curr = df['Close'].iloc[-1]
         score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
@@ -49,34 +39,52 @@ def get_scores():
         print(f"지표 1 오류: {e}")
         scores.append(50)
 
-    # 지표 2: 신고가/신저가 비율 (최근 영업일 기준)
+    # 지표 2: KOSPI 14일 RSI (대체 지표)
     try:
-        high = len(stock.get_market_number_of_250days_high_low(recent_bday, "KOSPI")['신고가'])
-        low = len(stock.get_market_number_of_250days_high_low(recent_bday, "KOSPI")['신저가'])
-        score2 = (high / (high + low + 1)) * 100
-        scores.append(score2)
+        df_rsi = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=40))
+        delta = df_rsi['Close'].diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+        rs = gain / loss
+        rsi = 100 - (100 / (1 + rs))
+        rsi_score = rsi.iloc[-1]
+        scores.append(rsi_score)
+        print(f"지표 2 (RSI) 성공: {rsi_score:.2f}")
     except Exception as e:
-        print(f"지표 2 오류: {e}")
+        print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 실제 계산 버전 (최근 영업일 기준)
+    # 지표 3: ADR (상승/하락 비율) - 5일간 조회하여 안정성 강화
     try:
-        df_adr = stock.get_market_price_change_by_ticker(recent_bday, recent_bday, "KOSPI")
+        df_adr = pd.DataFrame()
+        for i in range(5):
+            day_to_check = datetime.now() - timedelta(days=i)
+            bday = stock.get_nearest_business_day_in_a_week(date=day_to_check.strftime('%Y%m%d'))
+            df_adr = stock.get_market_price_change_by_ticker(bday)
+            if not df_adr.empty:
+                print(f"지표 3 (ADR): {bday} 데이터 사용.")
+                break
+        
+        if df_adr.empty:
+            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
+            
         ups = (df_adr['종가'] > df_adr['시가']).sum()
         downs = (df_adr['종가'] < df_adr['시가']).sum()
         adr_score = (ups / (ups + downs + 1)) * 100
         scores.append(adr_score)
+        print(f"지표 3 (ADR) 성공: {adr_score:.2f}")
     except Exception as e:
-        print(f"지표 3 오류: {e}")
+        print(f"지표 3 (ADR) 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - fdr이 마지막 거래일 데이터를 자동으로 가져오므로 날짜 지정 불필요
+    # 지표 4: VKOSPI (변동성) - 대체 티커 사용
     try:
-        vix = fdr.DataReader('KSVIX').iloc[-1]['Close']
-        v_score = 100 - (min(max((vix - 15) / 20 * 100, 0), 100))
+        vix = fdr.DataReader('^VIXK').iloc[-1]['Close']
+        v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
         scores.append(v_score)
+        print(f"지표 4 (VKOSPI) 성공: {v_score:.2f}")
     except Exception as e:
-        print(f"지표 4 오류: {e}")
+        print(f"지표 4 (VKOSPI) 오류: {e}")
         scores.append(50)
     
     # 4개 지표의 평균 계산
