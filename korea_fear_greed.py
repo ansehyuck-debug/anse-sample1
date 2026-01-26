@@ -62,18 +62,10 @@ def get_scores():
         response.raise_for_status() # HTTP 오류 발생 시 예외 발생
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # 'KOSPI' ADR 값을 찾기 (웹사이트 구조에 따라 셀렉터 변경될 수 있음)
-        # 예시: 특정 테이블의 n번째 행, m번째 열
-        # 실제 웹사이트 구조 확인 후 셀렉터 조정 필요
-        # 임시 셀렉터: ADR 값들이 포함된 테이블을 찾고 그 안에서 텍스트 추출
-        # 예를 들어, <td class="tbl_adr">123.45</td> 이런 형태일 경우
-        adr_value_tag = soup.select_one('td.tbl_adr') # 임시 셀렉터, 실제 확인 필요
+        adr_value_tag = soup.select_one('td.tbl_adr')
         if adr_value_tag:
             adr_text = adr_value_tag.get_text(strip=True)
             adr_score = float(adr_text)
-            # ADR 값을 0~100 스케일로 변환 (예시: 100을 중립으로 보고 스케일링)
-            # 정확한 스케일링은 ADR 지표의 일반적인 범위에 따라 조정 필요
-            # 일단은 0~200 범위라고 가정하고 100이 중립이라고 보고 변환
             adr_score_scaled = min(max((adr_score - 50) / 100 * 100, 0), 100) # 예시 스케일링
             scores.append(adr_score_scaled)
             print(f"지표 3 (ADR) 성공: {adr_score:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
@@ -84,32 +76,31 @@ def get_scores():
         print(f"지표 3 (ADR) 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (네이버 금융)
+    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (Investing.com)
     try:
-        url_vkospi = "https://finance.naver.com/sise/sise_index_day.naver?code=KOSPI200" # KOSPI200 일별 시세 페이지 (VKOSPI 포함)
+        url_vkospi = "https://kr.investing.com/indices/kospi-volatility"
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(url_vkospi, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # 네이버 금융 페이지에서 VKOSPI 값을 찾기 (웹사이트 구조에 따라 셀렉터 변경될 수 있음)
-        # 예시: 특정 테이블에서 VKOSPI 값 텍스트 추출
-        # 실제 네이버 금융 페이지에서 VKOSPI 값이 어떻게 표시되는지 확인 후 셀렉터 조정 필요
-        # 임시 셀렉터: `VKOSPI` 텍스트를 포함하는 요소를 찾고 그 주변에서 값 추출
-        vkospi_tag = soup.find('th', string='변동성지수') # VKOSPI 텍스트가 있는 th 태그
-        if vkospi_tag:
-            # VKOSPI 값은 보통 그 다음 td에 있을 수 있음.
-            vkospi_value_tag = vkospi_tag.find_next_sibling('td')
-            if vkospi_value_tag:
-                vkospi_text = vkospi_value_tag.get_text(strip=True)
-                vix = float(vkospi_text)
-                v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
-                scores.append(v_score)
-                print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
-            else:
-                raise ValueError("네이버 금융 페이지에서 VKOSPI 값을 찾을 수 없습니다.")
+        # Investing.com 페이지에서 VKOSPI 값을 찾기
+        # 이 셀렉터는 웹사이트의 현재 구조를 기반으로 추정됨.
+        # 개발자 도구로 실제 페이지의 요소를 확인하여 정확한 셀렉터를 찾아야 함.
+        # 일반적으로 실시간 가격은 'last_last' 같은 ID를 가진 span/div에 있음.
+        vkospi_value_tag = soup.select_one('div.text-5xl > span#last_last') # 현재 가격을 나타내는 셀렉터 추정
+        if not vkospi_value_tag:
+            # 다른 셀렉터 시도 (예: 이전 버전 또는 다른 구조)
+            vkospi_value_tag = soup.select_one('span.instrument-price_last__FXKj4')
+
+        if vkospi_value_tag:
+            vkospi_text = vkospi_value_tag.get_text(strip=True).replace(',', '') # 콤마 제거
+            vix = float(vkospi_text)
+            v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
+            scores.append(v_score)
+            print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
         else:
-            raise ValueError("네이버 금융 페이지에서 '변동성지수' 항목을 찾을 수 없습니다.")
+            raise ValueError("Investing.com 페이지에서 VKOSPI 값을 찾을 수 없습니다.")
 
     except Exception as e:
         print(f"지표 4 (VKOSPI) 오류: {e}")
