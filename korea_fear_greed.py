@@ -5,7 +5,7 @@ import FinanceDataReader as fdr
 from pykrx import stock
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -28,6 +28,10 @@ db = firestore.client()
 def get_scores():
     scores = []
     
+    # 휴장일 처리를 위해 가장 최근의 영업일 조회
+    today_str = datetime.now().strftime("%Y%m%d")
+    recent_bday = stock.get_nearest_business_day_in_a_week(date=today_str)
+    
     # 지표 1: KOSPI vs 125일 이평선 이격도
     try:
         df = fdr.DataReader('KS11')
@@ -38,38 +42,32 @@ def get_scores():
     except:
         scores.append(50)
 
-    # 지표 2: 신고가/신저가 비율
+    # 지표 2: 신고가/신저가 비율 (최근 영업일 기준)
     try:
-        today = datetime.now().strftime("%Y%m%d")
-        high = len(stock.get_market_number_of_250days_high_low(today, "KOSPI")['신고가'])
-        low = len(stock.get_market_number_of_250days_high_low(today, "KOSPI")['신저가'])
+        high = len(stock.get_market_number_of_250days_high_low(recent_bday, "KOSPI")['신고가'])
+        low = len(stock.get_market_number_of_250days_high_low(recent_bday, "KOSPI")['신저가'])
         score2 = (high / (high + low + 1)) * 100
         scores.append(score2)
     except:
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 실제 계산 버전
+    # 지표 3: ADR (상승/하락 비율) - 실제 계산 버전 (최근 영업일 기준)
     try:
-        target_date = datetime.now().strftime("%Y%m%d")
-        # 오늘 하루의 등락 종목수 가져오기
-        df_adr = stock.get_market_price_change_by_ticker(target_date, target_date, "KOSPI")
+        df_adr = stock.get_market_price_change_by_ticker(recent_bday, recent_bday, "KOSPI")
         ups = (df_adr['종가'] > df_adr['시가']).sum()
         downs = (df_adr['종가'] < df_adr['시가']).sum()
-        # 상승종목 / 전체종목 비율로 점수화
         adr_score = (ups / (ups + downs + 1)) * 100
         scores.append(adr_score)
     except:
         scores.append(50) # 에러 시 중립값
 
-    # 지표 4: VKOSPI (변동성) - 낮을수록 점수 높음(탐욕)
+    # 지표 4: VKOSPI (변동성) - fdr이 마지막 거래일 데이터를 자동으로 가져오므로 날짜 지정 불필요
     try:
         vix = fdr.DataReader('KSVIX').iloc[-1]['Close']
         v_score = 100 - (min(max((vix - 15) / 20 * 100, 0), 100))
         scores.append(v_score)
     except:
         scores.append(50)
-
-    # 지표 5(풋콜 비율) 제외됨
     
     # 4개 지표의 평균 계산
     final_score = sum(scores) / len(scores) if scores else 50
