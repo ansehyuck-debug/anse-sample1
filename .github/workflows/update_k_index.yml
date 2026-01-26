@@ -23,10 +23,11 @@ jobs:
         run: |
           pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas
 
-      - name: Print korea_fear_greed.py content
-        run: cat korea_fear_greed.py
+      # - name: Print korea_fear_greed.py content # KRX API 키 추가를 위해 제거
+      #   run: cat korea_fear_greed.py
 
       - name: Run Python script
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          KRX_API_KEY: ${{ secrets.KRX_API_KEY }} # KRX API 키 환경 변수 추가
         run: python korea_fear_greed.py
