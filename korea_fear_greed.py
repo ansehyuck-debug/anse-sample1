@@ -54,54 +54,61 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 웹 스크래핑 사용 (www.adrinfo.kr)
+    # 지표 3: ADR (상승/하락 비율) - FinanceDataReader 사용
     try:
-        url_adr = "http://www.adrinfo.kr/main/sub_adr_index.html"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url_adr, headers=headers)
-        response.raise_for_status() # HTTP 오류 발생 시 예외 발생
-        soup = BeautifulSoup(response.text, 'html.parser')
+        # 오늘 날짜를 기준으로 코스피 전 종목의 등락률 가져오기
+        today_date = datetime.now().strftime('%Y%m%d')
+        # pykrx의 get_market_price_change_by_ticker는 해당 날짜의 등락 정보 제공
+        # fdr.StockListing은 현재 시점의 등락률이기에 과거 데이터와의 일관성을 위해 pykrx 사용
+        # 단, pykrx가 안정적이지 않으므로, 5일간 반복 로직은 유지하되, pykrx 대신 fdr.StockListing을 활용
         
-        adr_value_tag = soup.select_one('td.tbl_adr')
-        if adr_value_tag:
-            adr_text = adr_value_tag.get_text(strip=True)
-            adr_score = float(adr_text)
-            adr_score_scaled = min(max((adr_score - 50) / 100 * 100, 0), 100) # 예시 스케일링
-            scores.append(adr_score_scaled)
-            print(f"지표 3 (ADR) 성공: {adr_score:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
-        else:
-            raise ValueError("ADR 웹사이트에서 값을 찾을 수 없습니다.")
+        # NOTE: fdr.StockListing()은 실시간 데이터에 가깝고, 과거 특정일의 등락 종목 수를 제공하지 않음.
+        # ADR 계산은 일반적으로 과거 일정 기간(예: 20일)의 상승/하락 종목 수 누적값을 사용함.
+        # pykrx의 get_market_price_change_by_ticker가 지속적으로 실패하는 문제가 있으므로,
+        # ADR 지표를 FinanceDataReader를 이용해 계산할 수 있는 다른 방식으로 대체하거나,
+        # ADR 지표 자체를 단순화해야 함.
+        # 일단은 사용자 제안처럼 '오늘'의 상승/하락 종목수를 기반으로 ADR을 계산.
+        # 이 방법은 ADR 지표의 본래 의미와 다소 차이가 있을 수 있음.
 
+        df_kospi_listing = fdr.StockListing('KOSPI')
+        # 상승 종목 수: ChangeRate가 0보다 큰 종목 (즉, 상승)
+        ups = len(df_kospi_listing[df_kospi_listing['ChangeRatio'] > 0])
+        # 하락 종목 수: ChangeRate가 0보다 작은 종목 (즉, 하락)
+        downs = len(df_kospi_listing[df_kospi_listing['ChangeRatio'] < 0])
+
+        adr_score = (ups / (ups + downs + 1)) * 100 if (ups + downs) > 0 else 50
+        # ADR 값은 0~200 사이로 나오므로, 100을 중립으로 보고 스케일링
+        adr_score_scaled = min(max((adr_score - 50) / 100 * 100, 0), 100)
+        
+        scores.append(adr_score_scaled)
+        print(f"지표 3 (ADR) 성공: {adr_score:.2f} (원시값), {adr_score_scaled:.2f} (스케일된 값)")
     except Exception as e:
         print(f"지표 3 (ADR) 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - 웹 스크래핑 사용 (Investing.com)
+    # 지표 4: VKOSPI (변동성) - FinanceDataReader KSVIX 심볼 사용
     try:
-        url_vkospi = "https://kr.investing.com/indices/kospi-volatility"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url_vkospi, headers=headers)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
+        # FinanceDataReader의 KSVIX 심볼 사용
+        vkospi_df = fdr.DataReader('KSVIX', start=datetime.now() - timedelta(days=30))
+        vix = vkospi_df['Close'].iloc[-1]
+        
+        # 사용자 제안처럼 과거 252일 (약 1년) 동안의 최소/최대값 대비 현재 위치 계산
+        # 다만, 30일치 데이터만 가져왔으므로 window를 20일 정도로 조정
+        window_size = min(len(vkospi_df), 20) # 데이터가 20개 미만일 경우 데이터 길이에 맞춤
 
-        # Investing.com 페이지에서 VKOSPI 값을 찾기
-        # 이 셀렉터는 웹사이트의 현재 구조를 기반으로 추정됨.
-        # 개발자 도구로 실제 페이지의 요소를 확인하여 정확한 셀렉터를 찾아야 함.
-        # 일반적으로 실시간 가격은 'last_last' 같은 ID를 가진 span/div에 있음.
-        vkospi_value_tag = soup.select_one('div.text-5xl > span#last_last') # 현재 가격을 나타내는 셀렉터 추정
-        if not vkospi_value_tag:
-            # 다른 셀렉터 시도 (예: 이전 버전 또는 다른 구조)
-            vkospi_value_tag = soup.select_one('span.instrument-price_last__FXKj4')
-
-        if vkospi_value_tag:
-            vkospi_text = vkospi_value_tag.get_text(strip=True).replace(',', '') # 콤마 제거
-            vix = float(vkospi_text)
-            v_score = 100 - (min(max((vix - 17) / 20 * 100, 0), 100))
-            scores.append(v_score)
-            print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
+        if window_size > 0:
+            low = vkospi_df['Close'].rolling(window=window_size).min().iloc[-1]
+            high = vkospi_df['Close'].rolling(window=window_size).max().iloc[-1]
+            if high - low == 0: # 분모가 0이 되는 경우 방지
+                v_score = 50
+            else:
+                # 수치가 높을수록 공포이므로 반전 처리 (0~100으로 스케일링)
+                v_score = 100 * (1 - (vix - low) / (high - low))
         else:
-            raise ValueError("Investing.com 페이지에서 VKOSPI 값을 찾을 수 없습니다.")
+            v_score = 50 # 데이터가 부족할 경우 중립값
 
+        scores.append(v_score)
+        print(f"지표 4 (VKOSPI) 성공: {vix:.2f} (원시값), {v_score:.2f} (스케일된 값)")
     except Exception as e:
         print(f"지표 4 (VKOSPI) 오류: {e}")
         scores.append(50)
