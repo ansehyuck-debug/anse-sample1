@@ -1,7 +1,7 @@
 import os
 import json
 import pandas as pd
-import FinanceDataReader as fdr
+import FinanceDataReader as fdr # 지표 1, 2에 필요
 from pykrx import stock
 import requests
 from bs4 import BeautifulSoup
@@ -19,7 +19,7 @@ if not firebase_admin._apps:
         firebase_admin.initialize_app(cred)
         print("GitHub Secrets 키를 사용하여 인증되었습니다.")
     else:
-        cred = credentials.ApplicationDefault()
+        cred = credentials.ApplicationDefault() 
         firebase_admin.initialize_app(cred)
         print("기존 ApplicationDefault 방식을 사용하여 인증되었습니다.")
 
@@ -61,7 +61,7 @@ def get_scores():
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
                 # fromdate와 todate 인자 모두 target_date로 지정
-                df_temp = stock.get_market_price_change_by_ticker(target_date, target_date, market="KOSPI")
+                df_temp = stock.get_market_price_change_by_ticker(fromdate=target_date, todate=target_date, market="KOSPI")
                 if not df_temp.empty:
                     df_change = df_temp
                     print(f"지표 3 (ADR): {target_date} 데이터 사용.")
@@ -93,17 +93,19 @@ def get_scores():
         print(f"지표 3 (ADR) 최종 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - pykrx 사용 (데이터 조회 범위 확장 및 빈 데이터 처리 강화)
+    # 지표 4: VKOSPI (변동성) - pykrx 사용 (pykrx ONLY, FDR 관련 코드 모두 제거)
     try:
         # 넉넉한 기간 (예: 90일) 데이터를 가져와서 20일 윈도우 계산에 사용
         start_date = (datetime.now() - timedelta(days=90)).strftime("%Y%m%d") 
         end_date = datetime.now().strftime("%Y%m%d")
         
-        vkospi_df = stock.get_index_ohlcv(start_date, end_date, "1003") # VKOSPI 코드 "1003"
+        # VKOSPI 코드 "1003" 사용
+        vkospi_df = stock.get_index_ohlcv(start_date, end_date, "1003") 
         
         if vkospi_df.empty:
             raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다. (데이터프레임 비어있음)")
 
+        # '종가' 컬럼 사용 (사용자 지침에 따라 확인)
         vix = vkospi_df['종가'].iloc[-1]
         
         window_size = min(len(vkospi_df), 20) # 20일 윈도우, 데이터 부족 시 조정
