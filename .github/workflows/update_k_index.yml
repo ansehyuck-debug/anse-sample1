@@ -23,6 +23,9 @@ jobs:
         run: |
           pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas
 
+      - name: Print korea_fear_greed.py content
+        run: cat korea_fear_greed.py
+
       - name: Run Python script
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
