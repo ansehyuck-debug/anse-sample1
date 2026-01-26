@@ -54,7 +54,7 @@ def get_scores():
         print(f"지표 2 (RSI) 오류: {e}")
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - pykrx 사용
+    # 지표 3: ADR (상승/하락 비율) - pykrx 사용 (등락률 컬럼명 수정)
     try:
         df_change = pd.DataFrame()
         for i in range(5): # 지난 5일간 데이터를 시도
@@ -93,11 +93,12 @@ def get_scores():
         print(f"지표 3 (ADR) 최종 오류: {e}")
         scores.append(50)
 
-    # 지표 4: VKOSPI (변동성) - pykrx 사용
+    # 지표 4: VKOSPI (변동성) - pykrx 사용 (pykrx ONLY)
     try:
-        today = datetime.now().strftime("%Y%m%d")
-        # 최근 30일치 데이터로 20일 윈도우 계산에 충분하도록 가져옴
-        vkospi_df = stock.get_index_ohlcv((datetime.now() - timedelta(days=60)).strftime("%Y%m%d"), today, "1003")
+        start_date = (datetime.now() - timedelta(days=60)).strftime("%Y%m%d") # 20일 윈도우 계산에 충분하도록 넉넉히 가져옴
+        end_date = datetime.now().strftime("%Y%m%d")
+        
+        vkospi_df = stock.get_index_ohlcv(start_date, end_date, "1003") # VKOSPI 코드 "1003"
         
         if vkospi_df.empty:
             raise ValueError("pykrx에서 VKOSPI 데이터를 찾을 수 없습니다.")
@@ -130,7 +131,7 @@ def get_status(score):
     elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
     elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
     elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
+    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보를 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
