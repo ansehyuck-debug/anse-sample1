@@ -358,6 +358,59 @@
             sentimentText.classList.add(textColorClass);
         }
 
+    <script>
+      // Firebase initialization (from old head)
+      const firebaseConfig = {
+        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
+        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
+        projectId: "anse-sample1-46739525-2d1c0",
+        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
+        messagingSenderId: "164266713411",
+        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
+
+        // Define indicator names
+        const indicatorNames = {
+            1: "시장의 모멘텀",
+            2: "주가 강도",
+            3: "시장의 폭",
+            4: "시장 변동성",
+            5: "옵션 풋콜 비율"
+        };
+
+        // Function to update gauge needle rotation and sentiment text/color
+        function updateGauge(score) {
+            const needle = document.getElementById('gauge-needle');
+            const scoreDisplay = document.getElementById('score');
+            const sentimentText = document.getElementById('status'); // Ref to sentiment text for color update
+
+            // Map score 0-100 to rotation 0-180 degrees
+            const rotationDegree = score * 1.8; // 180 / 100 = 1.8
+            needle.style.transform = `translateX(-50%) rotate(${rotationDegree}deg)`;
+
+            scoreDisplay.textContent = score;
+
+            // Determine color based on score
+            let textColorClass = "";
+            if (score <= 25) { textColorClass = "text-red-500"; }
+            else if (score <= 45) { textColorClass = "text-orange-500"; }
+            else if (score <= 55) { textColorClass = "text-yellow-500"; }
+            else if (score <= 75) { textColorClass = "text-emerald-500"; }
+            else { textColorClass = "text-blue-500"; }
+            
+            // Apply color to score display
+            scoreDisplay.className = scoreDisplay.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+            scoreDisplay.classList.add(textColorClass);
+            
+            // Apply color to sentiment text
+            sentimentText.className = sentimentText.className.split(' ').filter(c => !c.startsWith('text-')).join(' ');
+            sentimentText.classList.add(textColorClass);
+        }
+
         async function fetchLatestIndex() {
             const scoreEl = document.getElementById('score');
             const statusEl = document.getElementById('status');
@@ -370,11 +423,21 @@
             const chartPlaceholderEl = document.getElementById('chart-placeholder');
             const indexHistoryChartEl = document.getElementById('index-history-chart');
             
+            // New elements for KOSPI 200 Quick View
+            const kospi200ValueEl = document.getElementById('kospi200-value');
+            const kospi200ChangeRateEl = document.getElementById('kospi200-change-rate');
+            const kospi200ChangePointEl = document.getElementById('kospi200-change-point');
+
             // 로딩 상태 표시
             statusEl.textContent = "데이터를 불러오는 중..."; 
             if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
             if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
             if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+
+            // KOSPI 200 Quick View 로딩 상태
+            kospi200ValueEl.textContent = "Loading...";
+            kospi200ChangeRateEl.textContent = "";
+            kospi200ChangePointEl.textContent = "";
 
             try {
                 const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
@@ -398,12 +461,137 @@
                         statusEl.textContent = "업데이트된 데이터가 없습니다."; // Fallback if status object is missing
                     }
 
+                    const indicators = [];
+                    for (let i = 1; i <= 5; i++) {
+                        const indicatorKey = `indicator${i}`;
+                        if (doc[indicatorKey] !== undefined) {
+                            indicators.push({
+                                id: i,
+                                name: indicatorNames[i],
+                                value: doc[indicatorKey]
+                            });
+                        }
+                    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchLatestIndex(); // Call on page load
-            updateMarketStatus(); // Initial status update
-            setInterval(updateMarketStatus, 60000); // Update every minute
-        });
-    </script>
-</body>
+                    if (indicators.length > 0) {
+                        const indicatorTexts = indicators.map(item => {
+                            if (item.id === 5 && item.value === 50) {
+                                return `지표 ${item.id}(${item.name}) : 준비중`;
+                            } else if (item.value === 50) {
+                                return `지표 ${item.id}(${item.name}) : 50 (수집 준비중, 현재는 평균값)`;
+                            } else {
+                                return `지표 ${item.id}(${item.name}) : ${item.value.toFixed(2)}`;
+                            }
+                        });
+                        indicatorListEl.innerHTML = indicatorTexts.join('<br>');
+
+                        const avg = indicators.reduce((a, b) => a + b.value, 0) / indicators.length;
+                        indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
+
+                        indicatorDetailsEl.style.display = 'block';
+                    } else {
+                        indicatorDetailsEl.style.display = 'none'; // Hide if no indicators
+                    }
+
+                    // Chart data handling (placeholder for now)
+                    // Assuming doc.historicalChartData will be available eventually
+                    // For now, it will always show "Preparing data..."
+                    if (doc.historicalChartData) { // Placeholder condition for future chart data
+                        chartPlaceholderEl.style.display = 'none';
+                        indexHistoryChartEl.style.display = 'block';
+                        // Render chart here when data is available
+                    } else {
+                        chartPlaceholderEl.style.display = 'flex'; // Use flex for centering
+                        indexHistoryChartEl.style.display = 'none';
+                    }
+
+                    // Fetch KOSPI 200 data from Yahoo Finance (client-side, might be flaky)
+                    try {
+                        const response = await fetch('https://query1.finance.yahoo.com/v7/finance/download/^KS200?period1=1609459200&period2=' + Math.floor(Date.now() / 1000) + '&interval=1d&events=history');
+                        const text = await response.text();
+                        const lines = text.split('\n');
+                        
+                        // Find the last two valid data lines
+                        let latestDataLine = null;
+                        let previousDataLine = null;
+                        for (let i = lines.length - 2; i > 0; i--) { // Start from second to last line
+                            const line = lines[i];
+                            if (line.trim().length > 0 && !line.startsWith('Date')) {
+                                if (latestDataLine === null) {
+                                    latestDataLine = line;
+                                } else if (previousDataLine === null) {
+                                    previousDataLine = line;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (latestDataLine && previousDataLine) {
+                            const latestData = latestDataLine.split(',');
+                            const previousData = previousDataLine.split(',');
+
+                            const currentClose = parseFloat(latestData[4]); // Close price
+                            const previousClose = parseFloat(previousData[4]);
+
+                            if (!isNaN(currentClose) && !isNaN(previousClose)) {
+                                const change = currentClose - previousClose;
+                                const changeRate = (change / previousClose) * 100;
+
+                                kospi200ValueEl.textContent = currentClose.toFixed(2);
+                                kospi200ChangeRateEl.textContent = `${changeRate.toFixed(2)}%`;
+                                kospi200ChangePointEl.textContent = `${change > 0 ? '▲' : '▼'} ${Math.abs(change).toFixed(2)}`;
+
+                                // Apply color for change
+                                // Remove existing color classes first
+                                kospi200ChangeRateEl.classList.remove('bg-emerald-500/20', 'bg-red-500/20', 'bg-white/20');
+                                kospi200ChangePointEl.classList.remove('text-emerald-500/80', 'text-red-500/80', 'text-white/80');
+
+                                if (change > 0) {
+                                    kospi200ChangeRateEl.classList.add('bg-emerald-500/20');
+                                    kospi200ChangePointEl.classList.add('text-emerald-500/80');
+                                } else if (change < 0) {
+                                    kospi200ChangeRateEl.classList.add('bg-red-500/20');
+                                    kospi200ChangePointEl.classList.add('text-red-500/80');
+                                } else {
+                                    kospi200ChangeRateEl.classList.add('bg-white/20'); // Neutral color
+                                    kospi200ChangePointEl.classList.add('text-white/80'); // Neutral color
+                                }
+                            } else {
+                                throw new Error("Invalid KOSPI 200 numerical data.");
+                            }
+                        } else {
+                            throw new Error("KOSPI 200 data not found in response.");
+                        }
+                    } catch (kospiError) {
+                        console.error("Failed to fetch KOSPI 200 data from Yahoo Finance:", kospiError);
+                        kospi200ValueEl.textContent = "N/A";
+                        kospi200ChangeRateEl.textContent = "N/A";
+                        kospi200ChangePointEl.textContent = "N/A";
+                    }
+
+                } else {
+                    statusEl.textContent = "업데이트된 데이터가 없습니다.";
+                    if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                    if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
+                    if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+                    kospi200ValueEl.textContent = "N/A";
+                    kospi200ChangeRateEl.textContent = "N/A";
+                    kospi200ChangePointEl.textContent = "N/A";
+                }
+            } catch (error) {
+                console.error("Firebase 오류: ", error);
+                statusEl.textContent = "연결 오류가 발생했습니다.";
+                if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
+                if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+                kospi200ValueEl.textContent = "N/A";
+                kospi200ChangeRateEl.textContent = "N/A";
+                kospi200ChangePointEl.textContent = "N/A";
+            } finally {
+                // Main score, sentiment, and last updated time are always displayed
+                scoreEl.style.display = 'block';
+                statusEl.style.display = 'block';
+                lastUpdatedTimeEl.style.display = 'block';
+            }
+        }
 </html>
