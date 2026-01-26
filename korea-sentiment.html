@@ -293,6 +293,8 @@
 </div>
 </footer>
 </main>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
       // Firebase initialization
       const firebaseConfig = {
@@ -584,20 +586,15 @@
         ];
 
         function displayRandomProverb() {
-            console.log('displayRandomProverb function called.');
             const proverbText = document.getElementById('proverb-text');
             if (proverbText) { // Check if element exists before updating
                 const randomIndex = Math.floor(Math.random() * proverbs.length);
                 const selectedProverb = proverbs[randomIndex];
                 proverbText.textContent = selectedProverb;
-                console.log('Proverb set:', selectedProverb);
-            } else {
-                console.log('Element with id "proverb-text" not found.');
             }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('DOMContentLoaded event fired.');
             await fetchLatestIndex(); // Call fetchLatestIndex first
             displayRandomProverb(); // Then display proverb
             const generateProverbButton = document.getElementById('generate-proverb');
