@@ -32,8 +32,8 @@ def get_scores():
     try:
         today_str = datetime.now().strftime("%Y%m%d")
         recent_bday = stock.get_nearest_business_day_in_a_week(date=today_str)
-    except IndexError:
-        # pykrx가 비어있는 DataFrame을 반환하여 IndexError가 발생하는 경우에 대한 예외 처리
+    except IndexError as e:
+        print(f"가장 가까운 영업일 조회 중 오류: {e}")
         yesterday = datetime.now() - timedelta(days=1)
         recent_bday = yesterday.strftime("%Y%m%d")
         print(f"경고: 가장 가까운 영업일을 찾지 못했습니다. {recent_bday}를 기준으로 계산합니다.")
@@ -45,7 +45,8 @@ def get_scores():
         curr = df['Close'].iloc[-1]
         score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
         scores.append(score1)
-    except:
+    except Exception as e:
+        print(f"지표 1 오류: {e}")
         scores.append(50)
 
     # 지표 2: 신고가/신저가 비율 (최근 영업일 기준)
@@ -54,7 +55,8 @@ def get_scores():
         low = len(stock.get_market_number_of_250days_high_low(recent_bday, "KOSPI")['신저가'])
         score2 = (high / (high + low + 1)) * 100
         scores.append(score2)
-    except:
+    except Exception as e:
+        print(f"지표 2 오류: {e}")
         scores.append(50)
 
     # 지표 3: ADR (상승/하락 비율) - 실제 계산 버전 (최근 영업일 기준)
@@ -64,15 +66,17 @@ def get_scores():
         downs = (df_adr['종가'] < df_adr['시가']).sum()
         adr_score = (ups / (ups + downs + 1)) * 100
         scores.append(adr_score)
-    except:
-        scores.append(50) # 에러 시 중립값
+    except Exception as e:
+        print(f"지표 3 오류: {e}")
+        scores.append(50)
 
     # 지표 4: VKOSPI (변동성) - fdr이 마지막 거래일 데이터를 자동으로 가져오므로 날짜 지정 불필요
     try:
         vix = fdr.DataReader('KSVIX').iloc[-1]['Close']
         v_score = 100 - (min(max((vix - 15) / 20 * 100, 0), 100))
         scores.append(v_score)
-    except:
+    except Exception as e:
+        print(f"지표 4 오류: {e}")
         scores.append(50)
     
     # 4개 지표의 평균 계산
@@ -84,7 +88,7 @@ def get_status(score):
     elif score <= 45: return "공포 : 점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
     elif score <= 55: return "중립 : 팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
     elif score <= 75: return "탐욕 : 사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
-    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 매도 해야할 주식이 있다면 지금이 기회."
+    else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
 score, individual_scores = get_scores()
