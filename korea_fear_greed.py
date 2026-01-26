@@ -3,7 +3,7 @@ import os
 import json
 import pandas as pd
 import FinanceDataReader as fdr # 지표 1, 2에 필요
-from pykrx import stock
+from pykrx import stock # pykrx는 더 이상 사용하지 않지만 FinanceDataReader가 의존할 수 있으므로 남겨둠
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
@@ -37,10 +37,12 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     # KRX Open API의 기본 URL이 data-dbg.krx.co.kr 이므로 이를 사용
-    url = "https://data-dbg.krx.co.kr/svc/apis/idx/" + endpoint # 파생상품지수 시세정보는 idx 엔드포인트 사용
+    # API에 따라 svc/apis/idx/ 또는 svc/apis/sto/ 등을 사용
+    base_url = "https://data-dbg.krx.co.kr/svc/apis/"
+    full_url = base_url + endpoint
 
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response = requests.get(full_url, headers=headers, params=params, timeout=10)
         response.raise_for_status() # HTTP 오류 발생 시 예외 발생
         return response.json()
     except requests.exceptions.HTTPError as http_err:
@@ -58,7 +60,7 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
         raise
 
 def get_vkospi_from_krx_api(date_str):
-    endpoint = "drvprod_dd_trd" # 파생상품지수 시세정보
+    endpoint = "idx/drvprod_dd_trd" # 파생상품지수 시세정보
     params = {"basDd": date_str}
     
     data = _call_krx_api(endpoint, params)
@@ -79,6 +81,33 @@ def get_vkospi_from_krx_api(date_str):
         raise ValueError("KRX API 응답에 OutBlock_1이 없습니다.")
         
     return vkospi_value
+
+def get_adr_from_krx_api(date_str):
+    endpoint = "sto/stk_bydd_trd" # 유가증권 일별매매정보
+    params = {"basDd": date_str}
+
+    data = _call_krx_api(endpoint, params)
+
+    if "OutBlock_1" not in data or not data["OutBlock_1"]:
+        raise ValueError("KRX API 응답에 OutBlock_1이 없거나 비어있습니다.")
+    
+    advancing_count = 0
+    declining_count = 0
+    
+    for item in data["OutBlock_1"]:
+        if item.get("MKT_NM") == "KOSPI": # KOSPI 시장만 필터링
+            fluc_rt = float(item.get("FLUC_RT").replace('-', '0')) # 등락률, '-'인 경우 0으로 처리
+            if fluc_rt > 0:
+                advancing_count += 1
+            elif fluc_rt < 0:
+                declining_count += 1
+    
+    if declining_count == 0:
+        adr_score_raw = 100 if advancing_count > 0 else 50 # 하락 종목이 없으면 상승 종목에 따라 점수
+    else:
+        adr_score_raw = (advancing_count / declining_count) * 100
+    
+    return adr_score_raw
 
 
 def get_scores():
@@ -110,11 +139,36 @@ def get_scores():
         print("지표 2 (RSI) 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - pykrx 사용은 실패, KRX API 또는 다른 소스 필요
-    # 현재는 오류가 나고 있으므로 임시로 50 처리
-    print("지표 3 (ADR) 현재 KRX API 구현 대기 중이므로 50 처리.")
-    scores.append(50)
+    # 지표 3: ADR (상승/하락 비율) - KRX API 사용
+    try:
+        adr_score_raw = None
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            try:
+                adr_score_raw = get_adr_from_krx_api(target_date)
+                if adr_score_raw is not None:
+                    print("지표 3 (ADR): %s 데이터 사용." % target_date)
+                    break
+            except Exception as e_inner:
+                print("지표 3 (ADR): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                time.sleep(1) # 짧은 지연
+        
+        if adr_score_raw is None:
+            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
 
+        # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
+        if adr_score_raw <= 70:
+            adr_score_scaled = 0
+        elif adr_score_raw >= 120:
+            adr_score_scaled = 100
+        else:
+            adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
+        
+        scores.append(adr_score_scaled)
+        print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
+    except Exception as e:
+        print("지표 3 (ADR) 최종 오류: %s" % str(e))
+        scores.append(50)
 
     # 지표 4: VKOSPI (변동성) - KRX API 사용
     try:
