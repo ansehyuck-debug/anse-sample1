@@ -33,16 +33,20 @@ def get_scores():
         df = fdr.DataReader('KS11')
         ma125 = df['Close'].rolling(window=125).mean().iloc[-1]
         curr = df['Close'].iloc[-1]
-        scores.append(min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100))
-    except: pass
+        score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
+        scores.append(score1)
+    except:
+        scores.append(50)
 
     # 지표 2: 신고가/신저가 비율
     try:
         today = datetime.now().strftime("%Y%m%d")
         high = len(stock.get_market_number_of_250days_high_low(today, "KOSPI")['신고가'])
         low = len(stock.get_market_number_of_250days_high_low(today, "KOSPI")['신저가'])
-        scores.append((high / (high + low + 1)) * 100)
-    except: pass
+        score2 = (high / (high + low + 1)) * 100
+        scores.append(score2)
+    except:
+        scores.append(50)
 
     # 지표 3: ADR (상승/하락 비율) - 실제 계산 버전
     try:
@@ -62,13 +66,14 @@ def get_scores():
         vix = fdr.DataReader('KSVIX').iloc[-1]['Close']
         v_score = 100 - (min(max((vix - 15) / 20 * 100, 0), 100))
         scores.append(v_score)
-    except: pass
+    except:
+        scores.append(50)
 
     # 지표 5(풋콜 비율) 제외됨
     
     # 4개 지표의 평균 계산
     final_score = sum(scores) / len(scores) if scores else 50
-    return int(final_score)
+    return int(final_score), scores
 
 def get_status(score):
     if score <= 25: return "극심한 공포 : 무섭게 떨어지네요.\n모두가 도망칠 때, 오히려 기회가 숨어 있다는데?!"
@@ -78,13 +83,18 @@ def get_status(score):
     else: return "극심한 탐욕 : 주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
 
 # 실행 및 Firestore 저장
-score = get_scores()
+score, individual_scores = get_scores()
 status = get_status(score)
 
-db.collection('korea_index').add({
+data_to_save = {
     'score': score,
     'status': status,
     'timestamp': firestore.SERVER_TIMESTAMP
-})
+}
+for i, s in enumerate(individual_scores):
+    data_to_save[f'indicator{i+1}'] = s
+
+db.collection('korea_index').add(data_to_save)
 
 print(f"저장 완료: {score}점 ({status})")
+print(f"개별 지표: {[f'{s:.2f}' for s in individual_scores]}")
