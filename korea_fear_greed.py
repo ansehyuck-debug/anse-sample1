@@ -123,24 +123,37 @@ def get_put_call_ratio_from_krx_api(date_str):
     put_volume = 0
     call_volume = 0
     
-    # KOSPI 200 옵션과 같은 관련 상품을 필터링해야 함. 'PROD_NM' 필드 확인 필요.
-    # 일단은 모든 상품에 대해 Put/Call 거래량 합산
-    print(f"지표 5 (풋콜 비율) OutBlock_1 내용 for {date_str}: {json.dumps(data['OutBlock_1'], indent=2)}") # Added logging
+    # KOSPI 200 옵션 상품만 필터링하여 Put/Call 거래량 합산
+    relevant_products = ["코스피200 옵션", "KOSPI200 옵션"] # Add other relevant names if found in logs
+    filtered_items = []
     for item in data["OutBlock_1"]:
-        # 실제 데이터에서 PROD_NM 값이 무엇인지 확인 필요. (예: "KOSPI200")
-        # if item.get("PROD_NM") == "KOSPI200": # 필요시 주석 해제 및 상품명 확인
+        prod_nm = item.get("PROD_NM", "")
+        if any(prod_name in prod_nm for prod_name in relevant_products):
+            filtered_items.append(item)
+            
+    print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}") # Added logging for filtered items
+
+    if not filtered_items:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음.")
+        raise ValueError("필터링된 KOSPI200 옵션 데이터가 없습니다.")
+
+    for item in filtered_items: # Iterate through filtered items
         try:
-            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0')) # '-'인 경우 0으로 처리
+            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0'))
             if item.get("RGHT_TP_NM") == "PUT":
                 put_volume += acc_trdvol
             elif item.get("RGHT_TP_NM") == "CALL":
                 call_volume += acc_trdvol
         except ValueError as ve:
             print("거래량 변환 오류: %s (item: %s)" % (str(ve), str(item)))
-            continue # 오류 발생 시 해당 항목 건너뛰기
-    
-    if call_volume == 0:
-        put_call_ratio = 100 if put_volume > 0 else 50 # 콜 거래량이 없으면 풋 거래량에 따라 점수
+            continue
+
+    if put_volume == 0 and call_volume == 0:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
+        put_call_ratio = 50
+    elif call_volume == 0:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
+        put_call_ratio = 100 # Put volume exists, Call volume is zero
     else:
         put_call_ratio = (put_volume / call_volume) * 100
     
