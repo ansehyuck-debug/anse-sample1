@@ -333,14 +333,14 @@ def get_scores():
         else:
             # PCR이 100(1.0)을 기준으로 어떻게 변하는지 매핑
             # 보통 70(탐욕) ~ 130(공포) 범위를 많이 사용하지만, 조금 더 넓은 범위를 사용합니다.
-            # 제안 (조금 더 넓은 범위): 60(탐욕) ~ 160(공포)
+            # 제안 (조금 더 넓은 범위): 60(탐욕) ~ 180(공포)
             if put_call_ratio_raw <= 60:
                 put_call_score = 100
-            elif put_call_ratio_raw >= 160:
+            elif put_call_ratio_raw >= 180:
                 put_call_score = 0
             else:
                 # 역비례 계산 (낮을수록 점수 높음)
-                put_call_score = 100 - (put_call_ratio_raw - 60) / (160 - 60) * 100
+                put_call_score = 100 - (put_call_ratio_raw - 60) / (180 - 60) * 100
             
             scores.append(put_call_score)
             print("지표 5 (코스피200 옵션 풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
