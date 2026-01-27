@@ -185,13 +185,20 @@
 <!-- 30-Day Trend Chart -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
 <div class="mb-6 flex items-center justify-between">
-<h3 class="text-lg font-bold">30-Day Index History</h3>
+<h3 class="text-lg font-bold">Index Advisors</h3>
 <div class="flex gap-2">
-<button class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">30D</button>
-<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">90D</button>
-<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">1Y</button>
+<button id="advisor-gemini" class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Gemini</button>
+<button id="advisor-gpt" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">GPT</button>
+<button id="advisor-grok" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Grok</button>
 </div>
 </div>
+
+
+<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+    <p class="text-sm dark:text-slate-200">Gemini의 조언 준비중</p>
+</div>
+
+
 <div id="index-history-container" class="h-64 w-full relative"> <!-- Added ID and relative for absolute positioning -->
     <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]">
         Preparing data...
@@ -219,6 +226,10 @@
 </div>
 </div>
 </div>
+
+
+
+
 <!-- Historical Comparisons & Side Metrics -->
 <div class="lg:col-span-4 flex flex-col gap-6">
 <!-- Comparison Cards -->
@@ -277,6 +288,7 @@
         <p class="text-sm font-semibold text-primary dark:text-emerald-400">
             <strong>스케일링:</strong> 이격도 0.9 이하 → 0점 (극심한 공포), 이격도 1.1 이상 → 100점 (극심한 탐욕). 0.9 ~ 1.1 범위에서 선형적으로 스케일링됩니다.
         </p>
+    
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
         <h3 class="text-lg font-bold mb-2">2. KOSPI 14일 RSI (주가 강도)</h3>
@@ -923,6 +935,81 @@
                     }
                 });
             }
+
+
+            const advisorFiles = {
+                gemini: 'gemini_adv.html',
+                gpt: 'gpt_adv.html', // Placeholder for future GPT advice file
+                grok: 'grok_adv.html' // Placeholder for future Grok advice file
+            };
+
+            const advisorGeminiBtn = document.getElementById('advisor-gemini');
+            const advisorGptBtn = document.getElementById('advisor-gpt');
+            const advisorGrokBtn = document.getElementById('advisor-grok');
+            const advisorAdviceDisplay = document.getElementById('advisor-advice-display');
+
+            const advisorButtons = [advisorGeminiBtn, advisorGptBtn, advisorGrokBtn];
+
+            function updateAdvisorDisplay(activeAdvisor) {
+                // Reset all buttons to inactive state
+                advisorButtons.forEach(button => {
+                    button.classList.remove('bg-primary/10', 'text-primary');
+                    button.classList.add('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                });
+
+                // Set active advisor button state
+                let currentActiveButton;
+                if (activeAdvisor === 'gemini') {
+                    currentActiveButton = advisorGeminiBtn;
+                } else if (activeAdvisor === 'gpt') {
+                    currentActiveButton = advisorGptBtn;
+                } else if (activeAdvisor === 'grok') {
+                    currentActiveButton = advisorGrokBtn;
+                }
+
+                if (currentActiveButton) {
+                    currentActiveButton.classList.remove('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                    currentActiveButton.classList.add('bg-primary/10', 'text-primary');
+                }
+
+                // Dynamically load content for advisor advice display
+                if (advisorAdviceDisplay) {
+                    const filePath = advisorFiles[activeAdvisor];
+                    if (filePath) {
+                        fetch(filePath)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.text();
+                            })
+                            .then(htmlContent => {
+                                advisorAdviceDisplay.innerHTML = htmlContent;
+                            })
+                            .catch(error => {
+                                console.error(`Error loading advisor advice for ${activeAdvisor}:`, error);
+                                advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">조언을 불러오는 데 실패했습니다: ${advisorAdvices[activeAdvisor] || '데이터 없음'}</p>`;
+                            });
+                    } else {
+                        // Fallback for advisors without a dedicated file (like GPT, Grok initially)
+                        advisorAdviceDisplay.innerHTML = `<p class="text-sm dark:text-slate-200">${advisorAdvices[activeAdvisor]}</p>`;
+                    }
+                }
+            }
+
+            // Add event listeners to advisor buttons
+            if (advisorGeminiBtn) {
+                advisorGeminiBtn.addEventListener('click', () => updateAdvisorDisplay('gemini'));
+            }
+            if (advisorGptBtn) {
+                advisorGptBtn.addEventListener('click', () => updateAdvisorDisplay('gpt'));
+            }
+            if (advisorGrokBtn) {
+                advisorGrokBtn.addEventListener('click', () => updateAdvisorDisplay('grok'));
+            }
+
+            // Set initial advisor (Gemini) on page load
+            updateAdvisorDisplay('gemini');
         });
     </script>
 
