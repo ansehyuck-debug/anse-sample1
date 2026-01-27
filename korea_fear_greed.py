@@ -279,7 +279,27 @@ def get_scores():
     
     # 5개 지표의 평균 계산 (지표 수가 변경되었으므로 동적으로 계산)
     final_score = sum(scores) / len(scores) if scores else 50
-    return int(final_score), scores
+
+    # KOSPI 현재 값, 등락률, 등락포인트 추가 (FinanceDataReader 재사용)
+    kospi_value = None
+    kospi_change_rate = None
+    kospi_change_point = None
+    try:
+        df_kospi = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=5)) # Get last few days for change calculation
+        if not df_kospi.empty:
+            curr_close = df_kospi['Close'].iloc[-1]
+            prev_close = df_kospi['Close'].iloc[-2] # Previous day's close
+            
+            kospi_value = round(curr_close, 2)
+            kospi_change_point = round(curr_close - prev_close, 2)
+            kospi_change_rate = round((kospi_change_point / prev_close) * 100, 2)
+            print(f"KOSPI 현재가: {kospi_value}, 등락포인트: {kospi_change_point}, 등락률: {kospi_change_rate}%")
+        else:
+            print("KOSPI 데이터를 FinanceDataReader에서 가져오지 못했습니다.")
+    except Exception as e:
+        print(f"KOSPI 데이터 가져오기 오류: {e}")
+
+    return int(final_score), scores, kospi_value, kospi_change_point, kospi_change_rate
 
 def get_status(score):
     phase = ""
@@ -303,14 +323,17 @@ def get_status(score):
 
 
 # 실행 및 Firestore 저장
-score, individual_scores = get_scores()
+score, individual_scores, kospi_value, kospi_change_point, kospi_change_rate = get_scores()
 status_obj = get_status(score) # Changed to status_obj
 
 # 중괄호를 피하기 위해 dict() 생성자 사용
 data_to_save = dict(
     score=score,
     status=status_obj, # Save the object
-    timestamp=firestore.SERVER_TIMESTAMP
+    timestamp=firestore.SERVER_TIMESTAMP,
+    kospi_value=kospi_value,
+    kospi_change_point=kospi_change_point,
+    kospi_change_rate=kospi_change_rate
 )
 
 for i, s in enumerate(individual_scores):
