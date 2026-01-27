@@ -163,7 +163,7 @@ def get_scores():
         print("지표 2 (RSI) 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - KRX API 사용
+    # 지표 3: ADR (상승/하락 비율) - KRX API 사용 
     try:
         adr_score_raw = None
         for i in range(5): # 지난 5일간 데이터를 시도
