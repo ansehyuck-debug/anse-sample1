@@ -196,7 +196,7 @@ def get_pcr_from_opt_bydd_trd_test(date_str):
 
     if not filtered_items:
         print(f"지표 6 (풋콜 비율 테스트) 필터링된 KOSPI 관련 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 0으로 처리합니다.")
-        return 0 # Return default if no filtered items
+        return 0 # Return default if no filtered items 
 
     for item in filtered_items: # Iterate through filtered items
         try:
