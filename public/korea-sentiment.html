@@ -4,18 +4,18 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>국내 금융시장 심리 - 오늘 저녁 뭐 먹지?</title> <!-- Keep original title -->
+<title>국내 금융시장 심리</title> <!-- Keep original title -->
 <meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/> <!-- Keep original description -->
 <link rel="canonical" href="https://anse-sample1.pages.dev/korea-sentiment.html"/> <!-- Keep original canonical -->
 
-<meta property="og:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?"/> <!-- Keep original og tags -->
+<meta property="og:title" content="국내 금융시장 심리"/> <!-- Keep original og tags -->
 <meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse-sample1.pages.dev/korea-sentiment.html"/>
 <meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
 <meta name="twitter:card" content="summary"/> <!-- Keep original twitter tags -->
-<meta name="twitter:title" content="국내 금융시장 심리 - 오늘 저녁 뭐 먹지?"/>
+<meta name="twitter:title" content="국내 금융시장 심리"/>
 <meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
 <meta name="twitter:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
@@ -88,7 +88,7 @@
 
 
 </head>
-<body>
+<body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
 <!-- Top Navigation Bar -->
 <header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
 <div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3">
@@ -110,6 +110,10 @@
 <div class="flex items-center gap-4">
 <button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">menu</span>
+</button>
+
+<button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
+<span class="material-symbols-outlined">light_mode</span>
 </button>
 <button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">notifications</span>
@@ -247,26 +251,80 @@
 </div>
 <p id="kospi-last-updated" class="text-xs text-white/70 mt-2"></p>
 </div>
+
+<div class="flex gap-4">
+    <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
+                            How it's calculated
+                        </button>
+    <button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
+                            Export Data
+                        </button>
+    </div>
 </div>
 </div>
 </div>
+
+<div id="indicator-explanation-section" style="display: none;" class="mt-8">
+<h2 class="text-2xl font-bold mb-4 dark:text-white">지표별 계산 방식 및 스케일링</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피 지수가 125일 이동평균선과 얼마나 떨어져 있는지를 나타내는 지표입니다. 이격도가 크면 과매수(탐욕), 작으면 과매도(공포)로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> 이격도 0.9 이하 → 0점 (극심한 공포), 이격도 1.1 이상 → 100점 (극심한 탐욕). 0.9 ~ 1.1 범위에서 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">2. KOSPI 14일 RSI (주가 강도)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            KOSPI 지수의 14일 상대강도지수(RSI)를 사용하여 주가의 상승 및 하락 강도를 측정합니다. RSI가 낮으면 과매도(공포), 높으면 과매수(탐욕)로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> RSI 값 0 ~ 100을 그대로 0점 ~ 100점으로 스케일링합니다. 0점은 극심한 공포, 100점은 극심한 탐욕을 나타냅니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">3. ADR (상승/하락 비율) - KRX API 사용 (시장 폭)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            일정 기간 동안 상승한 종목 수와 하락한 종목 수의 비율을 나타내는 지표입니다. ADR이 낮으면 시장 전반의 하락세(공포), 높으면 상승세(탐욕)를 의미합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> ADR 70 이하 → 0점 (극심한 공포), ADR 120 이상 → 100점 (극심한 탐욕). 70 ~ 120 범위에서 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">4. VKOSPI (변동성) - KRX API 사용 (시장 변동성)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피200 변동성 지수(VKOSPI)는 시장의 예상 변동성을 나타내며, 투자자들의 공포 심리를 반영합니다. VKOSPI 값이 높으면 시장의 불확실성 증가(공포), 낮으면 안정(탐욕)으로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> VKOSPI 40 이상 → 0점 (극심한 공포), VKOSPI 10 이하 → 100점 (극심한 탐욕). 10 ~ 40 범위에서 역비례하여 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">5. 코스피200 옵션 풋콜 비율 (옵션 풋콜 비율)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피200 옵션 시장에서 풋옵션 거래량과 콜옵션 거래량의 비율을 나타내는 지표입니다. 풋옵션 거래량(하락에 베팅)이 많으면 공포, 콜옵션 거래량(상승에 베팅)이 많으면 탐욕으로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> PCR 180 이상 → 0점 (극심한 공포), PCR 60 이하 → 100점 (극심한 탐욕). 60 ~ 180 범위에서 역비례하여 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+</div>
+</div>
+
 <!-- Footer / Data Source -->
 <footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
 <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
 <div class="flex flex-col gap-2">
-<p class="text-sm font-medium">Data provided by KRX (Korea Exchange) and KOFIA.</p>
-<p class="max-w-md text-xs leading-relaxed">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
+<p class="text-sm font-medium dark:text-white">Data provided by KRX (Korea Exchange) and KOFIA.</p>
+<p class="max-w-md text-xs leading-relaxed dark:text-white">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
 </div>
-<div class="flex gap-4">
-<button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-<span class="material-symbols-outlined text-[18px]">help_outline</span>
-                        How it's calculated
-                    </button>
-<button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-<span class="material-symbols-outlined text-[18px]">download</span>
-                        Export Data
-                    </button>
-</div>
+
 </div>
 </footer>
 </main>
@@ -783,7 +841,41 @@
             }
         }
 
+        // --- Theme Switcher Logic ---
+        const updateThemeIcon = (isDarkMode) => {
+            const icon = document.querySelector('#theme-switcher .material-symbols-outlined');
+            if (icon) {
+                icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
+            }
+        };
+
+        const applySavedTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const isDarkMode = savedTheme === 'dark';
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
+            applySavedTheme(); // Apply saved theme on page load
+            const themeSwitcher = document.getElementById('theme-switcher');
+            if (themeSwitcher) {
+                themeSwitcher.addEventListener('click', () => {
+                    const isDarkMode = document.documentElement.classList.toggle('dark');
+                    if (isDarkMode) {
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        localStorage.removeItem('theme');
+                    }
+                    updateThemeIcon(isDarkMode);
+                });
+            }
+
             await fetchLatestIndex(); // Call fetchLatestIndex first
             displayRandomProverb(); // Then display proverb
             const generateProverbButton = document.getElementById('generate-proverb');
@@ -811,6 +903,20 @@
             // Call it initially and set an interval for updates
             updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator);
             setInterval(() => updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator), 60 * 1000); // Update every minute
+
+            // Toggle indicator explanation section
+            const howCalculatedButton = document.getElementById('how-calculated-button');
+            const indicatorExplanationSection = document.getElementById('indicator-explanation-section');
+
+            if (howCalculatedButton && indicatorExplanationSection) {
+                howCalculatedButton.addEventListener('click', () => {
+                    if (indicatorExplanationSection.style.display === 'none') {
+                        indicatorExplanationSection.style.display = 'block';
+                    } else {
+                        indicatorExplanationSection.style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 
