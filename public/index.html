@@ -97,16 +97,18 @@
 </div>
 <h2 class="text-lg font-bold tracking-tight dark:text-white">오늘 저녁 뭐 먹지?</h2>
 </div>
-<nav class="hidden md:flex items-center gap-6">
+<div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
 <a class="text-sm font-semibold text-primary" href="/index.html">오늘 저녁 뭐 먹지?</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/about-insect.html">곤충상이란?</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
-
-</nav>
+</div>
 </div>
 <div class="flex items-center gap-4">
+<button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
 <button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">light_mode</span>
 </button>
@@ -115,6 +117,15 @@
 </button>
 <div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvU8yp9ZTwnIf')"></div>
 </div>
+</div>
+<div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
+<nav class="flex flex-col items-center gap-4 py-2">
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/index.html">오늘 저녁 뭐 먹지?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/about-insect.html">곤충상이란?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+</nav>
 </div>
 </header>
 
@@ -332,6 +343,15 @@ themeSwitcher.addEventListener('click', () => {
 // 페이지 로드 시 저장된 테마를 확인하고 적용합니다.
 document.addEventListener('DOMContentLoaded', () => {
     applySavedTheme();
+    // Mobile menu toggle logic
+    const menuButton = document.getElementById('menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuButton && mobileMenu) {
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
     // 페이지가 처음 로드될 때 메뉴를 추천합니다.
     if (generateBtn) { // Only call if on the main menu page
         recommendMenu();
