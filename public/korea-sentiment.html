@@ -358,12 +358,18 @@
                 marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
                 marketStatusIndicator.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
                 marketStatusIndicator.classList.add('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+                // Explicitly set text color for marketStatusText
+                marketStatusText.classList.remove('text-slate-600', 'dark:text-slate-400', 'text-red-500');
+                marketStatusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
             } else {
                 marketStatusText.textContent = "MARKET CLOSED";
                 marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
                 marketStatusDot.classList.add('bg-red-500');
-                marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-slate-400');
+                marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
                 marketStatusIndicator.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                // Explicitly set text color for marketStatusText
+                marketStatusText.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                marketStatusText.classList.add('text-slate-600', 'dark:text-slate-400');
             }
         }
 
