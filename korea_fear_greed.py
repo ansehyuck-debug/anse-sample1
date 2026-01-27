@@ -315,15 +315,16 @@ def get_scores():
     try:
         put_call_ratio_raw = None
         for i in range(10): # 지난 10일간 데이터를 시도
-            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            target_date = datetime.now() - timedelta(days=i)
+            target_date_str = target_date.strftime("%Y%m%d") # API 호출 및 프린트용 문자열 날짜
             try:
-                temp_put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
+                temp_put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date_str)
                 if temp_put_call_ratio_raw is not None: 
                     put_call_ratio_raw = temp_put_call_ratio_raw
-                    print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date.strftime('%Y%m%d')} 데이터 사용.")
+                    print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date_str} 데이터 사용.")
                     break
             except Exception as e_inner:
-                print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date.strftime('%Y%m%d')} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+                print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date_str} 데이터 조회 실패. 재시도. 오류: {e_inner}")
                 time.sleep(1)
         
         if put_call_ratio_raw is None:
