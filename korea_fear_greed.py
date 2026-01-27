@@ -80,7 +80,7 @@ def get_vkospi_from_krx_api(date_str):
     else:
         raise ValueError("KRX API 응답에 OutBlock_1이 없습니다.")
         
-    return vkospi_value
+    return vkospi_value 
 
 def get_adr_from_krx_api(date_str):
     endpoint = "sto/stk_bydd_trd" # 유가증권 일별매매정보
