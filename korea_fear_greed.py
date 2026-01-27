@@ -165,6 +165,61 @@ def get_put_call_ratio_from_krx_api(date_str):
     
     return put_call_ratio
 
+def get_pcr_from_opt_bydd_trd_test(date_str):
+    endpoint = "drv/opt_bydd_trd" # 옵션 일별매매정보 (주식옵션外)
+    params = {"basDd": date_str}
+
+    data = _call_krx_api(endpoint, params)
+    print(f"지표 6 (풋콜 비율 테스트) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}")
+
+    if "OutBlock_1" not in data or not data["OutBlock_1"]:
+        print(f"지표 6 (풋콜 비율 테스트) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 0으로 처리합니다.")
+        return 0 # Gracefully return 0 for test if OutBlock_1 is empty or missing
+    
+    put_volume = 0
+    call_volume = 0
+    
+    # KOSPI 관련 옵션 상품만 필터링하여 Put/Call 거래량 합산 (미니코스피200 포함)
+    relevant_product_keywords = ["코스피", "KOSPI"] # Broader filter for testing
+    filtered_items = []
+    
+    all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
+    print(f"지표 6 (풋콜 비율 테스트) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}")
+
+
+    for item in data["OutBlock_1"]:
+        prod_nm = item.get("PROD_NM", "")
+        if any(keyword in prod_nm for keyword in relevant_product_keywords):
+            filtered_items.append(item)
+            
+    print(f"지표 6 (풋콜 비율 테스트) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
+
+    if not filtered_items:
+        print(f"지표 6 (풋콜 비율 테스트) 필터링된 KOSPI 관련 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 0으로 처리합니다.")
+        return 0 # Return default if no filtered items
+
+    for item in filtered_items: # Iterate through filtered items
+        try:
+            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0'))
+            if item.get("RGHT_TP_NM") == "PUT":
+                put_volume += acc_trdvol
+            elif item.get("RGHT_TP_NM") == "CALL":
+                call_volume += acc_trdvol
+        except ValueError as ve:
+            print("거래량 변환 오류: %s (item: %s)" % (str(ve), str(item)))
+            continue
+
+    if put_volume == 0 and call_volume == 0:
+        print(f"지표 6 (풋콜 비율 테스트) 필터링된 KOSPI 관련 옵션의 Put/Call 거래량 모두 0 for {date_str}. 기본값 0으로 처리합니다.")
+        put_call_ratio = 0
+    elif call_volume == 0:
+        print(f"지표 6 (풋콜 비율 테스트) 필터링된 KOSPI 관련 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
+        put_call_ratio = 100 # Put volume exists, Call volume is zero (can be interpreted as extreme fear)
+    else:
+        put_call_ratio = (put_volume / call_volume) * 100
+    
+    return put_call_ratio
+
 def get_scores():
     scores = []
     
@@ -309,6 +364,27 @@ def get_scores():
         print("지표 5 (풋콜 비율) 오류: %s" % str(e))
         scores.append(50) # Ensure 50 is appended even on unexpected errors
     
+    # 지표 6: 풋콜 비율 테스트 - drv/opt_bydd_trd 사용
+    try:
+        pcr_test_raw = None
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            try:
+                pcr_test_raw = get_pcr_from_opt_bydd_trd_test(target_date)
+                if pcr_test_raw is not None:
+                    print("지표 6 (풋콜 비율 테스트): %s 데이터 사용." % target_date)
+                    break
+            except Exception as e_inner:
+                print("지표 6 (풋콜 비율 테스트): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                time.sleep(1) # 짧은 지연
+
+        # No scaling for test indicator, just append raw or default 0
+        scores.append(pcr_test_raw)
+        print("지표 6 (풋콜 비율 테스트) 성공: %.2f (원시값)" % pcr_test_raw)
+    except Exception as e:
+        print("지표 6 (풋콜 비율 테스트) 오류: %s" % str(e))
+        scores.append(0) # Append 0 on unexpected errors for test
+    
     # 5개 지표의 평균 계산 (지표 수가 변경되었으므로 동적으로 계산)
     final_score = sum(scores) / len(scores) if scores else 50
 
@@ -350,7 +426,7 @@ def get_status(score):
         description = "사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
     else:
         phase = "극심한 탐욕"
-        description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보를 주식이라면 지금이 기회."
+        description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
     return {"phase": phase, "description": description}
 
 
