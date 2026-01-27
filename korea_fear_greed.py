@@ -40,9 +40,9 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
     # API에 따라 svc/apis/idx/ 또는 svc/apis/sto/ 등을 사용
     base_url = "https://data-dbg.krx.co.kr/svc/apis/"
     full_url = base_url + endpoint
-
+    print(f"KRX API 호출: URL={full_url}, Params={params}") # Added logging
     try:
-        response = requests.get(full_url, headers=headers, params=params, timeout=10)
+        response = requests.get(full_url, headers=headers, params=params, timeout=30) # Increased timeout
         response.raise_for_status() # HTTP 오류 발생 시 예외 발생
         return response.json()
     except requests.exceptions.HTTPError as http_err:
@@ -114,8 +114,10 @@ def get_put_call_ratio_from_krx_api(date_str):
     params = {"basDd": date_str}
 
     data = _call_krx_api(endpoint, params)
+    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str}: {json.dumps(data, indent=2)}") # Added logging
 
     if "OutBlock_1" not in data or not data["OutBlock_1"]:
+        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}") # Added logging
         raise ValueError("KRX API 응답에 OutBlock_1이 없거나 비어있습니다.")
     
     put_volume = 0
@@ -123,6 +125,7 @@ def get_put_call_ratio_from_krx_api(date_str):
     
     # KOSPI 200 옵션과 같은 관련 상품을 필터링해야 함. 'PROD_NM' 필드 확인 필요.
     # 일단은 모든 상품에 대해 Put/Call 거래량 합산
+    print(f"지표 5 (풋콜 비율) OutBlock_1 내용 for {date_str}: {json.dumps(data['OutBlock_1'], indent=2)}") # Added logging
     for item in data["OutBlock_1"]:
         # 실제 데이터에서 PROD_NM 값이 무엇인지 확인 필요. (예: "KOSPI200")
         # if item.get("PROD_NM") == "KOSPI200": # 필요시 주석 해제 및 상품명 확인
