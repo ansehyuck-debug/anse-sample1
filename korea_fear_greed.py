@@ -54,7 +54,7 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
     # API에 따라 svc/apis/idx/ 또는 svc/apis/sto/ 등을 사용
     base_url = "https://data-dbg.krx.co.kr/svc/apis/"
     full_url = base_url + endpoint
-    print(f"KRX API 호출: URL={full_url}, Params={params}") # Added logging
+    # print(f"KRX API 호출: URL={full_url}, Params={params}") # Removed verbose logging
     try:
         response = requests.get(full_url, headers=headers, params=params, timeout=30) # Increased timeout
         response.raise_for_status() # HTTP 오류 발생 시 예외 발생
@@ -131,13 +131,13 @@ def get_put_call_ratio_from_krx_api(date_str):
     
     # _call_krx_api에서 None을 반환한 경우 (예: KRX_API_KEY 없음)
     if data is None:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API 호출 실패로 None 반환 for {date_str}.")
+        # print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API 호출 실패로 None 반환 for {date_str}.") # Keep critical warnings
         return None
 
-    print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}")
+    # print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}") # Removed verbose logging
 
     if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. None을 반환합니다.")
+        # print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. None을 반환합니다.") # Keep critical warnings
         return None
     
     put_volume = 0
@@ -147,18 +147,18 @@ def get_put_call_ratio_from_krx_api(date_str):
     target_prod_nm = "코스피200 옵션"
     filtered_items = []
     
-    all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
-    print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}")
+    # all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
+    # print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}") # Removed verbose logging
 
     for item in data["OutBlock_1"]:
         prod_nm = item.get("PROD_NM", "")
         if prod_nm == target_prod_nm:
             filtered_items.append(item)
             
-    print(f"지표 5 (코스피200 옵션 풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
+    # print(f"지표 5 (코스피200 옵션 풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}") # Removed verbose logging
 
     if not filtered_items:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. None을 반환합니다.")
+        # print(f"지표 5 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. None을 반환합니다.") # Keep critical warnings
         return None
 
     for item in filtered_items:
@@ -173,10 +173,10 @@ def get_put_call_ratio_from_krx_api(date_str):
             continue
 
     if put_volume == 0 and call_volume == 0:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. None을 반환합니다.")
+        # print(f"지표 5 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. None을 반환합니다.") # Keep critical warnings
         return None # Return None if no volume to signify no meaningful data
     elif call_volume == 0:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 200으로 처리 for {date_str}.")
+        # print(f"지표 5 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 200으로 처리 for {date_str}.") # Keep critical warnings
         put_call_ratio = 200 # Put volume exists, Call volume is zero (extreme fear)
     else:
         put_call_ratio = (put_volume / call_volume) * 100
