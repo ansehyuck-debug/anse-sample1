@@ -230,12 +230,13 @@
 <a href="https://finance.naver.com/sise/" target="_blank"><span class="material-symbols-outlined">insights</span></a>
 </div>
 <div class="flex flex-col gap-1">
-<p id="kospi200-value" class="text-3xl font-black">2,654.32</p>
+<p id="kospi-value" class="text-3xl font-black">Loading...</p>
 <div class="flex items-center gap-2">
-<span id="kospi200-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded">+1.24%</span>
-<span id="kospi200-change-point" class="text-sm text-white/80">▲ 32.50</span>
+<span id="kospi-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded"></span>
+<span id="kospi-change-point" class="text-sm text-white/80"></span>
 </div>
 </div>
+<p id="kospi-last-updated" class="text-xs text-white/70 mt-2"></p>
 </div>
 </div>
 </div>
@@ -327,204 +328,339 @@
             const chartPlaceholderEl = document.getElementById('chart-placeholder');
             const indexHistoryChartEl = document.getElementById('index-history-chart');
             
-            // New elements for KOSPI 200 Quick View
-            const kospi200ValueEl = document.getElementById('kospi200-value');
-            const kospi200ChangeRateEl = document.getElementById('kospi200-change-rate');
-            const kospi200ChangePointEl = document.getElementById('kospi200-change-point');
-            const dynamicIndicatorsContainer = document.getElementById('dynamic-indicators-container'); // Get new container reference
-
-            // 로딩 상태 표시
-            statusEl.textContent = "데이터를 불러오는 중..."; 
-            // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
-            if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
-            if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
-            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">데이터를 불러오는 중...</p>';
-
-
-            // KOSPI 200 Quick View 로딩 상태
-            kospi200ValueEl.textContent = "Loading...";
-            kospi200ChangeRateEl.textContent = "";
-            kospi200ChangePointEl.textContent = "";
-
-            try {
-                const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
-                const querySnapshot = await q.get();
-
-                if (!querySnapshot.empty) {
-                    const doc = querySnapshot.docs[0].data();
-                    const score = doc.score;
-                    const statusFromFirestore = doc.status; // This will be the object
-                    const timestamp = doc.timestamp.toDate(); // Corrected line
-                    const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-                    
-                    // Update main score, sentiment, and gauge
-                    updateGauge(score); // This handles needle and score color/value
-                    lastUpdatedTimeEl.textContent = `Last updated: ${formattedTime}`; // Use template literal
-
-                    // Set sentiment text from Firestore object
-                    if (statusFromFirestore && statusFromFirestore.phase) {
-                        statusEl.textContent = statusFromFirestore.phase;
-                    } else {
-                        statusEl.textContent = "업데이트된 데이터가 없습니다."; // Fallback if status object is missing
-                    }
-
-                    const indicators = [];
-                    for (let i = 1; i <= 5; i++) {
-                        const indicatorKey = `indicator${i}`;
-                        if (doc[indicatorKey] !== undefined) {
-                            indicators.push({
-                                id: i,
-                                name: indicatorNames[i],
-                                value: doc[indicatorKey]
-                            });
-                        }
-                    }
-
-                    if (indicators.length > 0) {
-                        dynamicIndicatorsContainer.innerHTML = ''; // Clear previous loading content
-                        indicators.forEach(item => {
-                            const indicatorValue = item.value.toFixed(2);
-                            let valueColorClass = "text-[#49699c]"; // Default color for text
-                            let progressBarColorClass = "bg-[#49699c]"; // Default color for progress bar
-
-                            // Determine color based on value for progress bar and text
-                            if (item.value <= 25) { 
-                                valueColorClass = "text-red-400";
-                                progressBarColorClass = "bg-red-400";
-                            } else if (item.value <= 45) { 
-                                valueColorClass = "text-orange-400";
-                                progressBarColorClass = "bg-orange-400";
-                            } else if (item.value <= 55) { 
-                                valueColorClass = "text-yellow-400";
-                                progressBarColorClass = "bg-yellow-400";
-                            } else if (item.value <= 75) { 
-                                valueColorClass = "text-emerald-500";
-                                progressBarColorClass = "bg-emerald-500";
-                            } else { 
-                                valueColorClass = "text-primary"; // blue for greed
-                                progressBarColorClass = "bg-primary";
-                            }
-
-                            const indicatorHtml = `
-                                <div class="flex flex-col gap-1">
-                                    <div class="flex justify-between text-xs font-bold">
-                                        <span>${item.name}</span>
-                                        <span class="${valueColorClass}">${indicatorValue}</span>
-                                    </div>
-                                    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-                                        <div class="h-full rounded-full ${progressBarColorClass}" style="width: ${indicatorValue}%;"></div>
-                                    </div>
-                                </div>
-                            `;
-                            dynamicIndicatorsContainer.insertAdjacentHTML('beforeend', indicatorHtml);
-                        });
-                    } else {
-                        dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
-                    }
-
-                    // Chart data handling (placeholder for now)
-                    // Assuming doc.historicalChartData will be available eventually
-                    // For now, it will always show "Preparing data..."
-                    if (doc.historicalChartData) { // Placeholder condition for future chart data
-                        chartPlaceholderEl.style.display = 'none';
-                        indexHistoryChartEl.style.display = 'block';
-                        // Render chart here when data is available
-                    } else {
-                        chartPlaceholderEl.style.display = 'flex'; // Use flex for centering
-                        indexHistoryChartEl.style.display = 'none';
-                    }
-
-                    // Fetch KOSPI 200 data from Yahoo Finance (client-client, might be flaky)
-                    try {
-                        const response = await fetch('https://query1.finance.yahoo.com/v7/finance/download/^KS200?period1=1609459200&period2=' + Math.floor(Date.now() / 1000) + '&interval=1d&events=history');
-                        const text = await response.text();
-                        const lines = text.split('\n');
-                        
-                        // Find the last two valid data lines
-                        let latestDataLine = null;
-                        let previousDataLine = null;
-                        for (let i = lines.length - 2; i > 0; i--) { // Start from second to last line
-                            const line = lines[i];
-                            if (line.trim().length > 0 && !line.startsWith('Date')) {
-                                if (latestDataLine === null) {
-                                    latestDataLine = line;
-                                } else if (previousDataLine === null) {
-                                    previousDataLine = line;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (latestDataLine && previousDataLine) {
-                            const latestData = latestDataLine.split(',');
-                            const previousData = previousDataLine.split(',');
-
-                            const currentClose = parseFloat(latestData[4]); // Close price
-                            const previousClose = parseFloat(previousData[4]);
-
-                            if (!isNaN(currentClose) && !isNaN(previousClose)) {
-                                const change = currentClose - previousClose;
-                                const changeRate = (change / previousClose) * 100;
-
-                                kospi200ValueEl.textContent = currentClose.toFixed(2);
-                                kospi200ChangeRateEl.textContent = `${changeRate.toFixed(2)}%`;
-                                kospi200ChangePointEl.textContent = `${change > 0 ? '▲' : '▼'} ${Math.abs(change).toFixed(2)}`;
-
-                                // Apply color for change
-                                // Remove existing color classes first
-                                kospi200ChangeRateEl.classList.remove('bg-emerald-500/20', 'bg-red-500/20', 'bg-white/20');
-                                kospi200ChangePointEl.classList.remove('text-emerald-500/80', 'text-red-500/80', 'text-white/80');
-
-                                if (change > 0) {
-                                    kospi200ChangeRateEl.classList.add('bg-emerald-500/20');
-                                    kospi200ChangePointEl.classList.add('text-emerald-500/80');
-                                } else if (change < 0) {
-                                    kospi200ChangeRateEl.classList.add('bg-red-500/20');
-                                    kospi200ChangePointEl.classList.add('text-red-500/80');
+                        // New elements for KOSPI Quick View
+            
+                        const kospiValueEl = document.getElementById('kospi-value');
+            
+                        const kospiChangeRateEl = document.getElementById('kospi-change-rate');
+            
+                        const kospiChangePointEl = document.getElementById('kospi-change-point');
+            
+                        const kospiLastUpdatedEl = document.getElementById('kospi-last-updated');
+            
+                        const dynamicIndicatorsContainer = document.getElementById('dynamic-indicators-container'); // Get new container reference
+            
+            
+            
+                        // 로딩 상태 표시
+            
+                        statusEl.textContent = "데이터를 불러오는 중..."; 
+            
+                        if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
+            
+                        if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                        if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">데이터를 불러오는 중...</p>';
+            
+            
+            
+            
+            
+                        // KOSPI Quick View 로딩 상태
+            
+                        kospiValueEl.textContent = "Loading...";
+            
+                        kospiChangeRateEl.textContent = "";
+            
+                        kospiChangePointEl.textContent = "";
+            
+                        kospiLastUpdatedEl.textContent = "";
+            
+            
+            
+                        try {
+            
+                            const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
+            
+                            const querySnapshot = await q.get();
+            
+            
+            
+                            if (!querySnapshot.empty) {
+            
+                                const doc = querySnapshot.docs[0].data();
+            
+                                const score = doc.score;
+            
+                                const statusFromFirestore = doc.status; // This will be the object
+            
+                                const timestamp = doc.timestamp.toDate(); // Corrected line
+            
+                                const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+            
+                                
+            
+                                // Update main score, sentiment, and gauge
+            
+                                updateGauge(score); // This handles needle and score color/value
+            
+                                lastUpdatedTimeEl.textContent = `Last updated: ${formattedTime}`; // Use template literal
+            
+            
+            
+                                // Set sentiment text from Firestore object
+            
+                                if (statusFromFirestore && statusFromFirestore.phase) {
+            
+                                    statusEl.textContent = statusFromFirestore.phase;
+            
                                 } else {
-                                    kospi200ChangeRateEl.classList.add('bg-white/20'); // Neutral color
-                                    kospi200ChangePointEl.classList.add('text-white/80'); // Neutral color
+            
+                                    statusEl.textContent = "업데이트된 데이터가 없습니다."; // Fallback if status object is missing
+            
                                 }
+            
+            
+            
+                                const indicators = [];
+            
+                                for (let i = 1; i <= 5; i++) {
+            
+                                    const indicatorKey = `indicator${i}`;
+            
+                                    if (doc[indicatorKey] !== undefined) {
+            
+                                        indicators.push({
+            
+                                            id: i,
+            
+                                            name: indicatorNames[i],
+            
+                                            value: doc[indicatorKey]
+            
+                                        });
+            
+                                    }
+            
+                                }
+            
+            
+            
+                                if (indicators.length > 0) {
+            
+                                    dynamicIndicatorsContainer.innerHTML = ''; // Clear previous loading content
+            
+                                    indicators.forEach(item => {
+            
+                                        const indicatorValue = item.value.toFixed(2);
+            
+                                        let valueColorClass = "text-[#49699c]"; // Default color for text
+            
+                                        let progressBarColorClass = "bg-[#49699c]"; // Default color for progress bar
+            
+            
+            
+                                        // Determine color based on value for progress bar and text
+            
+                                        if (item.value <= 25) { 
+            
+                                            valueColorClass = "text-red-400";
+            
+                                            progressBarColorClass = "bg-red-400";
+            
+                                        } else if (item.value <= 45) { 
+            
+                                            valueColorClass = "text-orange-400";
+            
+                                            progressBarColorClass = "bg-orange-400";
+            
+                                        } else if (item.value <= 55) { 
+            
+                                            valueColorClass = "text-yellow-400";
+            
+                                            progressBarColorClass = "bg-yellow-400";
+            
+                                        } else if (item.value <= 75) { 
+            
+                                            valueColorClass = "text-emerald-500";
+            
+                                            progressBarColorClass = "bg-emerald-500";
+            
+                                        } else { 
+            
+                                            valueColorClass = "text-primary"; // blue for greed
+            
+                                            progressBarColorClass = "bg-primary";
+            
+                                        }
+            
+            
+            
+                                        const indicatorHtml = `
+            
+                                            <div class="flex flex-col gap-1">
+            
+                                                <div class="flex justify-between text-xs font-bold">
+            
+                                                    <span>${item.name}</span>
+            
+                                                    <span class="${valueColorClass}">${indicatorValue}</span>
+            
+                                                </div>
+            
+                                                <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+            
+                                                    <div class="h-full rounded-full ${progressBarColorClass}" style="width: ${indicatorValue}%;"></div>
+            
+                                                </div>
+            
+                                            </div>
+            
+                                        `;
+            
+                                        dynamicIndicatorsContainer.insertAdjacentHTML('beforeend', indicatorHtml);
+            
+                                    });
+            
+                                } else {
+            
+                                    dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
+            
+                                }
+            
+            
+            
+                                // Chart data handling (placeholder for now)
+            
+                                // Assuming doc.historicalChartData will be available eventually
+            
+                                // For now, it will always show "Preparing data..."
+            
+                                if (doc.historicalChartData) { // Placeholder condition for future chart data
+            
+                                    chartPlaceholderEl.style.display = 'none';
+            
+                                    indexHistoryChartEl.style.display = 'block';
+            
+                                    // Render chart here when data is available
+            
+                                } else {
+            
+                                    chartPlaceholderEl.style.display = 'flex'; // Use flex for centering
+            
+                                    indexHistoryChartEl.style.display = 'none';
+            
+                                }
+            
+            
+            
+                                // Populate KOSPI Quick View from Firestore
+            
+                                const kospi_value = doc.kospi_value;
+            
+                                const kospi_change_point = doc.kospi_change_point;
+            
+                                const kospi_change_rate = doc.kospi_change_rate;
+            
+            
+            
+                                if (kospi_value !== undefined && kospi_change_point !== undefined && kospi_change_rate !== undefined) {
+            
+                                    kospiValueEl.textContent = kospi_value.toFixed(2);
+            
+                                    kospiChangeRateEl.textContent = `${kospi_change_rate > 0 ? '+' : ''}${kospi_change_rate.toFixed(2)}%`;
+            
+                                    kospiChangePointEl.textContent = `${kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(kospi_change_point).toFixed(2)}`;
+            
+                                    kospiLastUpdatedEl.textContent = `업데이트: ${formattedTime}`; // Use Firestore doc timestamp
+            
+            
+            
+                                    // Apply color for change
+            
+                                    kospiChangeRateEl.classList.remove('bg-emerald-500/20', 'bg-red-500/20', 'bg-white/20');
+            
+                                    kospiChangePointEl.classList.remove('text-emerald-500/80', 'text-red-500/80', 'text-white/80');
+            
+            
+            
+                                    if (kospi_change_point > 0) {
+            
+                                        kospiChangeRateEl.classList.add('bg-emerald-500/20');
+            
+                                        kospiChangePointEl.classList.add('text-emerald-500/80');
+            
+                                    } else if (kospi_change_point < 0) {
+            
+                                        kospiChangeRateEl.classList.add('bg-red-500/20');
+            
+                                        kospiChangePointEl.classList.add('text-red-500/80');
+            
+                                    } else {
+            
+                                        kospiChangeRateEl.classList.add('bg-white/20'); // Neutral color
+            
+                                        kospiChangePointEl.classList.add('text-white/80'); // Neutral color
+            
+                                    }
+            
+                                } else {
+            
+                                    kospiValueEl.textContent = "N/A";
+            
+                                    kospiChangeRateEl.textContent = "N/A";
+            
+                                    kospiChangePointEl.textContent = "N/A";
+            
+                                    kospiLastUpdatedEl.textContent = "KOSPI 데이터 없음";
+            
+                                }
+            
+            
+            
                             } else {
-                                throw new Error("Invalid KOSPI 200 numerical data.");
+            
+                                statusEl.textContent = "업데이트된 데이터가 없습니다.";
+            
+                                if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
+            
+                                if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
+            
+                                kospiValueEl.textContent = "N/A";
+            
+                                kospiChangeRateEl.textContent = "N/A";
+            
+                                kospiChangePointEl.textContent = "N/A";
+            
+                                kospiLastUpdatedEl.textContent = "KOSPI 데이터 없음";
+            
                             }
-                        } else {
-                            throw new Error("KOSPI 200 data not found in response.");
+            
+                        } catch (error) {
+            
+                            console.error("Firebase 오류: ", error);
+            
+                            statusEl.textContent = "연결 오류가 발생했습니다.";
+            
+                            if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
+            
+                            if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 불러오는 중 오류가 발생했습니다.</p>';
+            
+                            kospiValueEl.textContent = "N/A";
+            
+                            kospiChangeRateEl.textContent = "N/A";
+            
+                            kospiChangePointEl.textContent = "N/A";
+            
+                            kospiLastUpdatedEl.textContent = "KOSPI 데이터 로드 오류";
+            
+                        } finally {
+            
+                            // Main score, sentiment, and last updated time are always displayed
+            
+                            scoreEl.style.display = 'block';
+            
+                            statusEl.style.display = 'block';
+            
+                            lastUpdatedTimeEl.style.display = 'block';
+            
                         }
-                    } catch (kospiError) {
-                        console.error("Failed to fetch KOSPI 200 data from Yahoo Finance:", kospiError);
-                        kospi200ValueEl.textContent = "N/A";
-                        kospi200ChangeRateEl.textContent = "N/A";
-                        kospi200ChangePointEl.textContent = "N/A";
+            
                     }
-
-                } else {
-                    statusEl.textContent = "업데이트된 데이터가 없습니다.";
-                    // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
-                    if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
-                    if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
-                    if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
-                    kospi200ValueEl.textContent = "N/A";
-                    kospi200ChangeRateEl.textContent = "N/A";
-                    kospi200ChangePointEl.textContent = "N/A";
-                }
-            } catch (error) {
-                console.error("Firebase 오류: ", error);
-                statusEl.textContent = "연결 오류가 발생했습니다.";
-                // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
-                if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
-                if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
-                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 불러오는 중 오류가 발생했습니다.</p>';
-                kospi200ValueEl.textContent = "N/A";
-                kospi200ChangeRateEl.textContent = "N/A";
-                kospi200ChangePointEl.textContent = "N/A";
-            } finally {
-                // Main score, sentiment, and last updated time are always displayed
-                scoreEl.style.display = 'block';
-                statusEl.style.display = 'block';
-                lastUpdatedTimeEl.style.display = 'block';
-            }
-        }
 
         const proverbs = [
         "“시장은 단기적으로 투표기계지만 장기적으로 저울이다.”\n→ 벤저민 그레이엄 (Benjamin Graham)",
