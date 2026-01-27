@@ -70,7 +70,7 @@ def get_vkospi_from_krx_api(date_str):
         for item in data["OutBlock_1"]:
             # VKOSPI의 지수명을 정확히 확인해야 함. "VKOSPI" 또는 "코스피200 변동성지수" 등이 될 수 있음.
             # 일단 "VKOSPI"로 가정하고, 없으면 로그로 모든 지수명 출력하여 디버깅.
-            if item.get("IDX_NM") == "VKOSPI": 
+            if item.get("IDX_NM") == "코스피 200 변동성지수": 
                 vkospi_value = float(item.get("CLSPRC_IDX").replace('-', '')) # '-' 제거 후 float 변환
                 break
         if vkospi_value is None:
@@ -258,15 +258,17 @@ def get_scores():
         if put_call_ratio_raw is None:
             raise ValueError("풋콜 비율 데이터를 5일 동안 찾지 못했습니다.")
 
-        # 풋콜 비율을 0~100 스케일로 변환
-        # 일반적으로 풋콜 비율은 0.5~1.5 범위. 1.0이 중립.
-        # 0.5 이하: 탐욕(100점), 1.5 이상: 공포(0점)
-        if put_call_ratio_raw <= 0.5:
+        # 풋콜 비율을 0~100 스케일로 변환 (현재 raw 값은 백분율)
+        # 일반적으로 풋콜 비율 (백분율)은 50~150 범위. 100이 중립.
+        # 50 이하: 탐욕(100점), 150 이상: 공포(0점)
+        if put_call_ratio_raw <= 50:
             put_call_score = 100
-        elif put_call_ratio_raw >= 1.5:
+        elif put_call_ratio_raw >= 150:
             put_call_score = 0
         else:
-            put_call_score = 100 - (put_call_ratio_raw - 0.5) / (1.5 - 0.5) * 100 # 선형 스케일링
+            # put_call_ratio_raw가 50에서 150 사이일 때 선형 스케일링
+            # 50 -> 100점, 150 -> 0점
+            put_call_score = 100 - (put_call_ratio_raw - 50) / (150 - 50) * 100 # 선형 스케일링
         
         scores.append(put_call_score)
         print("지표 5 (풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
