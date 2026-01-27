@@ -12,25 +12,39 @@ from firebase_admin import credentials, firestore
 import time # 재시도를 위한 시간 지연
 
 # 1. Firebase 초기화
+firestore_initialized = False
+db = None
 if not firebase_admin._apps:
-    firebase_key = os.environ.get('FIREBASE_KEY')
-    
-    if firebase_key:
-        key_dict = json.loads(firebase_key)
-        cred = credentials.Certificate(key_dict)
-        firebase_admin.initialize_app(cred)
-        print("GitHub Secrets 키를 사용하여 인증되었습니다.")
-    else:
-        cred = credentials.ApplicationDefault() 
-        firebase_admin.initialize_app(cred)
-        print("기존 ApplicationDefault 방식을 사용하여 인증되었습니다.")
+    try:
+        firebase_key = os.environ.get('FIREBASE_KEY')
+        
+        if firebase_key:
+            key_dict = json.loads(firebase_key)
+            cred = credentials.Certificate(key_dict)
+            firebase_admin.initialize_app(cred)
+            print("GitHub Secrets 키를 사용하여 인증되었습니다.")
+        else:
+            cred = credentials.ApplicationDefault() 
+            firebase_admin.initialize_app(cred)
+            print("기존 ApplicationDefault 방식을 사용하여 인증되었습니다.")
+        
+        db = firestore.client()
+        firestore_initialized = True
+    except Exception as e:
+        print(f"Firebase 초기화 중 오류 발생: {e}. Firestore에 데이터를 저장할 수 없습니다.")
+else: # Already initialized, likely in a testing environment or subsequent call
+    try:
+        db = firestore.client()
+        firestore_initialized = True
+    except Exception as e:
+        print(f"이미 초기화된 Firebase 앱에서 Firestore 클라이언트 가져오기 오류: {e}. Firestore에 데이터를 저장할 수 없습니다.")
 
-db = firestore.client()
 
 def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
     auth_key = os.environ.get(auth_key_env_var)
     if not auth_key:
-        raise ValueError("환경 변수 '%s'가 KRX API 키로 설정되지 않았습니다." % auth_key_env_var)
+        print(f"경고: 환경 변수 '{auth_key_env_var}'가 KRX API 키로 설정되지 않았습니다. KRX API 호출을 건너뜝니다.")
+        return None
     
     headers = {
         "AUTH_KEY": auth_key,
@@ -114,11 +128,17 @@ def get_put_call_ratio_from_krx_api(date_str):
     params = {"basDd": date_str}
 
     data = _call_krx_api(endpoint, params)
+    
+    # _call_krx_api에서 None을 반환한 경우 (예: KRX_API_KEY 없음)
+    if data is None:
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API 호출 실패로 None 반환 for {date_str}.")
+        return None
+
     print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}")
 
     if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 50으로 처리합니다.")
-        return 50 # Return 50 as a neutral value
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. None을 반환합니다.")
+        return None
     
     put_volume = 0
     call_volume = 0
@@ -138,8 +158,8 @@ def get_put_call_ratio_from_krx_api(date_str):
     print(f"지표 5 (코스피200 옵션 풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
 
     if not filtered_items:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
-        return 50 # Return neutral if no specific product found
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. None을 반환합니다.")
+        return None
 
     for item in filtered_items:
         try:
@@ -153,11 +173,11 @@ def get_put_call_ratio_from_krx_api(date_str):
             continue
 
     if put_volume == 0 and call_volume == 0:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
-        put_call_ratio = 50
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. None을 반환합니다.")
+        return None # Return None if no volume to signify no meaningful data
     elif call_volume == 0:
-        print(f"지표 5 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
-        put_call_ratio = 100 # Put volume exists, Call volume is zero
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 200으로 처리 for {date_str}.")
+        put_call_ratio = 200 # Put volume exists, Call volume is zero (extreme fear)
     else:
         put_call_ratio = (put_volume / call_volume) * 100
     
@@ -237,18 +257,17 @@ def get_scores():
         if adr_score_raw is None:
             print("지표 3 (ADR) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
             scores.append(50)
-            continue
-
-        # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
-        if adr_score_raw <= 70:
-            adr_score_scaled = 0
-        elif adr_score_raw >= 120:
-            adr_score_scaled = 100
         else:
-            adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
-        
-        scores.append(adr_score_scaled)
-        print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
+            # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
+            if adr_score_raw <= 70:
+                adr_score_scaled = 0
+            elif adr_score_raw >= 120:
+                adr_score_scaled = 100
+            else:
+                adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
+            
+            scores.append(adr_score_scaled)
+            print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
     except Exception as e:
         print("지표 3 (ADR) 최종 오류: %s" % str(e))
         scores.append(50)
@@ -270,25 +289,24 @@ def get_scores():
         if vkospi_value is None:
             print("지표 4 (VKOSPI) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
             scores.append(50)
-            continue
-
-        vix = vkospi_value
-        
-        # 20일 윈도우 min/max 기반 스케일링 
-        # KRX API는 일별 데이터만 제공하므로, 20일치 데이터를 얻으려면 여러 번 호출 필요
-        # 아니면 한 번에 긴 기간을 요청하는 API를 찾아야 함.
-        # 일단은 현재 가져온 1일치 VKOSPI 값으로 직접 스케일링
-        # VKOSPI의 일반적인 범위는 10~40.
-        # 10 이하: 극심한 탐욕 (100점), 40 이상: 극심한 공포 (0점)
-        if vix <= 10:
-            v_score = 100
-        elif vix >= 40:
-            v_score = 0
         else:
-            v_score = 100 - (vix - 10) / (40 - 10) * 100 # 선형 스케일링
-        
-        scores.append(v_score)
-        print("지표 4 (VKOSPI) 성공: %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
+            vix = vkospi_value
+            
+            # 20일 윈도우 min/max 기반 스케일링 
+            # KRX API는 일별 데이터만 제공하므로, 20일치 데이터를 얻으려면 여러 번 호출 필요
+            # 아니면 한 번에 긴 기간을 요청하는 API를 찾아야 함.
+            # 일단은 현재 가져온 1일치 VKOSPI 값으로 직접 스케일링
+            # VKOSPI의 일반적인 범위는 10~40.
+            # 10 이하: 극심한 탐욕 (100점), 40 이상: 극심한 공포 (0점)
+            if vix <= 10:
+                v_score = 100
+            elif vix >= 40:
+                v_score = 0
+            else:
+                v_score = 100 - (vix - 10) / (40 - 10) * 100 # 선형 스케일링
+            
+            scores.append(v_score)
+            print("지표 4 (VKOSPI) 성공: %.2f (원시값), %.2f (스케일된 값)" % (vix, v_score))
     except Exception as e:
         print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
@@ -299,28 +317,31 @@ def get_scores():
         for i in range(10): # 지난 10일간 데이터를 시도
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
-                put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
-                if put_call_ratio_raw is not None: 
-                    print("지표 5 (코스피200 옵션 풋콜 비율): %s 데이터 사용." % target_date)
+                temp_put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
+                if temp_put_call_ratio_raw is not None: 
+                    put_call_ratio_raw = temp_put_call_ratio_raw
+                    print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date.strftime('%Y%m%d')} 데이터 사용.")
                     break
             except Exception as e_inner:
-                print("지표 5 (코스피200 옵션 풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                print(f"지표 5 (코스피200 옵션 풋콜 비율): {target_date.strftime('%Y%m%d')} 데이터 조회 실패. 재시도. 오류: {e_inner}")
                 time.sleep(1)
         
         if put_call_ratio_raw is None:
             print("지표 5 (코스피200 옵션 풋콜 비율) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
             scores.append(50)
-            continue
-
-        if put_call_ratio_raw <= 50:
-            put_call_score = 100
-        elif put_call_ratio_raw >= 150:
-            put_call_score = 0
         else:
-            put_call_score = 100 - (put_call_ratio_raw - 50) / (150 - 50) * 100
-        
-        scores.append(put_call_score)
-        print("지표 5 (코스피200 옵션 풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
+            # PCR이 100(1.0)을 기준으로 어떻게 변하는지 매핑
+            # 보통 70(탐욕) ~ 130(공포) 범위를 많이 사용합니다.
+            if put_call_ratio_raw <= 70:
+                put_call_score = 100
+            elif put_call_ratio_raw >= 130:
+                put_call_score = 0
+            else:
+                # 역비례 계산 (낮을수록 점수 높음)
+                put_call_score = 100 - (put_call_ratio_raw - 70) / (130 - 70) * 100
+            
+            scores.append(put_call_score)
+            print("지표 5 (코스피200 옵션 풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
     except Exception as e:
         print("지표 5 (코스피200 옵션 풋콜 비율) 오류: %s" % str(e))
         scores.append(50)
@@ -391,4 +412,11 @@ print("저장 완료: %d점 (%s)" % (score, status_obj["phase"])) # Print phase
 formatted_scores = [format(s, ".2f") for s in individual_scores]
 print("개별 지표: %s" % formatted_scores)
 
-db.collection('korea_index').add(data_to_save)
+if firestore_initialized:
+    try:
+        db.collection('korea_index').add(data_to_save)
+        print("Firestore에 데이터 저장 완료.")
+    except Exception as e:
+        print(f"Firestore에 데이터 저장 중 오류 발생: {e}")
+else:
+    print("Firestore가 초기화되지 않아 데이터 저장을 건너뜁니다.")
