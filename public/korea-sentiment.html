@@ -327,10 +327,6 @@
 
         // KOSPI Market Status Update logic (defined globally for accessibility)
         function updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator) {
-            // Temporarily force MARKET CLOSED for design review
-            let isOpen = false; 
-
-            /* Original market hour calculation logic (commented out for testing)
             const now = new Date();
             const currentUTCDay = now.getUTCDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
             const currentUTCHour = now.getUTCHours();
@@ -354,7 +350,7 @@
                     isOpen = true;
                 }
             }
-            */
+            
 
             if (isOpen) {
                 marketStatusText.textContent = "MARKET OPEN";
