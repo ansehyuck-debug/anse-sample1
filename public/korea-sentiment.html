@@ -134,8 +134,8 @@
 <h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
 <p class="text-base text-[#49699c] dark:text-slate-400">KOSPI fear and greed analysis based on market momentum and volatility.</p>
 </div>
-<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-bold text-slate-600 dark:text-slate-400">
-    <span id="market-status-dot" class="h-2 w-2 rounded-full bg-slate-400"></span>
+<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-6 py-2 text-xs font-bold text-slate-600 dark:text-slate-400">
+    <span id="market-status-dot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
     <span id="market-status-text">Updating...</span>
 </div>
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -361,15 +361,17 @@
                 // Explicitly set text color for marketStatusText
                 marketStatusText.classList.remove('text-slate-600', 'dark:text-slate-400', 'text-red-500');
                 marketStatusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                
             } else {
                 marketStatusText.textContent = "MARKET CLOSED";
                 marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
                 marketStatusDot.classList.add('bg-red-500');
                 marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
-                marketStatusIndicator.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                marketStatusIndicator.classList.add('bg-slate-200/60', 'dark:bg-slate-800/90', 'text-slate-600', 'dark:text-slate-400');
                 // Explicitly set text color for marketStatusText
                 marketStatusText.classList.remove('text-emerald-600', 'dark:text-emerald-400');
-                marketStatusText.classList.add('text-slate-600', 'dark:text-slate-400');
+                marketStatusText.classList.add('text-slate-400', 'dark:text-slate-400');        
+
             }
         }
 
