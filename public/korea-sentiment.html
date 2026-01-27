@@ -771,6 +771,8 @@
                 const isWeekday = currentUTCDay >= 1 && currentUTCDay <= 5; // Monday to Friday UTC
                 
                 let isOpen = false;
+                // Temporarily force MARKET CLOSED for design review
+                isOpen = false; 
                 if (isWeekday) {
                     if (currentUTCHour > marketOpenUTCHour && currentUTCHour < marketCloseUTCHour) {
                         isOpen = true;
