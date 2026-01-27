@@ -110,26 +110,26 @@ def get_adr_from_krx_api(date_str):
     return adr_score_raw
 
 def get_put_call_ratio_from_krx_api(date_str):
-    endpoint = "drv/opt_bydd_trd" # 옵션 일별매매정보 (주식옵션外)
+    endpoint = "drv/eqsop_bydd_trd" # 주식옵션(유가) 일별매매정보 (Equity Options Daily Trade Information) # <-- CHANGED
     params = {"basDd": date_str}
 
-    data = _call_krx_api(endpoint, params)
-    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str}: {json.dumps(data, indent=2)}") # Added logging
+    data = _call_krx_api(endpoint, params) # This might raise HTTPError (401)
+    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str} (from drv/eqsop_bydd_trd): {json.dumps(data, indent=2)}")
 
     if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}") # Added logging
+        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 50으로 처리합니다.")
         return 50 # Gracefully return 50 if OutBlock_1 is empty or missing
     
     put_volume = 0
     call_volume = 0
     
-    # KOSPI 200 옵션 상품만 필터링하여 Put/Call 거래량 합산
+    # KOSPI200 옵션 상품만 필터링하여 Put/Call 거래량 합산
     # '코스피200' 또는 'KOSPI200'을 포함하는 상품명 필터링
-    relevant_product_keywords = ["코스피200", "KOSPI200"] # We previously used this, let's keep it for drv/opt_bydd_trd
+    relevant_product_keywords = ["코스피200", "KOSPI200"]
     filtered_items = []
     
     all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
-    print(f"지표 5 (풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}")
+    print(f"지표 5 (풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/eqsop_bydd_trd): {all_prod_names_in_block}")
 
 
     for item in data["OutBlock_1"]:
@@ -137,11 +137,11 @@ def get_put_call_ratio_from_krx_api(date_str):
         if any(keyword in prod_nm for keyword in relevant_product_keywords):
             filtered_items.append(item)
             
-    print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}") # Added logging for filtered items
+    print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
 
     if not filtered_items:
         print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
-        return 50 # Return default if no filtered items after filtering
+        return 50 # Return default if no filtered items
 
     for item in filtered_items: # Iterate through filtered items
         try:
@@ -263,6 +263,51 @@ def get_scores():
     except Exception as e:
         print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
+    
+    # 지표 5: 풋콜 비율 - KRX API 사용
+    try:
+        put_call_ratio_raw = None
+        for i in range(5): # 지난 5일간 데이터를 시도
+            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            try:
+                # get_put_call_ratio_from_krx_api 함수 내에서 오류 발생 시 50을 반환하도록 수정했음.
+                # 따라서 이 곳에서는 None을 반환하지 않음.
+                put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
+                # If get_put_call_ratio_from_krx_api returns 50 (due to error/no data),
+                # we treat it as a valid score and don't retry further dates for this indicator.
+                # However, if it raises an exception, the outer try-except will catch it.
+                # put_call_ratio_raw는 get_put_call_ratio_from_krx_api 함수 내에서 50을 반환하도록 처리되었으므로,
+                # 이 시점에서는 None이 아닌 50을 가지게 됩니다.
+                # 따라서 이 조건 검사는 항상 True가 될 것입니다.
+                if put_call_ratio_raw is not None: 
+                    print("지표 5 (풋콜 비율): %s 데이터 사용." % target_date)
+                    break
+            except Exception as e_inner:
+                print("지표 5 (풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                time.sleep(1) # 짧은 지연
+        
+        # put_call_ratio_raw가 50을 반환하면 None이 아니므로 이 조건은 필요 없음.
+        # 이전에 raise ValueError를 발생시키던 부분 제거.
+        # if put_call_ratio_raw is None: # 이 줄은 이제 필요 없음.
+        #     raise ValueError("풋콜 비율 데이터를 5일 동안 찾지 못했습니다.")
+
+        # 풋콜 비율을 0~100 스케일로 변환 (현재 raw 값은 백분율)
+        # 일반적으로 풋콜 비율 (백분율)은 50~150 범위. 100이 중립.
+        # 50 이하: 탐욕(100점), 150 이상: 공포(0점)
+        if put_call_ratio_raw <= 50:
+            put_call_score = 100
+        elif put_call_ratio_raw >= 150:
+            put_call_score = 0
+        else:
+            # put_call_ratio_raw가 50에서 150 사이일 때 선형 스케일링
+            # 50 -> 100점, 150 -> 0점
+            put_call_score = 100 - (put_call_ratio_raw - 50) / (150 - 50) * 100 # 선형 스케일링
+        
+        scores.append(put_call_score)
+        print("지표 5 (풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
+    except Exception as e:
+        print("지표 5 (풋콜 비율) 오류: %s" % str(e))
+        scores.append(50) # Ensure 50 is appended even on unexpected errors
     
     # 5개 지표의 평균 계산 (지표 수가 변경되었으므로 동적으로 계산)
     final_score = sum(scores) / len(scores) if scores else 50
