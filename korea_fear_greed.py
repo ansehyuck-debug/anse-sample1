@@ -134,8 +134,8 @@ def get_put_call_ratio_from_krx_api(date_str):
     print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}") # Added logging for filtered items
 
     if not filtered_items:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음.")
-        raise ValueError("필터링된 KOSPI200 옵션 데이터가 없습니다.")
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI 관련 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
+        return 50 # Return default if no filtered items
 
     for item in filtered_items: # Iterate through filtered items
         try:
@@ -149,10 +149,10 @@ def get_put_call_ratio_from_krx_api(date_str):
             continue
 
     if put_volume == 0 and call_volume == 0:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI 관련 옵션의 Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
         put_call_ratio = 50
     elif call_volume == 0:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI 관련 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
         put_call_ratio = 100 # Put volume exists, Call volume is zero
     else:
         put_call_ratio = (put_volume / call_volume) * 100
