@@ -110,70 +110,14 @@ def get_adr_from_krx_api(date_str):
     return adr_score_raw
 
 def get_put_call_ratio_from_krx_api(date_str):
-    endpoint = "drv/eqsop_bydd_trd" # 주식옵션(유가) 일별매매정보 (Equity Options Daily Trade Information) # <-- CHANGED
-    params = {"basDd": date_str}
-
-    data = _call_krx_api(endpoint, params) # This might raise HTTPError (401)
-    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str} (from drv/eqsop_bydd_trd): {json.dumps(data, indent=2)}")
-
-    if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 50으로 처리합니다.")
-        return 50 # Gracefully return 50 if OutBlock_1 is empty or missing
-    
-    put_volume = 0
-    call_volume = 0
-    
-    # KOSPI200 옵션 상품만 필터링하여 Put/Call 거래량 합산
-    # '코스피200' 또는 'KOSPI200'을 포함하는 상품명 필터링
-    relevant_product_keywords = ["코스피200", "KOSPI200"]
-    filtered_items = []
-    
-    all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
-    print(f"지표 5 (풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/eqsop_bydd_trd): {all_prod_names_in_block}")
-
-
-    for item in data["OutBlock_1"]:
-        prod_nm = item.get("PROD_NM", "")
-        if any(keyword in prod_nm for keyword in relevant_product_keywords):
-            filtered_items.append(item)
-            
-    print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
-
-    if not filtered_items:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
-        return 50 # Return default if no filtered items
-
-    for item in filtered_items: # Iterate through filtered items
-        try:
-            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0'))
-            if item.get("RGHT_TP_NM") == "PUT":
-                put_volume += acc_trdvol
-            elif item.get("RGHT_TP_NM") == "CALL":
-                call_volume += acc_trdvol
-        except ValueError as ve:
-            print("거래량 변환 오류: %s (item: %s)" % (str(ve), str(item)))
-            continue
-
-    if put_volume == 0 and call_volume == 0:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
-        put_call_ratio = 50
-    elif call_volume == 0:
-        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
-        put_call_ratio = 100 # Put volume exists, Call volume is zero
-    else:
-        put_call_ratio = (put_volume / call_volume) * 100
-    
-    return put_call_ratio
-
-def get_pcr_from_kospi200_options_test(date_str):
     endpoint = "drv/opt_bydd_trd" # 옵션 일별매매정보 (주식옵션外)
     params = {"basDd": date_str}
 
     data = _call_krx_api(endpoint, params)
-    print(f"지표 6 (코스피200 옵션 풋콜 비율) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}")
+    print(f"지표 5 (코스피200 옵션 풋콜 비율) KRX API raw response for {date_str} (from drv/opt_bydd_trd): {json.dumps(data, indent=2)}")
 
     if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        print(f"지표 6 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 50으로 처리합니다.")
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}. 기본값 50으로 처리합니다.")
         return 50 # Return 50 as a neutral value
     
     put_volume = 0
@@ -184,17 +128,17 @@ def get_pcr_from_kospi200_options_test(date_str):
     filtered_items = []
     
     all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
-    print(f"지표 6 (코스피200 옵션 풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}")
+    print(f"지표 5 (코스피200 옵션 풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/opt_bydd_trd): {all_prod_names_in_block}")
 
     for item in data["OutBlock_1"]:
         prod_nm = item.get("PROD_NM", "")
         if prod_nm == target_prod_nm:
             filtered_items.append(item)
             
-    print(f"지표 6 (코스피200 옵션 풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
+    print(f"지표 5 (코스피200 옵션 풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}")
 
     if not filtered_items:
-        print(f"지표 6 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) '{target_prod_nm}' 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
         return 50 # Return neutral if no specific product found
 
     for item in filtered_items:
@@ -209,10 +153,10 @@ def get_pcr_from_kospi200_options_test(date_str):
             continue
 
     if put_volume == 0 and call_volume == 0:
-        print(f"지표 6 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
         put_call_ratio = 50
     elif call_volume == 0:
-        print(f"지표 6 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
+        print(f"지표 5 (코스피200 옵션 풋콜 비율) Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
         put_call_ratio = 100 # Put volume exists, Call volume is zero
     else:
         put_call_ratio = (put_volume / call_volume) * 100
@@ -224,35 +168,62 @@ def get_scores():
     
     # 지표 1: KOSPI vs 125일 이평선 이격도
     try:
-        df = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=200))
-        ma125 = df['Close'].rolling(window=125).mean().iloc[-1]
-        curr = df['Close'].iloc[-1]
-        score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
+        score1 = 50 # 기본값 설정
+        for i in range(10): # 오늘부터 10일 전까지 시도
+            target_date = datetime.now() - timedelta(days=i)
+            try:
+                df = fdr.DataReader('KS11', start=target_date - timedelta(days=200))
+                if not df.empty and len(df) >= 125: # 최소 125일 데이터 필요
+                    ma125 = df['Close'].rolling(window=125).mean().iloc[-1]
+                    curr = df['Close'].iloc[-1]
+                    score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
+                    print(f"지표 1 (KOSPI vs 125일 이평선 이격도) 성공: {target_date.strftime('%Y%m%d')} 데이터 사용, 점수: {score1:.2f}")
+                    break
+                else:
+                    print(f"지표 1 (KOSPI vs 125일 이평선 이격도): {target_date.strftime('%Y%m%d')} 데이터 부족. 재시도.")
+            except Exception as e_inner:
+                print(f"지표 1 (KOSPI vs 125일 이평선 이격도): {target_date.strftime('%Y%m%d')} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+            time.sleep(0.5) # 짧은 지연
         scores.append(score1)
-        print("지표 1 (KOSPI vs 125일 이평선 이격도) 성공: %.2f" % score1)
+        if score1 == 50: # 여전히 기본값이면 10일 동안 데이터를 찾지 못한 것
+             print("지표 1 (KOSPI vs 125일 이평선 이격도) 최종 오류: 10일 동안 유효한 데이터를 찾지 못했습니다. 기본값 50 사용.")
     except Exception as e:
-        print("지표 1 오류: %s" % str(e))
+        print("지표 1 (KOSPI vs 125일 이평선 이격도) 최종 오류: %s" % str(e))
         scores.append(50)
 
     # 지표 2: KOSPI 14일 RSI (대체 지표)
     try:
-        df_rsi = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=40))
-        delta = df_rsi['Close'].diff()
-        gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-        rs = gain / loss
-        rsi = 100 - (100 / (1 + rs))
-        rsi_score = rsi.iloc[-1]
+        rsi_score = 50 # 기본값 설정
+        for i in range(10): # 오늘부터 10일 전까지 시도
+            target_date = datetime.now() - timedelta(days=i)
+            try:
+                # RSI 계산을 위해 넉넉한 기간의 데이터 필요 (14일 + 1일 diff)
+                df_rsi = fdr.DataReader('KS11', start=target_date - timedelta(days=40)) 
+                if not df_rsi.empty and len(df_rsi) > 14: # 최소 14일 데이터 필요
+                    delta = df_rsi['Close'].diff()
+                    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+                    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+                    rs = gain / loss
+                    rsi = 100 - (100 / (1 + rs))
+                    rsi_score = rsi.iloc[-1]
+                    print(f"지표 2 (RSI) 성공: {target_date.strftime('%Y%m%d')} 데이터 사용, 점수: {rsi_score:.2f}")
+                    break
+                else:
+                    print(f"지표 2 (RSI): {target_date.strftime('%Y%m%d')} 데이터 부족. 재시도.")
+            except Exception as e_inner:
+                print(f"지표 2 (RSI): {target_date.strftime('%Y%m%d')} 데이터 조회 실패. 재시도. 오류: {e_inner}")
+            time.sleep(0.5) # 짧은 지연
         scores.append(rsi_score)
-        print("지표 2 (RSI) 성공: %.2f" % rsi_score)
+        if rsi_score == 50: # 여전히 기본값이면 10일 동안 데이터를 찾지 못한 것
+             print("지표 2 (RSI) 최종 오류: 10일 동안 유효한 데이터를 찾지 못했습니다. 기본값 50 사용.")
     except Exception as e:
-        print("지표 2 (RSI) 오류: %s" % str(e))
+        print("지표 2 (RSI) 최종 오류: %s" % str(e))
         scores.append(50)
 
     # 지표 3: ADR (상승/하락 비율) - KRX API 사용 
     try:
         adr_score_raw = None
-        for i in range(5): # 지난 5일간 데이터를 시도
+        for i in range(10): # 지난 10일간 데이터를 시도
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
                 adr_score_raw = get_adr_from_krx_api(target_date)
@@ -264,7 +235,9 @@ def get_scores():
                 time.sleep(1) # 짧은 지연
         
         if adr_score_raw is None:
-            raise ValueError("ADR 데이터를 5일 동안 찾지 못했습니다.")
+            print("지표 3 (ADR) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
+            scores.append(50)
+            continue
 
         # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
         if adr_score_raw <= 70:
@@ -283,7 +256,7 @@ def get_scores():
     # 지표 4: VKOSPI (변동성) - KRX API 사용
     try:
         vkospi_value = None
-        for i in range(5): # 지난 5일간 데이터를 시도
+        for i in range(10): # 지난 10일간 데이터를 시도
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
                 vkospi_value = get_vkospi_from_krx_api(target_date)
@@ -295,7 +268,9 @@ def get_scores():
                 time.sleep(1) # 짧은 지연
 
         if vkospi_value is None:
-            raise ValueError("VKOSPI 데이터를 5일 동안 찾지 못했습니다.")
+            print("지표 4 (VKOSPI) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
+            scores.append(50)
+            continue
 
         vix = vkospi_value
         
@@ -318,22 +293,24 @@ def get_scores():
         print("지표 4 (VKOSPI) 오류: %s" % str(e))
         scores.append(50)
     
-    # 지표 5: 풋콜 비율 - KRX API 사용
+    # 지표 5: 코스피200 옵션 풋콜 비율 - KRX API 사용
     try:
         put_call_ratio_raw = None
-        for i in range(5): # 지난 5일간 데이터를 시도
+        for i in range(10): # 지난 10일간 데이터를 시도
             target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
             try:
                 put_call_ratio_raw = get_put_call_ratio_from_krx_api(target_date)
                 if put_call_ratio_raw is not None: 
-                    print("지표 5 (풋콜 비율): %s 데이터 사용." % target_date)
+                    print("지표 5 (코스피200 옵션 풋콜 비율): %s 데이터 사용." % target_date)
                     break
             except Exception as e_inner:
-                print("지표 5 (풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
+                print("지표 5 (코스피200 옵션 풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
                 time.sleep(1)
         
         if put_call_ratio_raw is None:
-            raise ValueError("풋콜 비율 데이터를 5일 동안 찾지 못했습니다.")
+            print("지표 5 (코스피200 옵션 풋콜 비율) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
+            scores.append(50)
+            continue
 
         if put_call_ratio_raw <= 50:
             put_call_score = 100
@@ -343,39 +320,9 @@ def get_scores():
             put_call_score = 100 - (put_call_ratio_raw - 50) / (150 - 50) * 100
         
         scores.append(put_call_score)
-        print("지표 5 (풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
+        print("지표 5 (코스피200 옵션 풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (put_call_ratio_raw, put_call_score))
     except Exception as e:
-        print("지표 5 (풋콜 비율) 오류: %s" % str(e))
-        scores.append(50)
-    
-    # 지표 6: 코스피200 옵션 풋콜 비율 - drv/opt_bydd_trd 사용
-    try:
-        pcr_kospi_raw = None
-        for i in range(5):
-            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
-            try:
-                pcr_kospi_raw = get_pcr_from_kospi200_options_test(target_date)
-                if pcr_kospi_raw is not None:
-                    print("지표 6 (코스피200 옵션 풋콜 비율): %s 데이터 사용." % target_date)
-                    break
-            except Exception as e_inner:
-                print("지표 6 (코스피200 옵션 풋콜 비율): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
-                time.sleep(1)
-
-        if pcr_kospi_raw is None:
-            raise ValueError("코스피200 옵션 풋콜 비율 데이터를 5일 동안 찾지 못했습니다.")
-
-        if pcr_kospi_raw <= 50:
-            pcr_kospi_score = 100
-        elif pcr_kospi_raw >= 150:
-            pcr_kospi_score = 0
-        else:
-            pcr_kospi_score = 100 - (pcr_kospi_raw - 50) / (150 - 50) * 100
-        
-        scores.append(pcr_kospi_score)
-        print("지표 6 (코스피200 옵션 풋콜 비율) 성공: %.2f (원시값), %.2f (스케일된 값)" % (pcr_kospi_raw, pcr_kospi_score))
-    except Exception as e:
-        print("지표 6 (코스피200 옵션 풋콜 비율) 오류: %s" % str(e))
+        print("지표 5 (코스피200 옵션 풋콜 비율) 오류: %s" % str(e))
         scores.append(50)
     
     final_score = sum(scores) / len(scores) if scores else 50
