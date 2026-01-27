@@ -217,65 +217,10 @@
 </div>
 <!-- Market Indicators section -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-<h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
-<div class="space-y-4">
-    <div class="flex flex-col gap-1">
-    <div class="flex justify-between text-xs font-bold">
-    <span>Market Momentum</span>
-    <span class="text-primary">Very Strong</span>
+    <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
+    <div id="dynamic-indicators-container" class="space-y-4">
+        <!-- Dynamic indicators will be injected here by JavaScript -->
     </div>
-    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-    <div class="h-full w-[85%] rounded-full bg-primary"></div>
-    </div>
-    </div>
- 
-    <div class="flex flex-col gap-1">
-    <div class="flex justify-between text-xs font-bold">
-    <span>Stock Price Strength</span>
-    <span class="text-emerald-500">Low</span>
-    </div>
-    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-    <div class="h-full w-[25%] rounded-full bg-emerald-500"></div>
-    </div>
-    </div>
-
-    <div class="flex flex-col gap-1">
-    <div class="flex justify-between text-xs font-bold">
-    <span>Market Breadth</span>
-    <span class="text-red-400">Low</span>
-    </div>
-    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
-    </div>
-    </div>
-
-    <div class="flex flex-col gap-1">
-    <div class="flex justify-between text-xs font-bold">
-    <span>Market Volatility2</span>
-    <span class="text-red-400">Low</span>
-    </div>
-    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
-    </div>
-    </div>
-
-    <div class="flex flex-col gap-1">
-    <div class="flex justify-between text-xs font-bold">
-    <span>Options Put/Call Ratio</span>
-    <span class="text-red-400">Low</span>
-    </div>
-    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-    <div class="h-full w-[15%] rounded-full bg-red-400"></div>
-    </div>
-    </div>
-    
-   </div>
-    </div>
-    
-<div id="indicator-details" class="space-y-4">
-    <!-- Indicators will be injected here by JavaScript -->
-    <p id="indicator-list" class="text-sm text-[#49699c] dark:text-slate-400"></p>
-    <p id="indicator-avg" class="text-sm font-bold text-[#49699c] dark:text-slate-400"></p>
 </div>
 </div>
 <!-- Market Indices Quick View -->
@@ -386,12 +331,15 @@
             const kospi200ValueEl = document.getElementById('kospi200-value');
             const kospi200ChangeRateEl = document.getElementById('kospi200-change-rate');
             const kospi200ChangePointEl = document.getElementById('kospi200-change-point');
+            const dynamicIndicatorsContainer = document.getElementById('dynamic-indicators-container'); // Get new container reference
 
             // 로딩 상태 표시
             statusEl.textContent = "데이터를 불러오는 중..."; 
-            if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+            // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
             if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
             if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">데이터를 불러오는 중...</p>';
+
 
             // KOSPI 200 Quick View 로딩 상태
             kospi200ValueEl.textContent = "Loading...";
@@ -433,23 +381,33 @@
                     }
 
                     if (indicators.length > 0) {
-                        const indicatorTexts = indicators.map(item => {
-                            if (item.id === 5 && item.value === 50) {
-                                return `지표 ${item.id}(${item.name}) : 준비중`;
-                            } else if (item.value === 50) {
-                                return `지표 ${item.id}(${item.name}) : 50 (수집 준비중, 현재는 평균값)`;
-                            } else {
-                                return `지표 ${item.id}(${item.name}) : ${item.value.toFixed(2)}`;
-                            }
+                        dynamicIndicatorsContainer.innerHTML = ''; // Clear previous loading content
+                        indicators.forEach(item => {
+                            const indicatorValue = item.value.toFixed(2);
+                            let valueColorClass = "text-[#49699c]"; // Default color for text
+
+                            // Determine color based on value for progress bar and text
+                            if (item.value <= 25) { valueColorClass = "text-red-400"; }
+                            else if (item.value <= 45) { valueColorClass = "text-orange-400"; }
+                            else if (item.value <= 55) { valueColorClass = "text-yellow-400"; }
+                            else if (item.value <= 75) { valueColorClass = "text-emerald-500"; }
+                            else { valueColorClass = "text-primary"; } // blue for greed
+
+                            const indicatorHtml = `
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex justify-between text-xs font-bold">
+                                        <span>${item.name}</span>
+                                        <span class="${valueColorClass}">${indicatorValue}</span>
+                                    </div>
+                                    <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                                        <div class="h-full rounded-full bg-current" style="width: ${indicatorValue}%;"></div>
+                                    </div>
+                                </div>
+                            `;
+                            dynamicIndicatorsContainer.insertAdjacentHTML('beforeend', indicatorHtml);
                         });
-                        indicatorListEl.innerHTML = indicatorTexts.join('<br>');
-
-                        const avg = indicators.reduce((a, b) => a + b.value, 0) / indicators.length;
-                        indicatorAvgEl.textContent = `${indicators.length}개 지표 평균: ${avg.toFixed(2)}`;
-
-                        indicatorDetailsEl.style.display = 'block';
                     } else {
-                        indicatorDetailsEl.style.display = 'none'; // Hide if no indicators
+                        dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
                     }
 
                     // Chart data handling (placeholder for now)
@@ -530,9 +488,10 @@
 
                 } else {
                     statusEl.textContent = "업데이트된 데이터가 없습니다.";
-                    if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                    // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
                     if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
                     if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+                    if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
                     kospi200ValueEl.textContent = "N/A";
                     kospi200ChangeRateEl.textContent = "N/A";
                     kospi200ChangePointEl.textContent = "N/A";
@@ -540,9 +499,10 @@
             } catch (error) {
                 console.error("Firebase 오류: ", error);
                 statusEl.textContent = "연결 오류가 발생했습니다.";
-                if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
+                // Removed: if (indicatorDetailsEl) indicatorDetailsEl.style.display = 'none';
                 if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
                 if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 불러오는 중 오류가 발생했습니다.</p>';
                 kospi200ValueEl.textContent = "N/A";
                 kospi200ChangeRateEl.textContent = "N/A";
                 kospi200ChangePointEl.textContent = "N/A";
