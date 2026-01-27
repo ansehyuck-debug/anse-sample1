@@ -94,24 +94,35 @@
 </div>
 <h2 class="text-lg font-bold tracking-tight dark:text-white">곤충상이란?</h2>
 </div>
-<nav class="hidden md:flex items-center gap-6">
+<div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">오늘 저녁 뭐 먹지?</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
 <a class="text-sm font-semibold text-primary" href="/about-insect.html">곤충상이란?</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
-</nav>
+</div>
 </div>
 <div class="flex items-center gap-4">
-
+<button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
 <button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">light_mode</span>
 </button>
 <button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">notifications</span>
 </button>
-<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
+<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
 </div>
+</div>
+<div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
+<nav class="flex flex-col items-center gap-4 py-2">
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">오늘 저녁 뭐 먹지?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
+<a class="text-sm font-semibold text-primary" href="/about-insect.html">곤충상이란?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+</nav>
 </div>
 </header>
     <main class="mx-auto max-w-[1200px] px-6 py-8">
@@ -225,7 +236,18 @@
         }
         
         // Initial theme application on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', applySavedTheme);
+        document.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuButton && mobileMenu) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
     </script>
     <script>
         // Disqus configuration (remains unchanged)
