@@ -1,383 +1,930 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 저녁 뭐 먹지? - AI 기반 저녁 메뉴 추천기 (2026년 기준)</title>
-    <meta name="description" content="AI가 추천하는 오늘 저녁 메뉴. 버튼 하나로 간편하게 한식, 중식, 일식 등 다양한 저녁 메뉴를 추천받으세요.">
-    <meta name="author" content="anse">
-    <meta name="date" content="2026-01-17">
-    <link rel="canonical" href="https://anse-sample1.pages.dev/">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>국내 금융시장 심리</title> <!-- Keep original title -->
+<meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/> <!-- Keep original description -->
+<link rel="canonical" href="https://anse-sample1.pages.dev/"/> <!-- Keep original canonical -->
 
-    <meta property="og:title" content="오늘 저녁 뭐 먹지? - AI 기반 저녁 메뉴 추천기 (2026년 기준)">
-    <meta property="og:description" content="AI가 추천하는 오늘 저녁 메뉴. 버튼 하나로 간편하게 한식, 중식, 일식 등 다양한 저녁 메뉴를 추천받으세요.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://anse-sample1.pages.dev/">
-    <meta property="og:image" content="https://anse-sample1.pages.dev/favicon.svg">
+<meta property="og:title" content="국내 금융시장 심리"/> <!-- Keep original og tags -->
+<meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://anse-sample1.pages.dev/"/>
+<meta property="og:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="오늘 저녁 뭐 먹지? - AI 기반 저녁 메뉴 추천기 (2026년 기준)">
-    <meta name="twitter:description" content="오늘 저녁 메뉴가 고민될 때, 버튼 하나로 간편하게 한식, 중식, 일식 등 다양한 저녁 메뉴를 추천받으세요.">
-    <meta name="twitter:image" content="https://anse-sample1.pages.dev/favicon.svg">
+<meta name="twitter:card" content="summary"/> <!-- Keep original twitter tags -->
+<meta name="twitter:title" content="국내 금융시장 심리"/>
+<meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta name="twitter:image" content="https://anse-sample1.pages.dev/images/neutral.png"/>
 
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+<!-- Existing styles and icons -->
+<link rel="stylesheet" href="style.css"/> <!-- Keep this for now, will remove later if Tailwind replaces all -->
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-            tailwind.config = {
-                darkMode: "class",
-                theme: {
-                    extend: {
-                        colors: {
-                            "primary": "#3d84f5",
-                            "background-light": "#f5f7f8",
-                            "background-dark": "#101722",
-                        },
-                        fontFamily: {
-                            "display": ["Inter", "sans-serif"]
-                        },
-                        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+<!-- Tailwind CSS and Fonts from code.html -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3d84f5",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
                     },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
                 },
-            }
-        </script>
-    <style>
-            body { font-family: 'Inter', sans-serif; }
-            .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24; }
-            .gauge-gradient {
-                background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
-            }
-        </style>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
-    <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-C8QR98TVTB');
-        </script>
-
-    <script type="text/javascript">
-            (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "v2qmp0i82b");
-        </script>
-
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": "오늘 저녁 뭐 먹지? - AI 기반 저녁 메뉴 추천기",
-          "url": "https://anse-sample1.pages.dev/",
-          "description": "AI가 추천하는 오늘 저녁 메뉴. 버튼 하나로 간편하게 한식, 중식, 일식 등 다양한 저녁 메뉴를 추천받으세요.",
-          "datePublished": "2026-01-17",
-          "author": {
-            "@type": "Person",
-            "name": "anse"
-          }
+            },
         }
-        </script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9750321636945438"
-         crossorigin="anonymous"></script>
-        <meta name="google-adsense-account" content="ca-pub-9750321636945438">
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24; }
+        .gauge-gradient {
+            background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
+        }
+    </style>
+
+<!-- Existing Google Analytics and Clarity scripts -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
+<script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C8QR98TVTB');
+    </script>
+
+<script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "v2qmp0i82b");
+    </script>
+
+<!-- Existing ld+json -->
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "국내 금융시장 심리",
+      "url": "https://anse-sample1.pages.dev/",
+      "description": "한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.",
+      "datePublished": "2026-01-17",
+      "author": {
+        "@type": "Person",
+        "name": "anse"
+      }
+    }
+    </script>
+
+
 </head>
 <body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
-    <div id="root">
 <!-- Top Navigation Bar -->
 <header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
 <div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3">
 <div class="flex items-center gap-8">
 <div class="flex items-center gap-3">
 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-<span class="material-symbols-outlined text-[20px] text-white">restaurant_menu</span>
+<span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
 </div>
-<h2 class="text-lg font-bold tracking-tight dark:text-white">오늘 저녁 뭐 먹지?</h2>
+<h2 class="text-lg font-bold tracking-tight dark:text-white">KOSPI Fear &amp; Greed</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/index.html">오늘 저녁 뭐 먹지?</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/about-insect.html">곤충상이란?</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/public/index.html">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/dinner.html">오늘 저녁 뭐 먹지?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/insect.html">곤충상 테스트</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/about-insect.html">곤충상이란?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/sentiment.html">미국 금융 시장 심리</a>
 </div>
 </div>
 <div class="flex items-center gap-4">
 <button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">menu</span>
 </button>
+
 <button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">light_mode</span>
 </button>
 <button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined">notifications</span>
 </button>
-<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvU8yp9ZTwnIf')"></div>
+<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
 </div>
 </div>
 <div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
 <nav class="flex flex-col items-center gap-4 py-2">
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/korea-sentiment.html">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/index.html">오늘 저녁 뭐 먹지?</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/insect.html">곤충상 테스트</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/about-insect.html">곤충상이란?</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/public/index.html">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/dinner.html">오늘 저녁 뭐 먹지?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/insect.html">곤충상 테스트</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/about-insect.html">곤충상이란?</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/public/sentiment.html">미국 금융 시장 심리</a>
 </nav>
 </div>
 </header>
-
-
-    <main class="mx-auto max-w-[1200px] px-6 py-8">
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div class="lg:col-span-12">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <article>
-                        <div class="menu-display">
-                            <div id="loading-indicator">
-                                <div class="loader"></div>
-                                <p>로딩 중...</p>
-                            </div>
-                            <img id="menu-image" src="" alt="추천 메뉴 이미지" style="display: none; width:30em; max-width: 100%; height: auto; margin-bottom: 15px; border-radius: 8px;">
-                            <span id="menu-recommendation">AI가 잠시 후 저녁 메뉴를 추천합니다...</span>
-                        </div>
-                        <button id="generate" class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:opacity-80 transition-colors">추천 받기</button>
-                    </article>
-                </div>
-            </div>
-
-            <div class="lg:col-span-12 mt-2">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <section>
-                        <h2 class="text-lg font-bold">AI 저녁 메뉴 추천기란?</h2>
-                        <p>본 웹사이트는 결정 장애를 겪는 분들을 위해 버튼 클릭 한 번으로 저녁 메뉴를 추천해주는 AI 기반 도구입니다. 추천 메뉴는 한식, 중식, 일식, 양식 등 다양한 카테고리를 포함합니다.</p>
-                    </section>
-                </div>
-            </div>
-
-            <div class="lg:col-span-12 mt-2">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <section>
-                        <h2 class="text-lg font-bold">자주 묻는 질문 (Q&A)</h2>
-                        <h3 class="text-base font-bold">Q. 추천은 어떻게 이루어지나요?</h3>
-                        <p>A. AI가 사전에 학습한 방대한 메뉴 데이터베이스에서 무작위로 1개의 메뉴를 선정하여 추천합니다.</p>
-                        <h3 class="text-base font-bold">Q. 메뉴를 직접 추가할 수 있나요?</h3>
-                        <p>A. 현재는 메뉴 추가 기능이 없으나, 제휴 문의를 통해 메뉴 추가를 제안하실 수 있습니다.</p>
-                    </section>
-                </div>
-            </div>
-
-            <div class="lg:col-span-12 mt-2">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <section>
-                        <h2 class="text-lg font-bold">데이터 출처 및 기준</h2>
-                        <p>본 추천기의 메뉴 리스트는 대한민국 인기 외식 메뉴 및 배달 음식 데이터를 기반으로 작성되었습니다. (기준일: 2026년 1월)</p>
-                        <table>
-                            <caption>카테고리별 메뉴 예시</caption>
-                            <thead>
-                                <tr>
-                                    <th>한식</th>
-                                    <th>중식</th>
-                                    <th>일식</th>
-                                    <th>양식</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>김치찌개</td>
-                                    <td>짜장면</td>
-                                    <td>초밥</td>
-                                    <td>파스타</td>
-                                </tr>
-                                <tr>
-                                    <td>된장찌개</td>
-                                    <td>짬뽕</td>
-                                    <td>라멘</td>
-                                    <td>피자</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                </div>
-            </div>
-
-            <div class="lg:col-span-12 mt-2">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <div class="contact-section">
-                        <h2 class="text-lg font-bold">저녁 메뉴 추천 제휴 문의</h2>
-                        <form action="https://formspree.io/f/mlggrwrk" method="POST">
-                            <input type="text" name="name" placeholder="이름" required>
-                            <input type="email" name="email" placeholder="이메일" required>
-                            <textarea name="message" placeholder="내용" required></textarea>
-                            <button type="submit" class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:opacity-80 transition-colors">보내기</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<main class="mx-auto max-w-[1200px] px-6 py-8">
+<!-- Page Heading -->
+<div class="mb-8 flex flex-wrap items-end justify-between gap-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
+<p class="text-base text-[#49699c] dark:text-slate-400">KOSPI fear and greed analysis based on market momentum and volatility.</p>
+</div>
+<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-6 py-2 text-xs font-bold text-slate-600 dark:text-slate-400">
+    <span id="market-status-dot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    <span id="market-status-text">Updating...</span>
+</div>
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+<!-- Main Gauge Section -->
+<div class="lg:col-span-8">
+<div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
+<div class="mb-4 flex items-center justify-between">
+<h3 class="text-lg font-bold">Current Sentiment</h3>
+<span id="last-updated-time" class="text-sm font-medium text-[#49699c]">Last updated: 14:30 KST</span>
+</div>
+<div class="relative flex flex-col items-center py-10">
+<!-- Gauge visualization -->
+<div class="relative h-48 w-80 overflow-hidden rounded-t-full bg-slate-100 dark:bg-slate-800">
+<!-- Gauge segments colored with conic gradient simulated as a semicircular background -->
+<div class="absolute inset-0 gauge-gradient opacity-80" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+<div class="absolute bottom-0 left-1/2 h-32 w-64 -translate-x-1/2 rounded-t-full bg-white dark:bg-[#161f2c]"></div>
+<!-- Needle -->
+<div class="absolute bottom-0 left-1/2 h-40 w-1 -translate-x-1/2 origin-bottom transition-transform duration-1000 ease-out" id="gauge-needle">
+<div class="h-full w-full bg-slate-900 dark:bg-white rounded-full"></div>
+<div class="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-slate-900 dark:bg-white"></div>
+</div>
+</div>
+<div class="mt-6 flex flex-col items-center gap-1">
+<span id="score" class="text-5xl font-black text-primary"></span>
+<span id="status" class="text-2xl font-bold tracking-tight text-primary">GREED</span>
+</div>
+<div class="mt-10 flex w-full justify-between px-4">
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-red-400"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Fear</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-yellow-400"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Neutral</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="h-1.5 w-12 rounded-full bg-primary"></span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Greed</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 30-Day Trend Chart -->
+<div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+<div class="mb-6 flex items-center justify-between">
+<h3 class="text-lg font-bold">30-Day Index History</h3>
+<div class="flex gap-2">
+<button class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">30D</button>
+<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">90D</button>
+<button class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">1Y</button>
+</div>
+</div>
+<div id="index-history-container" class="h-64 w-full relative"> <!-- Added ID and relative for absolute positioning -->
+    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]">
+        Preparing data...
+    </div>
+    <div id="index-history-chart" class="h-full w-full" style="display: none;"> <!-- Added ID and initially hidden -->
+        <svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+        <!-- Area background -->
+        <path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+        <!-- Line -->
+        <path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
+        <defs>
+        <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#3d84f5"></stop>
+        <stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
+        </lineargradient>
+        </defs>
+        </svg>
+        <div class="mt-4 flex justify-between text-[11px] font-bold text-[#49699c]">
+        <span>30 DAYS AGO</span>
+        <span>20 DAYS AGO</span>
+        <span>10 DAYS AGO</span>
+        <span>TODAY</span>
         </div>
-        
+    </div>
+</div>
+</div>
+</div>
+<!-- Historical Comparisons & Side Metrics -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Comparison Cards -->
+<div class="grid grid-cols-1 gap-4">
+<div class="proverb-display flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4">오늘의 주식 시장 격언</h4>
+        <p id="proverb-text" class="italic text-base text-gray-800 dark:text-gray-200 min-h-[50px] flex items-center justify-center text-center" style="white-space: pre-wrap;"></p>
+        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors">새 격언 확인하기</button>
+</div>
+<!-- Market Indicators section -->
+<div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+    <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
+    <div id="dynamic-indicators-container" class="space-y-4">
+        <!-- Dynamic indicators will be injected here by JavaScript -->
+    </div>
+</div>
+</div>
+<!-- Market Indices Quick View -->
+<div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-primary text-white p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-sm font-bold uppercase tracking-wider">KOSPI</h4>
+<a href="https://finance.naver.com/sise/" target="_blank"><span class="material-symbols-outlined">insights</span></a>
+</div>
+<div class="flex flex-col gap-1">
+<p id="kospi-value" class="text-3xl font-black">Loading...</p>
+<div class="flex items-center gap-2">
+<span id="kospi-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded"></span>
+<span id="kospi-change-point" class="text-sm text-white/80"></span>
+</div>
+</div>
+<p id="kospi-last-updated" class="text-xs text-white/70 mt-2"></p>
+</div>
 
+<div class="flex gap-4">
+    <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
+                            How it's calculated
+                        </button>
+    <button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
+                            Export Data
+                        </button>
+    </div>
+</div>
+</div>
+</div>
+
+<div id="indicator-explanation-section" style="display: none;" class="mt-8">
+<h2 class="text-2xl font-bold mb-4 dark:text-white">지표별 계산 방식 및 스케일링</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피 지수가 125일 이동평균선과 얼마나 떨어져 있는지를 나타내는 지표입니다. 이격도가 크면 과매수(탐욕), 작으면 과매도(공포)로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> 이격도 0.9 이하 → 0점 (극심한 공포), 이격도 1.1 이상 → 100점 (극심한 탐욕). 0.9 ~ 1.1 범위에서 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">2. KOSPI 14일 RSI (주가 강도)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            KOSPI 지수의 14일 상대강도지수(RSI)를 사용하여 주가의 상승 및 하락 강도를 측정합니다. RSI가 낮으면 과매도(공포), 높으면 과매수(탐욕)로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> RSI 값 0 ~ 100을 그대로 0점 ~ 100점으로 스케일링합니다. 0점은 극심한 공포, 100점은 극심한 탐욕을 나타냅니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">3. ADR (상승/하락 비율) (시장 폭)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            일정 기간 동안 상승한 종목 수와 하락한 종목 수의 비율을 나타내는 지표입니다. ADR이 낮으면 시장 전반의 하락세(공포), 높으면 상승세(탐욕)를 의미합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> ADR 70 이하 → 0점 (극심한 공포), ADR 120 이상 → 100점 (극심한 탐욕). 70 ~ 120 범위에서 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">4. VKOSPI (변동성) (시장 변동성)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피200 변동성 지수(VKOSPI)는 시장의 예상 변동성을 나타내며, 투자자들의 공포 심리를 반영합니다. VKOSPI 값이 높으면 시장의 불확실성 증가(공포), 낮으면 안정(탐욕)으로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> VKOSPI 40 이상 → 0점 (극심한 공포), VKOSPI 10 이하 → 100점 (극심한 탐욕). 10 ~ 40 범위에서 역비례하여 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+        <h3 class="text-lg font-bold mb-2">5. 코스피200 옵션 풋콜 비율 (옵션 풋콜 비율)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+            코스피200 옵션 시장에서 풋옵션 거래량과 콜옵션 거래량의 비율을 나타내는 지표입니다. 풋옵션 거래량(하락에 베팅)이 많으면 공포, 콜옵션 거래량(상승에 베팅)이 많으면 탐욕으로 해석합니다.
+        </p>
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+            <strong>스케일링:</strong> PCR 180 이상 → 0점 (극심한 공포), PCR 60 이하 → 100점 (극심한 탐욕). 60 ~ 180 범위에서 역비례하여 선형적으로 스케일링됩니다.
+        </p>
+    </div>
+</div>
+</div>
+
+<!-- Footer / Data Source -->
 <footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
 <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
 <div class="flex flex-col gap-2">
-<p class="text-sm font-medium">AI가 추천하는 오늘 저녁 메뉴. 버튼 하나로 간편하게 한식, 중식, 일식 등 다양한 저녁 메뉴를 추천받으세요.</p>
-<p class="max-w-md text-xs leading-relaxed">본 추천기의 메뉴 리스트는 대한민국 인기 외식 메뉴 및 배달 음식 데이터를 기반으로 작성되었습니다. (기준일: 2026년 1월)</p>
+<p class="text-sm font-medium dark:text-white">Data provided by KRX (Korea Exchange) and KOFIA.</p>
+<p class="max-w-md text-xs leading-relaxed dark:text-white">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
 </div>
 <div class="flex gap-4">
-<a href="/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-<span class="material-symbols-outlined text-[18px]">policy</span>
-                        개인정보처리방침
-                    </a>
-</div>
+    <a href="/public/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <span class="material-symbols-outlined text-[18px]">policy</span>
+                            개인정보처리방침
+                        </a>
+    </div>
+
 </div>
 </footer>
 </main>
-
-
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-const generateBtn = document.getElementById('generate');
-const menuRecommendation = document.getElementById('menu-recommendation');
-const menuImage = document.getElementById('menu-image'); // New: Get reference to the image element
-const themeSwitcher = document.getElementById('theme-switcher');
-const body = document.body;
-const loadingIndicator = document.getElementById('loading-indicator'); // Get reference to loading indicator
+      // Firebase initialization
+      const firebaseConfig = {
+        apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
+        authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
+        projectId: "anse-sample1-46739525-2d1c0",
+        storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
+        messagingSenderId: "164266713411",
+        appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
 
-const menus = [
-    '치킨', '피자', '삼겹살', '떡볶이', '초밥', '파스타', '김치찌개', '된장찌개',
-    '부대찌개', '곱창', '족발', '보쌈', '짜장면', '짬뽕', '탕수육', '돈까스',
-    '냉면', '국밥', '스테이크', '햄버거'
-];
-
-// New: Map menu items to image paths
-const menuImageMap = {
-    "치킨": "images/치킨.png",
-    "피자": "images/피자.png",
-    "삼겹살": "images/삼겹살.png",
-    "떡볶이": "images/떡볶이.png",
-    "초밥": "images/초밥.png",
-    "파스타": "images/파스타.png",
-    "김치찌개": "images/김치찌개.png",
-    "된장찌개": "images/된장찌개.png",
-    "부대찌개": "images/부대찌개.png",
-    "곱창": "images/곱창.png",
-    "족발": "images/족발.png",
-    "보쌈": "images/보쌈.png",
-    "짜장면": "images/짜장면.png",
-    "짬뽕": "images/짬뽕.png",
-    "탕수육": "images/탕수육.png",
-    "돈까스": "images/돈까스.png",
-    "냉면": "images/냉면.png",
-    "국밥": "images/국밥.png",
-    "스테이크": "images/스테이크.png",
-    "햄버거": "images/햄버거.png",
-};
-
-function recommendMenu() {
-    const randomIndex = Math.floor(Math.random() * menus.length);
-    const recommendedMenu = menus[randomIndex];
-    menuRecommendation.textContent = recommendedMenu;
-    menuRecommendation.style.display = 'none'; // Hide text until image loads
-
-    // Show loading indicator and hide image before setting src
-    menuImage.style.display = 'none';
-    if (menuImageMap[recommendedMenu]) {
-        loadingIndicator.style.display = 'flex'; // Use flex for centering content inside loading indicator
-        menuImage.src = menuImageMap[recommendedMenu];
-    } else {
-        menuImage.src = ''; // Clear source
-        loadingIndicator.style.display = 'none'; // Ensure loading indicator is hidden if no image
-        menuRecommendation.style.display = 'block'; // Show text if no image to load
-    }
-}
-
-// Add these new lines outside the recommendMenu function, perhaps after variable declarations
-menuImage.addEventListener('load', () => {
-    loadingIndicator.style.display = 'none';
-    menuImage.style.display = 'block';
-    menuRecommendation.style.display = 'block'; // Show text after image loads
-});
-
-menuImage.addEventListener('error', () => {
-    loadingIndicator.style.display = 'none';
-    menuImage.src = ''; // Clear source to prevent broken image icon
-    menuImage.style.display = 'none'; // Ensure image remains hidden
-    menuRecommendation.style.display = 'block'; // Show text even if image fails
-    console.error("Failed to load image for: " + menuRecommendation.textContent);
-});
-
-// --- Theme Switcher Logic ---
-const updateThemeIcon = (isDarkMode) => {
-    const icon = document.querySelector('#theme-switcher .material-symbols-outlined');
-    if (icon) {
-        icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
-    }
-};
-
-const applySavedTheme = () => {
-    const savedTheme = localStorage.getItem('theme');
-    const isDarkMode = savedTheme === 'dark';
-    if (isDarkMode) {
-        document.documentElement.classList.add('dark');
-        updateThemeIcon(true);
-    } else {
-        document.documentElement.classList.remove('dark');
-        updateThemeIcon(false);
-    }
-};
-
-themeSwitcher.addEventListener('click', () => {
-    const isDarkMode = document.documentElement.classList.toggle('dark');
-    if (isDarkMode) {
-        localStorage.setItem('theme', 'dark');
-    } else {
-        localStorage.removeItem('theme');
-    }
-    updateThemeIcon(isDarkMode);
-});
-
-// 페이지 로드 시 저장된 테마를 확인하고 적용합니다.
-document.addEventListener('DOMContentLoaded', () => {
-    applySavedTheme();
-    // Mobile menu toggle logic
-    const menuButton = document.getElementById('menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (menuButton && mobileMenu) {
-        menuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-    // 페이지가 처음 로드될 때 메뉴를 추천합니다.
-    if (generateBtn) { // Only call if on the main menu page
-        recommendMenu();
-    }
-});
-
-if (generateBtn) {
-    generateBtn.addEventListener('click', recommendMenu);
-}
-
-
-    </script>
-    <script>
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-        var disqus_config = function () {
-            this.page.url = 'https://anse-sample1.pages.dev/';  // Replace PAGE_URL with your page's canonical URL variable
-            this.page.identifier = 'https://anse-sample1.pages.dev/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        // Define indicator names
+        const indicatorNames = {
+            1: "시장의 모멘텀",
+            2: "주가 강도",
+            3: "시장의 폭",
+            4: "시장 변동성",
+            5: "옵션 풋콜 비율"
         };
-        (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        s.src = 'https://ansebooktv.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
+
+        // Function to update gauge needle rotation and sentiment text/color
+        function updateGauge(score) {
+            const needle = document.getElementById('gauge-needle');
+            const scoreDisplay = document.getElementById('score');
+            const sentimentText = document.getElementById('status'); // Ref to sentiment text for color update
+
+            // Map score 0-100 to rotation -90 to 90 degrees
+            const rotationDegree = (score / 100) * 180 - 90;
+            needle.style.transform = `translateX(-50%) rotate(${rotationDegree}deg)`;
+
+            scoreDisplay.textContent = score;
+
+            // Determine color based on score
+            let textColorClass = "";
+            if (score <= 25) { textColorClass = "text-red-500"; }
+            else if (score <= 45) { textColorClass = "text-orange-500"; }
+            else if (score <= 55) { textColorClass = "text-yellow-500"; }
+            else if (score <= 75) { textColorClass = "text-emerald-500"; }
+            else { textColorClass = "text-blue-500"; }
+
+            // Apply color to score display, preserving font size and other text styles
+            scoreDisplay.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
+            scoreDisplay.classList.add(textColorClass);
+            
+            // Apply color to sentiment text, preserving font size and other text styles
+            sentimentText.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
+            sentimentText.classList.add(textColorClass);
+        }
+
+        // KOSPI Market Status Update logic (defined globally for accessibility)
+        function updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator) {
+            const now = new Date();
+            const currentUTCDay = now.getUTCDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+            const currentUTCHour = now.getUTCHours();
+            const currentUTCMinute = now.getUTCMinutes();
+
+            // KOSPI market hours in UTC: Monday-Friday, 00:00 UTC (9:00 KST) to 06:30 UTC (15:30 KST)
+            const marketOpenUTCHour = 0; // 09:00 KST
+            const marketOpenUTCMinute = 0;
+            const marketCloseUTCHour = 6; // 15:30 KST
+            const marketCloseUTCMinute = 30;
+
+            const isWeekday = currentUTCDay >= 1 && currentUTCDay <= 5; // Monday to Friday UTC
+            
+            let isOpen = false;
+            if (isWeekday) {
+                if (currentUTCHour > marketOpenUTCHour && currentUTCHour < marketCloseUTCHour) {
+                    isOpen = true;
+                } else if (currentUTCHour === marketOpenUTCHour && currentUTCMinute >= marketOpenUTCMinute) {
+                    isOpen = true;
+                } else if (currentUTCHour === marketCloseUTCHour && currentUTCMinute <= marketCloseUTCMinute) {
+                    isOpen = true;
+                }
+            }
+            
+
+            if (isOpen) {
+                marketStatusText.textContent = "MARKET OPEN";
+                marketStatusDot.classList.remove('bg-red-500', 'bg-slate-400');
+                marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
+                marketStatusIndicator.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                marketStatusIndicator.classList.add('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+                // Explicitly set text color for marketStatusText
+                marketStatusText.classList.remove('text-slate-600', 'dark:text-slate-400', 'text-red-500');
+                marketStatusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                
+            } else {
+                marketStatusText.textContent = "MARKET CLOSED";
+                marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
+                marketStatusDot.classList.add('bg-red-500');
+                marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+                marketStatusIndicator.classList.add('bg-slate-200/60', 'dark:bg-slate-800/90', 'text-slate-600', 'dark:text-slate-400');
+                // Explicitly set text color for marketStatusText
+                marketStatusText.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                marketStatusText.classList.add('text-slate-400', 'dark:text-slate-400');        
+
+            }
+        }
+
+        async function fetchLatestIndex() {
+            const scoreEl = document.getElementById('score');
+            const statusEl = document.getElementById('status');
+            const lastUpdatedTimeEl = document.getElementById('last-updated-time');
+            const indicatorDetailsEl = document.getElementById('indicator-details');
+            const indicatorListEl = document.getElementById('indicator-list');
+            const indicatorAvgEl = document.getElementById('indicator-avg');
+
+            // New elements for chart placeholder
+            const chartPlaceholderEl = document.getElementById('chart-placeholder');
+            const indexHistoryChartEl = document.getElementById('index-history-chart');
+            
+                        // New elements for KOSPI Quick View
+            
+                        const kospiValueEl = document.getElementById('kospi-value');
+            
+                        const kospiChangeRateEl = document.getElementById('kospi-change-rate');
+            
+                        const kospiChangePointEl = document.getElementById('kospi-change-point');
+            
+                        const kospiLastUpdatedEl = document.getElementById('kospi-last-updated');
+            
+                        const dynamicIndicatorsContainer = document.getElementById('dynamic-indicators-container'); // Get new container reference
+            
+            
+            
+                        // 로딩 상태 표시
+            
+                        statusEl.textContent = "데이터를 불러오는 중..."; 
+            
+                        if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
+            
+                        if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                        if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">데이터를 불러오는 중...</p>';
+            
+            
+            
+            
+            
+                        // KOSPI Quick View 로딩 상태
+            
+                        kospiValueEl.textContent = "Loading...";
+            
+                        kospiChangeRateEl.textContent = "";
+            
+                        kospiChangePointEl.textContent = "";
+            
+                        kospiLastUpdatedEl.textContent = "";
+            
+            
+            
+                        try {
+            
+                            const q = db.collection("korea_index").orderBy("timestamp", "desc").limit(1);
+            
+                            const querySnapshot = await q.get();
+            
+            
+            
+                            if (!querySnapshot.empty) {
+            
+                                const doc = querySnapshot.docs[0].data();
+            
+                                const score = doc.score;
+            
+                                const statusFromFirestore = doc.status; // This will be the object
+            
+                                const timestamp = doc.timestamp.toDate(); // Corrected line
+            
+                                const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+            
+                                
+            
+                                // Update main score, sentiment, and gauge
+            
+                                updateGauge(score); // This handles needle and score color/value
+            
+                                lastUpdatedTimeEl.textContent = `Last updated: ${formattedTime}`; // Use template literal
+            
+            
+            
+                                // Set sentiment text from Firestore object
+            
+                                if (statusFromFirestore && statusFromFirestore.phase) {
+            
+                                    statusEl.textContent = statusFromFirestore.phase;
+            
+                                } else {
+            
+                                    statusEl.textContent = "업데이트된 데이터가 없습니다."; // Fallback if status object is missing
+            
+                                }
+            
+            
+            
+                                const indicators = [];
+            
+                                for (let i = 1; i <= 5; i++) {
+            
+                                    const indicatorKey = `indicator${i}`;
+            
+                                    if (doc[indicatorKey] !== undefined) {
+            
+                                        indicators.push({
+            
+                                            id: i,
+            
+                                            name: indicatorNames[i],
+            
+                                            value: doc[indicatorKey]
+            
+                                        });
+            
+                                    }
+            
+                                }
+            
+            
+            
+                                if (indicators.length > 0) {
+            
+                                    dynamicIndicatorsContainer.innerHTML = ''; // Clear previous loading content
+            
+                                    indicators.forEach(item => {
+            
+                                        const indicatorValue = item.value.toFixed(2);
+            
+                                        let valueColorClass = "text-[#49699c]"; // Default color for text
+            
+                                        let progressBarColorClass = "bg-[#49699c]"; // Default color for progress bar
+            
+            
+            
+                                        // Determine color based on value for progress bar and text
+            
+                                        if (item.value <= 25) { 
+            
+                                            valueColorClass = "text-red-400";
+            
+                                            progressBarColorClass = "bg-red-400";
+            
+                                        } else if (item.value <= 45) { 
+            
+                                            valueColorClass = "text-orange-400";
+            
+                                            progressBarColorClass = "bg-orange-400";
+            
+                                        } else if (item.value <= 55) { 
+            
+                                            valueColorClass = "text-yellow-400";
+            
+                                            progressBarColorClass = "bg-yellow-400";
+            
+                                        } else if (item.value <= 75) { 
+            
+                                            valueColorClass = "text-emerald-500";
+            
+                                            progressBarColorClass = "bg-emerald-500";
+            
+                                        } else { 
+            
+                                            valueColorClass = "text-primary"; // blue for greed
+            
+                                            progressBarColorClass = "bg-primary";
+            
+                                        }
+            
+            
+            
+                                        const indicatorHtml = `
+            
+                                            <div class="flex flex-col gap-1">
+            
+                                                <div class="flex justify-between text-xs font-bold">
+            
+                                                    <span>${item.name}</span>
+            
+                                                    <span class="${valueColorClass}">${indicatorValue}</span>
+            
+                                                </div>
+            
+                                                <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+            
+                                                    <div class="h-full rounded-full ${progressBarColorClass}" style="width: ${indicatorValue}%;"></div>
+            
+                                                </div>
+            
+                                            </div>
+            
+                                        `;
+            
+                                        dynamicIndicatorsContainer.insertAdjacentHTML('beforeend', indicatorHtml);
+            
+                                    });
+            
+                                } else {
+            
+                                    dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
+            
+                                }
+            
+            
+            
+                                // Chart data handling (placeholder for now)
+            
+                                // Assuming doc.historicalChartData will be available eventually
+            
+                                // For now, it will always show "Preparing data..."
+            
+                                if (doc.historicalChartData) { // Placeholder condition for future chart data
+            
+                                    chartPlaceholderEl.style.display = 'none';
+            
+                                    indexHistoryChartEl.style.display = 'block';
+            
+                                    // Render chart here when data is available
+            
+                                } else {
+            
+                                    chartPlaceholderEl.style.display = 'flex'; // Use flex for centering
+            
+                                    indexHistoryChartEl.style.display = 'none';
+            
+                                }
+            
+            
+            
+                                // Populate KOSPI Quick View from Firestore
+            
+                                const kospi_value = doc.kospi_value;
+            
+                                const kospi_change_point = doc.kospi_change_point;
+            
+                                const kospi_change_rate = doc.kospi_change_rate;
+            
+            
+            
+                                if (kospi_value !== undefined && kospi_change_point !== undefined && kospi_change_rate !== undefined) {
+            
+                                    kospiValueEl.textContent = kospi_value.toFixed(2);
+            
+                                    kospiChangeRateEl.textContent = `${kospi_change_rate > 0 ? '+' : ''}${kospi_change_rate.toFixed(2)}%`;
+            
+                                    kospiChangePointEl.textContent = `${kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(kospi_change_point).toFixed(2)}`;
+            
+                                    kospiLastUpdatedEl.textContent = `업데이트: ${formattedTime}`; // Use Firestore doc timestamp
+            
+            
+            
+                                    // Apply color for change
+            
+                                    kospiChangeRateEl.classList.remove('bg-emerald-500/20', 'bg-red-500/20', 'bg-white/20');
+            
+                                    kospiChangePointEl.classList.remove('text-emerald-500/80', 'text-red-500/80', 'text-white/80');
+            
+            
+            
+                                    if (kospi_change_point > 0) {
+            
+                                        kospiChangeRateEl.classList.add('bg-emerald-500/20');
+            
+                                        kospiChangePointEl.classList.add('text-emerald-500/80');
+            
+                                    } else if (kospi_change_point < 0) {
+            
+                                        kospiChangeRateEl.classList.add('bg-red-500/20');
+            
+                                        kospiChangePointEl.classList.add('text-red-500/80');
+            
+                                    } else {
+            
+                                        kospiChangeRateEl.classList.add('bg-white/20'); // Neutral color
+            
+                                        kospiChangePointEl.classList.add('text-white/80'); // Neutral color
+            
+                                    }
+            
+                                } else {
+            
+                                    kospiValueEl.textContent = "N/A";
+            
+                                    kospiChangeRateEl.textContent = "N/A";
+            
+                                    kospiChangePointEl.textContent = "N/A";
+            
+                                    kospiLastUpdatedEl.textContent = "KOSPI 데이터 없음";
+            
+                                }
+            
+            
+            
+                            } else {
+            
+                                statusEl.textContent = "업데이트된 데이터가 없습니다.";
+            
+                                if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
+            
+                                if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
+            
+                                kospiValueEl.textContent = "N/A";
+            
+                                kospiChangeRateEl.textContent = "N/A";
+            
+                                kospiChangePointEl.textContent = "N/A";
+            
+                                kospiLastUpdatedEl.textContent = "KOSPI 데이터 없음";
+            
+                            }
+            
+                        } catch (error) {
+            
+                            console.error("Firebase 오류: ", error);
+            
+                            statusEl.textContent = "연결 오류가 발생했습니다.";
+            
+                            if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
+            
+                            if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+            
+                            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 불러오는 중 오류가 발생했습니다.</p>';
+            
+                            kospiValueEl.textContent = "N/A";
+            
+                            kospiChangeRateEl.textContent = "N/A";
+            
+                            kospiChangePointEl.textContent = "N/A";
+            
+                            kospiLastUpdatedEl.textContent = "KOSPI 데이터 로드 오류";
+            
+                        } finally {
+            
+                            // Main score, sentiment, and last updated time are always displayed
+            
+                            scoreEl.style.display = 'block';
+            
+                            statusEl.style.display = 'block';
+            
+                            lastUpdatedTimeEl.style.display = 'block';
+            
+                        }
+            
+                    }
+
+        const proverbs = [
+        "“시장은 단기적으로 투표기계지만 장기적으로 저울이다.”\n→ 벤저민 그레이엄 (Benjamin Graham)",
+        "“잃지 않는 것이 버는 것보다 중요하다.”\n→ 워런 버핏 (Warren Buffett)",
+        "“첫 번째 규칙은 돈을 잃지 않는 것이다. 두 번째 규칙은 첫 번째 규칙을 잊지 않는 것이다.”\n→ 워런 버핏",
+        "“훌륭한 기업을 적당한 가격에 사라.”\n→ 워런 버핏 / 찰리 멍거",
+        "“위험은 자신이 무엇을 하고 있는지 모를 때 생긴다.”\n→ 워런 버핏",
+        "“공포 속에서 사고 탐욕 속에서 팔아라.”\n→ 워런 버핏 / 월가 격언",
+        "“시장은 인내심 없는 사람의 돈을 인내심 있는 사람에게서 옮겨준다.”\n→ 워런 버핏",
+        "“가격은 지불하는 것이고 가치는 얻는 것이다.”\n→ 워런 버핏",
+        "“이해하지 못하는 사업에는 투자하지 마라.”\n→ 워런 버핏",
+        "“10년 이상 보유할 생각이 없다면 10분도 보유하지 마라.”\n→ 워런 버핏",
+        "“추세는 당신의 친구다.”\n→ 제시 리버모어 (Jesse Livermore)",
+        "“손실은 짧게, 이익은 길게 가져가라.”\n→ 제시 리버모어",
+        "“시장은 항상 옳다.”\n→ 제시 리버모어 (의미상 격언)",
+        "“강세장은 비관 속에서 태어나 회의 속에서 자라고 낙관 속에서 성숙하며 도취 속에서 죽는다.”\n→ 존 템플턴 (John Templeton)",
+        "“이번엔 다르다는 말이 가장 위험하다.”\n→ 존 템플턴",
+        "“기다리는 것도 포지션이다.”\n→ 월가 격언",
+        "“현금도 투자다.”\n→ 월가 격언",
+        "“절대 바닥에서 못 사고 꼭대기에서 못 판다.”\n→ 월가 격언",
+        "“칼 떨어질 때 잡지 마라.”\n→ 월가 격언",
+        "“소문에 사고 뉴스에 팔아라.”\n→ 월가 격언",
+        "“모두가 같은 방향을 볼 때 위험은 커진다.”\n→ 월가 격언",
+        "“시장은 당신의 감정을 시험한다.”\n→ 월가 격언",
+        "“확신이 클수록 조심하라.”\n→ 월가 격언",
+        "“거래가 잦을수록 수익률은 낮아진다.”\n→ 브래드 바버 & 테런스 오딘 (행동재무학 연구)",
+        "“시장에 머무는 시간이 시장을 맞추는 것보다 중요하다.”\n→ 투자 격언 (Bogle 계열 인용)",
+        "“복리는 세계 8대 불가사의다.”\n→ 알버트 아인슈타인 (투자 격언으로 인용)",
+        "“시간은 좋은 기업의 편이다.”\n→ 워런 버핏",
+        "“숫자를 보지 않고 주식을 사는 것은 계기판 없는 비행기를 타는 것과 같다.”\n→ 피터 린치 (Peter Lynch)",
+        "“스토리가 아니라 실적을 사라.”\n→ 피터 린치 (의미 요약)",
+        "“가장 위험한 시점은 모두가 안심할 때다.”\n→ 하워드 막스 (Howard Marks)",
+        "“리스크는 변동성이 아니라 영구적 자본 손실이다.”\n→ 하워드 막스",
+        "“좋은 투자란 나쁜 시나리오에서도 버티는 것이다.”\n→ 하워드 막스",
+        "“높은 수익은 높은 불편함에서 나온다.”\n→ 하워드 막스",
+        "“시장은 과잉 반응한다.”\n→ 로버트 실러 (Robert Shiller)",
+        "“분산투자는 무지를 인정하는 행위다.”\n→ 워런 버핏",
+        "“가장 좋은 매수 시점은 모두가 팔고 싶을 때다.”\n→ 월가 격언",
+        "“싸게 사는 것이 수익의 절반이다.”\n→ 벤저민 그레이엄",
+        "“시장은 언제나 과도하게 낙관적이거나 비관적이다.”\n→ 벤저민 그레이엄",
+        "“손절은 선택이 아니라 생존이다.”\n→ 트레이더 격언",
+        "“포트폴리오는 수익이 아니라 리스크로 관리하라.”\n→ 레이 달리오 (Ray Dalio)",
+        "“미래를 예측하지 말고 대비하라.”\n→ 레이 달리오",
+        "“좋은 투자자는 예측보다 원칙에 의존한다.”\n→ 레이 달리오",
+        "“시장은 합리적이지 않을 수 있다, 하지만 오래 비합리적이진 않다.”\n→ 존 메이너드 케인즈 (John M. Keynes)",
+        "“시장은 당신이 파산하기 전에 비이성적으로 남아 있을 수 있다.”\n→ 존 메이너드 케인즈",
+        "“레버리지는 실수를 치명적으로 만든다.”\n→ 월가 격언",
+        "“수익은 인내에서 나오고 손실은 조급함에서 나온다.”\n→ 월가 격언",
+        "“완벽한 타이밍은 없다.”\n→ 투자 격언",
+        "“하락장은 나쁜 기업을 드러낸다.”\n→ 월가 격언",
+        "“좋은 기업은 위기에서 더 강해진다.”\n→ 워런 버핏 (의미 인용)",
+        "“투자에서 가장 중요한 단어는 ‘영원히’가 아니라 ‘충분히 오래’다.”\n→ 하워드 막스 (의미 인용)"
+        ];
+
+        function displayRandomProverb() {
+            const proverbText = document.getElementById('proverb-text');
+            if (proverbText) { // Check if element exists before updating
+                const randomIndex = Math.floor(Math.random() * proverbs.length);
+                const selectedProverb = proverbs[randomIndex];
+                proverbText.textContent = selectedProverb;
+            }
+        }
+
+        // --- Theme Switcher Logic ---
+        const updateThemeIcon = (isDarkMode) => {
+            const icon = document.querySelector('#theme-switcher .material-symbols-outlined');
+            if (icon) {
+                icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
+            }
+        };
+
+        const applySavedTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const isDarkMode = savedTheme === 'dark';
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            applySavedTheme(); // Apply saved theme on page load
+            const themeSwitcher = document.getElementById('theme-switcher');
+            if (themeSwitcher) {
+                themeSwitcher.addEventListener('click', () => {
+                    const isDarkMode = document.documentElement.classList.toggle('dark');
+                    if (isDarkMode) {
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        localStorage.removeItem('theme');
+                    }
+                    updateThemeIcon(isDarkMode);
+                });
+            }
+
+            await fetchLatestIndex(); // Call fetchLatestIndex first
+            displayRandomProverb(); // Then display proverb
+            const generateProverbButton = document.getElementById('generate-proverb');
+            if (generateProverbButton) {
+                generateProverbButton.addEventListener('click', displayRandomProverb); // Set up button listener
+            }
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuButton && mobileMenu) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // KOSPI Market Status Update logic
+            const marketStatusText = document.getElementById('market-status-text');
+            const marketStatusDot = document.getElementById('market-status-dot');
+            const marketStatusIndicator = document.getElementById('market-status-indicator'); // Parent div for color changes
+
+
+
+            // Call it initially and set an interval for updates
+            updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator);
+            setInterval(() => updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator), 60 * 1000); // Update every minute
+
+            // Toggle indicator explanation section
+            const howCalculatedButton = document.getElementById('how-calculated-button');
+            const indicatorExplanationSection = document.getElementById('indicator-explanation-section');
+
+            if (howCalculatedButton && indicatorExplanationSection) {
+                howCalculatedButton.addEventListener('click', () => {
+                    if (indicatorExplanationSection.style.display === 'none') {
+                        indicatorExplanationSection.style.display = 'block';
+                    } else {
+                        indicatorExplanationSection.style.display = 'none';
+                    }
+                });
+            }
+        });
     </script>
-   
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
+
 </body>
 </html>
