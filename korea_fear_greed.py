@@ -153,6 +153,7 @@ def get_scores():
         curr = df['Close'].iloc[-1]
         score1 = min(max((curr/ma125 - 0.9) / 0.2 * 100, 0), 100)
         scores.append(score1)
+        print("지표 1 (KOSPI vs 125일 이평선 이격도) 성공: %.2f" % score1)
     except Exception as e:
         print("지표 1 오류: %s" % str(e))
         scores.append(50)
