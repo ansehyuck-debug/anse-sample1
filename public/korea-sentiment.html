@@ -134,12 +134,10 @@
 <h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
 <p class="text-base text-[#49699c] dark:text-slate-400">KOSPI fear and greed analysis based on market momentum and volatility.</p>
 </div>
-<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-    <div class="flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        MARKET OPEN
-                    </div>
-        </div>
+<div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-bold text-slate-600 dark:text-slate-400">
+    <span id="market-status-dot" class="h-2 w-2 rounded-full bg-slate-400"></span>
+    <span id="market-status-text">Updating...</span>
+</div>
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
 <!-- Main Gauge Section -->
 <div class="lg:col-span-8">
@@ -752,6 +750,55 @@
                     mobileMenu.classList.toggle('hidden');
                 });
             }
+
+            // KOSPI Market Status Update logic
+            const marketStatusText = document.getElementById('market-status-text');
+            const marketStatusDot = document.getElementById('market-status-dot');
+            const marketStatusIndicator = document.getElementById('market-status-indicator'); // Parent div for color changes
+
+            function updateKOSPIStatus() {
+                const now = new Date();
+                const currentUTCDay = now.getUTCDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+                const currentUTCHour = now.getUTCHours();
+                const currentUTCMinute = now.getUTCMinutes();
+
+                // KOSPI market hours in UTC: Monday-Friday, 00:00 UTC (9:00 KST) to 06:30 UTC (15:30 KST)
+                const marketOpenUTCHour = 0; // 09:00 KST
+                const marketOpenUTCMinute = 0;
+                const marketCloseUTCHour = 6; // 15:30 KST
+                const marketCloseUTCMinute = 30;
+
+                const isWeekday = currentUTCDay >= 1 && currentUTCDay <= 5; // Monday to Friday UTC
+                
+                let isOpen = false;
+                if (isWeekday) {
+                    if (currentUTCHour > marketOpenUTCHour && currentUTCHour < marketCloseUTCHour) {
+                        isOpen = true;
+                    } else if (currentUTCHour === marketOpenUTCHour && currentUTCMinute >= marketOpenUTCMinute) {
+                        isOpen = true;
+                    } else if (currentUTCHour === marketCloseUTCHour && currentUTCMinute <= marketCloseUTCMinute) {
+                        isOpen = true;
+                    }
+                }
+
+                if (isOpen) {
+                    marketStatusText.textContent = "MARKET OPEN";
+                    marketStatusDot.classList.remove('bg-red-500', 'bg-slate-400');
+                    marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
+                    marketStatusIndicator.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                    marketStatusIndicator.classList.add('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+                } else {
+                    marketStatusText.textContent = "MARKET CLOSED";
+                    marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
+                    marketStatusDot.classList.add('bg-red-500');
+                    marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
+                    marketStatusIndicator.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                }
+            }
+
+            // Call it initially and set an interval for updates
+            updateKOSPIStatus();
+            setInterval(updateKOSPIStatus, 60 * 1000); // Update every minute
         });
     </script>
 
