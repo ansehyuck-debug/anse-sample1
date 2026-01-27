@@ -110,28 +110,60 @@ def get_adr_from_krx_api(date_str):
     return adr_score_raw
 
 def get_put_call_ratio_from_krx_api(date_str):
-    endpoint = "idx/drvprod_dd_trd" # 파생상품지수 시세정보 (Derivatives Product Index Price Information)
+    endpoint = "drv/eqsop_bydd_trd" # 주식옵션(유가) 일별매매정보 (Equity Options Daily Trade Information)
     params = {"basDd": date_str}
-    
-    data = _call_krx_api(endpoint, params)
-    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str} (from drvprod_dd_trd): {json.dumps(data, indent=2)}") # Added logging
 
-    put_call_ratio_value = None
-    if "OutBlock_1" in data:
-        for item in data["OutBlock_1"]:
-            # 예상되는 풋콜 비율 지수명들을 확인
-            if item.get("IDX_NM") == "KOSPI200 풋콜 비율" or item.get("IDX_NM") == "코스피200 풋콜 비율": 
-                put_call_ratio_value = float(item.get("CLSPRC_IDX").replace('-', '0')) # 종가
-                break
-        if put_call_ratio_value is None:
-            all_idx_names = [item.get("IDX_NM") for item in data["OutBlock_1"]]
-            print(f"KRX API에서 풋콜 비율을 찾지 못했습니다. 확인된 지수명: {str(all_idx_names)}")
-            raise ValueError("풋콜 비율 데이터를 찾을 수 없습니다 (IDX_NM not 'KOSPI200 풋콜 비율').")
+    data = _call_krx_api(endpoint, params)
+    print(f"지표 5 (풋콜 비율) KRX API raw response for {date_str} (from drv/eqsop_bydd_trd): {json.dumps(data, indent=2)}") # Added logging
+
+    if "OutBlock_1" not in data or not data["OutBlock_1"]:
+        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}") # Added logging
+        raise ValueError("KRX API 응답에 OutBlock_1이 없거나 비어있습니다.")
+    
+    put_volume = 0
+    call_volume = 0
+    
+    # KOSPI200 옵션 상품만 필터링하여 Put/Call 거래량 합산
+    # '코스피200' 또는 'KOSPI200'을 포함하는 상품명 필터링
+    relevant_product_keywords = ["코스피200", "KOSPI200"]
+    filtered_items = []
+    
+    all_prod_names_in_block = [item.get("PROD_NM", "") for item in data["OutBlock_1"]]
+    print(f"지표 5 (풋콜 비율) OutBlock_1 모든 PROD_NM for {date_str} (drv/eqsop_bydd_trd): {all_prod_names_in_block}")
+
+
+    for item in data["OutBlock_1"]:
+        prod_nm = item.get("PROD_NM", "")
+        if any(keyword in prod_nm for keyword in relevant_product_keywords):
+            filtered_items.append(item)
+            
+    print(f"지표 5 (풋콜 비율) 필터링된 OutBlock_1 내용 for {date_str}: {json.dumps(filtered_items, indent=2)}") # Added logging for filtered items
+
+    if not filtered_items:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션 데이터 없음 for {date_str}. OutBlock_1은 있었으나 관련 상품 없음. 기본값 50으로 처리합니다.")
+        return 50 # Return default if no filtered items
+
+    for item in filtered_items: # Iterate through filtered items
+        try:
+            acc_trdvol = float(item.get("ACC_TRDVOL").replace('-', '0'))
+            if item.get("RGHT_TP_NM") == "PUT":
+                put_volume += acc_trdvol
+            elif item.get("RGHT_TP_NM") == "CALL":
+                call_volume += acc_trdvol
+        except ValueError as ve:
+            print("거래량 변환 오류: %s (item: %s)" % (str(ve), str(item)))
+            continue
+
+    if put_volume == 0 and call_volume == 0:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Put/Call 거래량 모두 0 for {date_str}. 중립(50)으로 처리합니다.")
+        put_call_ratio = 50
+    elif call_volume == 0:
+        print(f"지표 5 (풋콜 비율) 필터링된 KOSPI200 옵션의 Call 거래량 0, Put 거래량 있음. Put/Call 비율 100으로 처리 for {date_str}.")
+        put_call_ratio = 100 # Put volume exists, Call volume is zero
     else:
-        print(f"지표 5 (풋콜 비율) OutBlock_1 없음 또는 비어있음 for {date_str}. Response keys: {data.keys()}")
-        raise ValueError("KRX API 응답에 OutBlock_1이 없습니다.")
-        
-    return put_call_ratio_value
+        put_call_ratio = (put_volume / call_volume) * 100
+    
+    return put_call_ratio
 
 def get_scores():
     scores = []
