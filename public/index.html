@@ -200,7 +200,7 @@
 
 
 <div id="index-history-container" class="h-64 w-full relative"> <!-- Added ID and relative for absolute positioning -->
-    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]">
+    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]" style="border:1px solid rgb(0, 255, 55)">
         Preparing data...
     </div>
     <div id="index-history-chart" class="h-full w-full" style="display: none;"> <!-- Added ID and initially hidden -->
@@ -459,9 +459,9 @@
             const indicatorListEl = document.getElementById('indicator-list');
             const indicatorAvgEl = document.getElementById('indicator-avg');
 
-            // New elements for chart placeholder
+            // New elements for chart placeholder 
             const chartPlaceholderEl = document.getElementById('chart-placeholder');
-            const indexHistoryChartEl = document.getElementById('index-history-chart');
+            const indexHistoryChartEl = document.getElementById('index-history-chart'); 
             
                         // New elements for KOSPI Quick View
             
