@@ -348,7 +348,15 @@ def get_scores():
         print("지표 5 (코스피200 옵션 풋콜 비율) 오류: %s" % str(e))
         scores.append(50)
     
-    final_score = sum(scores) / len(scores) if scores else 50
+    # final_score = sum(scores) / len(scores) if scores else 50
+    # 가중치 적용: 지표 1: 25%, 지표 2,3,4: 20%, 지표 5: 15%
+    if len(scores) == 5:
+        final_score = (scores[0] * 0.25 + scores[1] * 0.20 + scores[2] * 0.20 + scores[3] * 0.20 + scores[4] * 0.15)
+    else:
+        # scores 리스트의 길이가 5가 아닌 경우 (예외 발생 시) 기본값 50을 사용하거나 다른 처리 로직 추가
+        # 현재 코드에서는 각 지표 계산 실패 시 50을 append하므로 이 else 블록에 도달할 일은 거의 없음.
+        print("경고: scores 리스트의 길이가 5가 아닙니다. 가중치 계산 대신 기본값 50을 사용합니다.")
+        final_score = 50
 
     kospi_value = None
     kospi_change_rate = None
