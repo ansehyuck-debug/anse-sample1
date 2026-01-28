@@ -1,4 +1,4 @@
-        <div class="p-8 bg-slate-900 text-white">
+        <div class="px-2 py-8 md:px-8 bg-slate-900 text-white">
             <h1 class="text-2xl md:text-3xl text-white font-bold mb-4">KOSPI 5135.18 장세 종합 보고서</h1>
             <p class="text-slate-300 leading-relaxed text-lg">
                 코스피 5,100선 돌파라니, 정말 유례없는 강세장이 이어지고 있네요! 어제보다 더 오른 5135.18이라니 투자자로서 기쁘기도 하겠지만, 지표들이 보내는 신호는 어제보다 훨씬 더 날카로워졌습니다. 
@@ -7,12 +7,12 @@
             </p>
         </div>
 
-        <div class="p-8 space-y-12">
+        <div class="px-0 py-8 space-y-12 md:px-8">
             <section>
                 <h2 class="text-xl font-bold mb-6 text-slate-900 border-l-4 border-slate-900 pl-4 dark:text-white">현 시장 심리 스캔: 폭주하는 기관차와 사라진 브레이크</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse border-t border-slate-200">
-                        <thead>
+                        <thead class="hidden md:table-header-group">
                             <tr class="bg-slate-50 text-slate-600 text-sm border-b border-slate-200">
                                 <th class="p-4 font-bold">지표</th>
                                 <th class="p-4 font-bold">점수</th>
@@ -20,36 +20,76 @@
                                 <th class="p-4 font-bold">분석 내용</th>
                             </tr>
                         </thead>
+                        
                         <tbody class="divide-y divide-slate-100">
-                            <tr>
-                                <td class="p-5 font-bold text-slate-800 dark:text-white">1. 이격도</td>
-                                <td class="p-5 text-red-600 font-bold">100.00</td>
-                                <td class="p-5 font-semibold text-red-600">극심한 탐욕</td>
-                                <td class="p-5 text-slate-600 leading-relaxed text-sm dark:text-white">125일 평균보다 10% 이상 높습니다. 고무줄이 끊어지기 직전까지 팽팽하게 늘어난 상태예요.</td>
+                            <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
+                                <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
+                                    <span>1. 이격도</span>
+                                    <span class="md:hidden text-red-600 font-bold">100.00</span>
+                                </td>
+                                <td class="hidden md:table-cell p-5 text-red-600 font-bold text-center">100.00</td>
+                                <td class="md:table-cell p-0 py-1 md:p-5 font-semibold text-red-600">
+                                    <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>극심한 탐욕
+                                </td>
+                                <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">
+                                    125일 평균보다 10% 이상 높습니다. 고무줄이 끊어지기 직전까지 팽팽하게 늘어난 상태예요.
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="p-5 font-bold text-slate-800 dark:text-white">2. RSI</td>
-                                <td class="p-5 text-red-600 font-bold">91.54</td>
-                                <td class="p-5 font-semibold text-red-600">극심한 탐욕</td>
-                                <td class="p-5 text-slate-600 leading-relaxed text-sm dark:text-white">어제(90.90)보다 더 올랐습니다. 주가 상승 속도가 비정상적으로 빠르며, 과열권의 끝자락에 와 있습니다.</td>
+
+                            <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
+                                <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
+                                    <span>2. RSI</span>
+                                    <span class="md:hidden text-red-600 font-bold">91.54</span>
+                                </td>
+                                <td class="hidden md:table-cell p-5 text-red-600 font-bold text-center">91.54</td>
+                                <td class="md:table-cell p-0 py-1 md:p-5 font-semibold text-red-600">
+                                    <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>극심한 탐욕
+                                </td>
+                                <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">
+                                    어제(90.90)보다 더 올랐습니다. 주가 상승 속도가 비정상적으로 빠르며, 과열권의 끝자락에 와 있습니다.
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="p-5 font-bold text-slate-800 dark:text-white">3. ADR</td>
-                                <td class="p-5 text-blue-600 font-bold">60.00</td>
-                                <td class="p-5 font-semibold text-blue-600">공포/소외</td>
-                                <td class="p-5 text-slate-600 leading-relaxed text-sm dark:text-white">중요! 지수는 오르는데 상승 종목 수는 여전히 적습니다. 대형주 몇 개가 지수를 견인하는 '질 낮은 상승'이 지속되고 있습니다.</td>
+
+                            <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
+                                <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
+                                    <span>3. ADR</span>
+                                    <span class="md:hidden text-blue-600 font-bold">60.00</span>
+                                </td>
+                                <td class="hidden md:table-cell p-5 text-blue-600 font-bold text-center">60.00</td>
+                                <td class="md:table-cell p-0 py-1 md:p-5 font-semibold text-blue-600">
+                                    <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>공포/소외
+                                </td>
+                                <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">
+                                    중요! 지수는 오르는데 상승 종목 수는 여전히 적습니다. 대형주 몇 개가 지수를 견인하는 '질 낮은 상승'이 지속되고 있습니다.
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="p-5 font-bold text-slate-800 dark:text-white">4. VKOSPI</td>
-                                <td class="p-5 text-blue-600 font-bold">17.30</td>
-                                <td class="p-5 font-semibold text-blue-600">공포</td>
-                                <td class="p-5 text-slate-600 leading-relaxed text-sm dark:text-white">변동성 지수가 더 높아졌습니다. 주가가 오르는데도 시장 참여자들의 불안감은 어제보다 더 커졌음을 의미합니다.</td>
+
+                            <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
+                                <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
+                                    <span>4. VKOSPI</span>
+                                    <span class="md:hidden text-blue-600 font-bold">17.30</span>
+                                </td>
+                                <td class="hidden md:table-cell p-5 text-blue-600 font-bold text-center">17.30</td>
+                                <td class="md:table-cell p-0 py-1 md:p-5 font-semibold text-blue-600">
+                                    <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>공포
+                                </td>
+                                <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">
+                                    변동성 지수가 더 높아졌습니다. 주가가 오르는데도 시장 참여자들의 불안감은 어제보다 더 커졌음을 의미합니다.
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="p-5 font-bold text-slate-800 dark:text-white">5. 풋콜 비율</td>
-                                <td class="p-5 text-blue-800 font-bold">0</td>
-                                <td class="p-5 font-semibold text-blue-800">극심한 공포</td>
-                                <td class="p-5 text-slate-600 leading-relaxed text-sm dark:text-white">비상 상황! 스케일링 점수가 0점이라는 것은 PCR 값이 180%를 넘어섰다는 뜻입니다. 하락 베팅(풋옵션)이 시장을 완전히 장악했습니다.</td>
+
+                            <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
+                                <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
+                                    <span>5. 풋콜 비율</span>
+                                    <span class="md:hidden text-blue-800 font-bold">0</span>
+                                </td>
+                                <td class="hidden md:table-cell p-5 text-blue-800 font-bold text-center">0</td>
+                                <td class="md:table-cell p-0 py-1 md:p-5 font-semibold text-blue-800">
+                                    <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>극심한 공포
+                                </td>
+                                <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">
+                                    비상 상황! 스케일링 점수가 0점이라는 것은 PCR 값이 180%를 넘어섰다는 뜻입니다. 하락 베팅(풋옵션)이 시장을 완전히 장악했습니다.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -58,7 +98,7 @@
 
             <section class="space-y-6">
                 <h2 class="text-xl font-bold text-slate-900 border-l-4 border-slate-900 pl-4 dark:text-white">전문적인 종합 분석: 붕괴를 대비하는 스마트 머니</h2>
-                <div class="bg-slate-50 p-6 rounded-lg space-y-4 text-slate-700">
+                <div class="bg-slate-50 px-2 py-6 md:px-6 rounded-lg space-y-4 text-slate-700">
                     <p>오늘의 장세는 전형적인 <strong>'라스트 스퍼트(Last Spurt)'</strong> 혹은 **'불 트랩(Bull Trap)'**의 위험을 내포하고 있습니다.</p>
                     <ul class="list-none space-y-4">
                         <li class="pl-4 border-l-2 border-slate-300">
@@ -74,7 +114,7 @@
                 </div>
             </section>
 
-            <section class="bg-slate-900 text-white p-8 rounded-xl shadow-inner">
+            <section class="bg-slate-900 text-white px-2 py-8 md:px-8 rounded-xl shadow-inner">
                     <h2 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">세심한 조언: 지금은 수익에 취해 있을 때가 아니라, 언제든 짐을 싸서 나갈 준비를 해야 하는 시점입니다.</h2>
                     <div class="grid md:grid-cols-3 gap-6 text-sm text-slate-300">
                         <div>

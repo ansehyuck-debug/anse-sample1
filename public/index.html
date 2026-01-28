@@ -91,10 +91,10 @@
 <body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
 <!-- Top Navigation Bar -->
 <header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
-<div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3">
+<div class="mx-auto flex max-w-[1200px] items-center justify-between px-3 py-3 md:px-6">
 <div class="flex items-center gap-8">
 <div class="flex items-center gap-3">
-<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
 <span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
 </div>
 <h2 class="text-lg font-bold tracking-tight dark:text-white">KOSPI Fear &amp; Greed</h2>
@@ -107,7 +107,7 @@
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
 </div>
 </div>
-<div class="flex items-center gap-4">
+<div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
 <button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
 <span class="material-symbols-outlined dark:text-white">menu</span>
 </button>
@@ -146,7 +146,7 @@
 <!-- Main Gauge Section -->
 <div class="lg:col-span-8">
 <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-<div class="mb-4 flex items-center justify-between">
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
 <h3 class="text-lg font-bold">Current Sentiment</h3>
 <span id="last-updated-time" class="text-sm font-medium text-[#49699c]">Last updated: 14:30 KST</span>
 </div>
@@ -166,16 +166,16 @@
 <span id="score" class="text-5xl font-black text-primary"></span>
 <span id="status" class="text-2xl font-bold tracking-tight text-primary">GREED</span>
 </div>
-<div class="mt-10 flex w-full justify-between px-4">
-<div class="flex flex-col items-center gap-1">
+<div class="mt-10 flex flex-wrap w-full justify-between px-4 gap-3">
+<div class="flex flex-col items-left md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-red-400"></span>
 <span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Fear</span>
 </div>
-<div class="flex flex-col items-center gap-1">
+<div class="flex flex-col items-left md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-yellow-400"></span>
 <span class="text-[10px] font-bold text-[#49699c] uppercase">Neutral</span>
 </div>
-<div class="flex flex-col items-center gap-1">
+<div class="flex flex-col items-left md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-primary"></span>
 <span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Greed</span>
 </div>
@@ -184,9 +184,9 @@
 </div>
 <!-- 30-Day Trend Chart -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-<div class="mb-6 flex items-center justify-between">
+<div class="mb-6 flex items-center justify-between gap-2">
 <h3 class="text-lg font-bold">Index Advisors</h3>
-<div class="flex gap-2">
+<div class="flex flex-wrap gap-2 justify-end">
 <button id="advisor-gemini" class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Gemini</button>
 <button id="advisor-gpt" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">GPT</button>
 <button id="advisor-grok" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Grok</button>
@@ -194,7 +194,7 @@
 </div>
 
 
-<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] px-2 py-6 md:px-6" shadow-sm">
     <p class="text-sm dark:text-slate-200">Gemini의 조언 준비중</p>
 </div>
 
@@ -263,7 +263,7 @@
 <p id="kospi-last-updated" class="text-xs text-white/70 mt-2"></p>
 </div>
 
-<div class="flex gap-4">
+<div class="flex flex-wrap gap-4">
     <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
                             How it's calculated
