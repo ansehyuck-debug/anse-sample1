@@ -421,21 +421,19 @@ def generate_gemini_report(data):
         # 2. [자동화] 내 계정에서 사용 가능한 모델 목록 확인
         all_models = client.models.list()
         
-        # 콘텐츠 생성이 가능한 모델들만 필터링 (글쓰기 기능이 있는 모델)
-        capable_models = [
-            m for m in all_models 
-            if 'generateContent' in m.supported_generation_methods
-        ]
+        # 에러 방지를 위해 속성 존재 여부를 따지지 않고, 
+        # 목록에 있는 모델 중 'gemini'가 포함된 이름들을 가져옵니다.
+        # 최신 SDK의 모델 객체는 보통 .name 속성을 가집니다.
+        capable_models = [m for m in all_models if 'gemini' in m.name.lower()]
         
         if not capable_models:
             raise Exception("사용 가능한 Gemini 모델을 찾을 수 없습니다.")
 
-        # 이름에 'flash'가 포함된 모델을 우선 선택하고, 없으면 목록의 첫 번째를 선택
-        # (나중에 flash 이름이 빠져도 목록에서 가장 적합한 것을 자동으로 집어옵니다)
+        # 1순위: 이름에 'flash'가 포함된 모델
+        # 2순위: 그 외 가장 첫 번째 모델
         target_model = next((m.name for m in capable_models if 'flash' in m.name.lower()), capable_models[0].name)
         
         print(f"시스템 자동 감지 모델 사용: {target_model}")
-
         # 3. 프롬프트 준비
         prompt_template = ""
         if os.path.exists('advisor_set.txt'):
