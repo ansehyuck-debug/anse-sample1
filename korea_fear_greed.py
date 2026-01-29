@@ -418,6 +418,7 @@ for i, s in enumerate(individual_scores):
     key_name = "indicator" + str(i + 1)
     data_to_save[key_name] = s
 
+
 print("저장 완료: %d점 (%s)" % (score, status_obj["phase"])) # Print phase
 formatted_scores = [format(s, ".2f") for s in individual_scores]
 print("개별 지표: %s" % formatted_scores)
@@ -430,3 +431,16 @@ if firestore_initialized:
         print(f"Firestore에 데이터 저장 중 오류 발생: {e}")
 else:
     print("Firestore가 초기화되지 않아 데이터 저장을 건너뜁니다.")
+
+# Print data in JSON format for GitHub Actions
+output_data = {
+    "final_score": score,
+    "status_phase": status_obj["phase"],
+    "status_description": status_obj["description"],
+    "kospi_value": kospi_value,
+    "kospi_change_point": kospi_change_point,
+    "kospi_change_rate": kospi_change_rate,
+    "individual_scores": individual_scores
+}
+print("::set-output name=advisor_data::%s" % json.dumps(output_data))
+
