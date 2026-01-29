@@ -436,17 +436,17 @@ def generate_gemini_report(data):
             with open('advisor_set.txt', 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
         
-        # [핵심] 디자인 고정 지시사항을 포함한 최종 프롬프트
+        # [수정] 데이터와 템플릿 결합 지시
         final_prompt = f"""
         {prompt_template}
         
-        [데이터]
-        현재 시장 데이터(JSON): {json.dumps(data)}
+        [현재 시장 데이터]
+        - 코스피: {data.get('kospi_val')} ({data.get('kospi_rate')}%)
+        - 지표별 점수: {json.dumps(data.get('scores'), ensure_ascii=False)}
         
-        [작성 지침]
-        - 반드시 제공된 '디자인 고정 규칙'을 100% 준수하여 HTML을 생성하세요.
-        - 다른 설명 없이 <div>로 시작하는 HTML 본문만 즉시 출력하세요.
-        - 마크다운 기호(```)를 쓰지 마세요.
+        [요청사항]
+        위 데이터를 사용하여 [HTML 마스터 템플릿]의 내용을 채우세요. 
+        특히 <table> 안의 클래스들과 하단 <section>의 bg-slate-900 등 모든 Tailwind 클래스를 사용자 코드와 동일하게 재현해야 합니다.
         """
         
         # 4. 결정된 모델로 콘텐츠 생성
