@@ -436,17 +436,38 @@ def generate_gemini_report(data):
             with open('advisor_set.txt', 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
         
-        # [수정] 데이터와 템플릿 결합 지시
+        # 한국 시간 생성
+        now = datetime.utcnow() + timedelta(hours=9)
+        now_str = now.strftime("%Y. %m. %d. %p %I:%M").replace("AM", "오전").replace("PM", "오후")
+
+        # 최종 프롬프트 구성 (JSON 통째로 전달)
         final_prompt = f"""
         {prompt_template}
-        
-        [현재 시장 데이터]
-        - 코스피: {data.get('kospi_val')} ({data.get('kospi_rate')}%)
-        - 지표별 점수: {json.dumps(data.get('scores'), ensure_ascii=False)}
-        
-        [요청사항]
-        위 데이터를 사용하여 [HTML 마스터 템플릿]의 내용을 채우세요. 
-        특히 <table> 안의 클래스들과 하단 <section>의 bg-slate-900 등 모든 Tailwind 클래스를 사용자 코드와 동일하게 재현해야 합니다.
+
+        [분석할 실시간 데이터]
+        {json.dumps(data, ensure_ascii=False, indent=2)}
+
+        [기준 시간]
+        {now_str}
+
+        [데이터 매칭 지침]
+        1. 헤더 섹션의 KOSPI {{지수}} 위치에는 JSON의 'kospi_value'를 사용합니다.
+        2. {{현재시간}} 위치에는 '{now_str}'을 기입하세요.
+        2. 테이블의 5개 지표는 JSON의 'individual_scores' 배열 순서와 같습니다:
+            - score[0]: KOSPI vs 125일 이격도
+            - score[1]: KOSPI 14일 RSI
+            - score[2]: ADR (상승/하락 비율)
+            - score[3]: VKOSPI (코스피200 변동성)
+            - score[4]: 코스피200 옵션 풋콜 비율
+
+        2. **색상 클래스 지정 (중요)**:
+            - 점수가 25점을 이하이면, 해당 행의 점수와 상태에 'text-red-400' 클래스를 부여하세요.
+            - 점수가 45점 이하이면, 'text-orange-400' 클래스를 부여하세요.
+            - 점수가 55점 이하이면, 'text-yellow-400' 클래스를 부여하세요.
+            - 점수가 75점 이하이면, 'text-emerald-500' 클래스를 부여하세요.
+            - 그 외 구간은 'text-primary' 클래스를 부여하세요.
+     
+        4. 디자인 유지: 원본 디자인의 모든 Tailwind CSS 클래스를 절대 생략하지 마세요.
         """
         
         # 4. 결정된 모델로 콘텐츠 생성

@@ -20,14 +20,23 @@
     <h2 class="text-xl font-bold mb-6 text-slate-900 border-l-4 border-slate-900 pl-4 dark:text-white">현 시장 심리 스캔</h2>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse border-t border-slate-200">
+             <thead class="hidden md:table-header-group">
+                <tr class="bg-slate-50 text-slate-600 text-sm border-b border-slate-200">
+                    <th class="p-4 font-bold">지표</th>
+                    <th class="p-4 font-bold">점수</th>
+                    <th class="p-4 font-bold">상태</th>
+                    <th class="p-4 font-bold">분석 내용</th>
+                </tr>
+            </thead>
+                        
             <tbody class="divide-y divide-slate-100">
                 <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
                     <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
                         <span class="dark:text-white">{지표명}</span>
-                        <span class="md:hidden {점수별 색상클래스} font-bold">{점수}</span>
-                    </td>
+                        <span class="md:hidden {점수별 색상클래스} font-bold">{점수}</span></td>
                     <td class="hidden md:table-cell p-5 {점수별 색상클래스} font-bold text-center">{점수}</td>
-                    <td class="md:table-cell p-0 py-1 md:p-2 font-semibold {점수별 색상클래스}">상태: {상태}</td>
+                    <td class="md:table-cell p-0 py-1 md:p-2 font-semibold {점수별 색상클래스}">
+                         <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>{상태}</td>
                     <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">{분석내용}</td>
                 </tr>
             </tbody>
@@ -67,7 +76,7 @@
 </div>
 
 [데이터 매칭 지침]
-- 점수가 80점 이상이면 색상 클래스에 'text-red-600'을, 40점 이하면 'text-blue-600'을 적용하세요.
+- 점수가 25점 이하이면 색상 클래스에 'text-red-400'을, 45점 이하면 'text-orange-400'을, 55점 이하면 'text-yellow-400'을, 75점 이하면 'text-emerald-500'을, 그 외 점수는 'text-primary'를 적용하세요.
 - 결과물에는 마크다운 기호(```)를 절대 포함하지 말고 순수 HTML만 출력하세요.
 
 [지표 정보 및 분석 기준]
