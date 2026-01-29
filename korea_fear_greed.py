@@ -408,7 +408,8 @@ def generate_gemini_report(data):
 
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # 프로젝트와 모델을 확실히 연결하기 위해 'models/' 경로를 명시합니다.
+        model = genai.GenerativeModel('models/gemini-1.5-flash')
         
         prompt_template = ""
         if os.path.exists('advisor_set.txt'):
