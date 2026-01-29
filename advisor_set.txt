@@ -32,11 +32,11 @@
             <tbody class="divide-y divide-slate-100">
                 <tr class="flex flex-col md:table-row px-2 py-5 md:p-0 border-b md:border-none">
                     <td class="md:table-cell p-0 md:p-5 font-bold text-slate-800 dark:text-white flex justify-between items-center">
-                        <span class="dark:text-white">{지표명}</span>
+                        <span class="dark:text-white break-keep">{지표명}</span>
                         <span class="md:hidden {점수별 색상클래스} font-bold">{점수}</span></td>
                     <td class="hidden md:table-cell p-5 {점수별 색상클래스} font-bold text-center">{점수}</td>
                     <td class="md:table-cell p-0 py-1 md:p-2 font-semibold {점수별 색상클래스}">
-                         <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>{상태}</td>
+                         <span class="md:hidden text-xs text-slate-400 mr-2 break-keep">상태:</span>{상태}</td>
                     <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">{분석내용}</td>
                 </tr>
             </tbody>

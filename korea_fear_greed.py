@@ -384,16 +384,16 @@ def get_scores():
 def get_status(score):
     phase = ""
     description = ""
-    if score <= 25: 
+    if score < 20: 
         phase = "극심한 공포"
         description = "무섭게 떨어지네요.\n모두가 도망칠 때, 오히려 기회가 숨어 있다는데?!"
-    elif score <= 45: 
+    elif score < 40: 
         phase = "공포"
         description = "점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요."
-    elif score <= 55: 
+    elif score < 60: 
         phase = "중립"
         description = "팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요."
-    elif score <= 75: 
+    elif score < 80: 
         phase = "탐욕"
         description = "사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다."
     else:
