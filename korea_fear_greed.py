@@ -10,7 +10,9 @@ from datetime import datetime, timedelta, datetime # Add datetime import for use
 import firebase_admin
 from firebase_admin import credentials, firestore
 import time # 재시도를 위한 시간 지연
-import google.generativeai as genai # Gemini API 사용을 위해 추가
+# [수정] 기존 'import google.generativeai' 대신 최신 SDK 임포트
+from google import genai 
+from google.genai import types
 
 # 1. Firebase 초기화
 firestore_initialized = False
@@ -399,7 +401,7 @@ def get_status(score):
         description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
     return {"phase": phase, "description": description}
 
-# [추가] 제미나이 리포트 생성 함수 정의
+# [수정] 제미나이 리포트 생성 함수 (공식 문서 python-genai 방식 적용)
 def generate_gemini_report(data):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -407,20 +409,27 @@ def generate_gemini_report(data):
         return
 
     try:
-        genai.configure(api_key=api_key)
-        # 프로젝트와 모델을 확실히 연결하기 위해 'models/' 경로를 명시합니다.
-        model = genai.GenerativeModel('models/gemini-1.5-flash')
+        # [변경] 공식 문서 방식: Client 생성 (api_version 설정 포함)
+        client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(api_version='v1beta') # 404 에러 방지를 위해 명시
+        )
         
         prompt_template = ""
         if os.path.exists('advisor_set.txt'):
             with open('advisor_set.txt', 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
         
-        final_prompt = f"{prompt_template}\n\n현재 시장 데이터(JSON): {json.dumps(data)}\n\n위 데이터를 바탕으로 기존 gemini_adv.html의 세련된 디자인 요소를 유지하면서 리포트 본문(HTML <div> 내용)을 작성해줘."
+        final_prompt = f"{prompt_template}\n\n현재 시장 데이터(JSON): {json.dumps(data)}\n\nHTML <div> 본문만 작성해줘."
         
-        response = model.generate_content(final_prompt)
+        # [변경] 공식 문서 방식: generate_content 호출
+        response = client.models.generate_content(
+            model='gemini-1.5-flash', # 혹은 'gemini-2.0-flash'
+            contents=final_prompt
+        )
         
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # response.text로 결과 가져오기
         html_content = f"\n" + response.text.replace('```html', '').replace('```', '').strip()
 
         public_dir = os.path.join(os.getcwd(), 'public')
@@ -433,6 +442,7 @@ def generate_gemini_report(data):
         
         print(f"Gemini 리포트 생성 및 저장 성공: {file_path}")
     except Exception as e:
+        # 오류 처리를 그대로 유지하여 문제 발생 시 로그 확인 가능
         print(f"Gemini 리포트 생성 중 에러 발생: {e}")
 
 

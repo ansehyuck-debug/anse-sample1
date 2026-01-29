@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas google-generativeai
+          pip install pykrx finance-datareader beautifulsoup4 lxml requests firebase-admin pandas google-genai
 
       - name: Run Python script
         id: run_python_script # Added ID to reference outputs
