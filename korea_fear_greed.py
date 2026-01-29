@@ -6,7 +6,7 @@ import FinanceDataReader as fdr # 지표 1, 2에 필요
 from pykrx import stock # pykrx는 더 이상 사용하지 않지만 FinanceDataReader가 의존할 수 있으므로 남겨둠
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, datetime # Add datetime import for use in generate_gemini_report
 import firebase_admin
 from firebase_admin import credentials, firestore
 import time # 재시도를 위한 시간 지연
@@ -399,6 +399,41 @@ def get_status(score):
         description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
     return {"phase": phase, "description": description}
 
+# [추가] 제미나이 리포트 생성 함수 정의
+def generate_gemini_report(data):
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("에러: GEMINI_API_KEY 환경변수가 없습니다.")
+        return
+
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        prompt_template = ""
+        if os.path.exists('advisor_set.txt'):
+            with open('advisor_set.txt', 'r', encoding='utf-8') as f:
+                prompt_template = f.read()
+        
+        final_prompt = f"{prompt_template}\n\n현재 시장 데이터(JSON): {json.dumps(data)}\n\n위 데이터를 바탕으로 기존 gemini_adv.html의 세련된 디자인 요소를 유지하면서 리포트 본문(HTML <div> 내용)을 작성해줘."
+        
+        response = model.generate_content(final_prompt)
+        
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        html_content = f"\n" + response.text.replace('```html', '').replace('```', '').strip()
+
+        public_dir = os.path.join(os.getcwd(), 'public')
+        if not os.path.exists(public_dir):
+            os.makedirs(public_dir)
+        
+        file_path = os.path.join(public_dir, 'gemini_adv.html')
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        print(f"Gemini 리포트 생성 및 저장 성공: {file_path}")
+    except Exception as e:
+        print(f"Gemini 리포트 생성 중 에러 발생: {e}")
+
 
 # 실행 및 Firestore 저장
 score, individual_scores, kospi_value, kospi_change_point, kospi_change_rate = get_scores()
@@ -444,7 +479,10 @@ output_data = {
     "kospi_change_rate": kospi_change_rate,
     "individual_scores": individual_scores
 }
+
+# [추가] 제미나이 리포트 생성 실행
+generate_gemini_report(output_data)
+
 if 'GITHUB_OUTPUT' in os.environ:
     with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
         f.write(f"advisor_data={json.dumps(output_data)}\n")
-
