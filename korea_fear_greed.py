@@ -401,20 +401,42 @@ def get_status(score):
         description = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회."
     return {"phase": phase, "description": description}
 
-# [수정] 제미나이 리포트 생성 함수 (공식 문서 python-genai 방식 적용)
+# [추가] 제미나이 리포트 생성 함수 (이름/정책 변화에 무관한 자동화 버전)
 def generate_gemini_report(data):
+    from google import genai 
+    from google.genai import types
+    
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("에러: GEMINI_API_KEY 환경변수가 없습니다.")
         return
 
     try:
-        # [변경] 공식 문서 방식: Client 생성 (api_version 설정 포함)
+        # 1. 클라이언트 설정 (사용자님이 찾으신 문서 방식)
         client = genai.Client(
             api_key=api_key,
-            http_options=types.HttpOptions(api_version='v1beta') # 404 에러 방지를 위해 명시
+            http_options=types.HttpOptions(api_version='v1beta')
         )
         
+        # 2. [자동화] 내 계정에서 사용 가능한 모델 목록 확인
+        all_models = client.models.list()
+        
+        # 콘텐츠 생성이 가능한 모델들만 필터링 (글쓰기 기능이 있는 모델)
+        capable_models = [
+            m for m in all_models 
+            if 'generateContent' in m.supported_generation_methods
+        ]
+        
+        if not capable_models:
+            raise Exception("사용 가능한 Gemini 모델을 찾을 수 없습니다.")
+
+        # 이름에 'flash'가 포함된 모델을 우선 선택하고, 없으면 목록의 첫 번째를 선택
+        # (나중에 flash 이름이 빠져도 목록에서 가장 적합한 것을 자동으로 집어옵니다)
+        target_model = next((m.name for m in capable_models if 'flash' in m.name.lower()), capable_models[0].name)
+        
+        print(f"시스템 자동 감지 모델 사용: {target_model}")
+
+        # 3. 프롬프트 준비
         prompt_template = ""
         if os.path.exists('advisor_set.txt'):
             with open('advisor_set.txt', 'r', encoding='utf-8') as f:
@@ -422,16 +444,16 @@ def generate_gemini_report(data):
         
         final_prompt = f"{prompt_template}\n\n현재 시장 데이터(JSON): {json.dumps(data)}\n\nHTML <div> 본문만 작성해줘."
         
-        # [변경] 공식 문서 방식: generate_content 호출
+        # 4. 결정된 모델로 콘텐츠 생성
         response = client.models.generate_content(
-            model='gemini-1.5-flash', # 혹은 'gemini-2.0-flash'
+            model=target_model, 
             contents=final_prompt
         )
         
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # response.text로 결과 가져오기
         html_content = f"\n" + response.text.replace('```html', '').replace('```', '').strip()
 
+        # 5. 파일 저장
         public_dir = os.path.join(os.getcwd(), 'public')
         if not os.path.exists(public_dir):
             os.makedirs(public_dir)
@@ -442,7 +464,7 @@ def generate_gemini_report(data):
         
         print(f"Gemini 리포트 생성 및 저장 성공: {file_path}")
     except Exception as e:
-        # 오류 처리를 그대로 유지하여 문제 발생 시 로그 확인 가능
+        # 에러 로그는 사용자님의 원래 스타일대로 남겨둡니다.
         print(f"Gemini 리포트 생성 중 에러 발생: {e}")
 
 
