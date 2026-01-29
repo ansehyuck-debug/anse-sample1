@@ -40,7 +40,6 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_INDEX_ADVISOR_KEY }}
           ADVISOR_DATA: ${{ steps.run_python_script.outputs.advisor_data }} # Pass data from Python script
         run: |
-          # 1. 노드 스크립트를 파일로 추출 (따옴표 충돌 방지)
           cat << 'EOF' > generate_report.js
           const fs = require('fs');
 
@@ -78,12 +77,101 @@ jobs:
 
 
               // 프롬프트 구성 (advisorData가 파싱되지 않았을 경우를 대비하여 추가 확인)
-              const finalPrompt = advisorDataRaw ? `${promptTemplate}\n\n현재 데이터(JSON): ${advisorDataRaw}\n\n위 데이터를 바탕으로 기존 gemini_adv.html 디자인을 유지하며 HTML <div> 본문만 생성해줘.` : `${promptTemplate}\n\n데이터를 가져오지 못했습니다. 기존 gemini_adv.html 디자인을 유지하며 일반적인 시장 분석 HTML <div> 본문만 생성해줘.`;
+              const finalPrompt = advisorDataRaw ? `${promptTemplate}\n\n현재 데이터(JSON): ${advisorDataRaw}\n\n위 데이터를 바탕으로 기존 gemini_adv.html 디자인(Tailwind CSS)을 완벽히 유지하며 HTML <div> 본문만 생성해줘.` : `${promptTemplate}\n\n데이터를 가져오지 못했습니다. 기존 gemini_adv.html 디자인(Tailwind CSS)을 유지하며 일반적인 시장 분석 HTML <div> 본문만 생성해줘.`;
 
-              console.log('Sending prompt to Gemini API (v1)...');
-              console.log(finalPrompt); // Log the final prompt for debugging
+              console.log('Gemini API 호출 중...');
 
-              const resp = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+              // 가장 범용적인 v1beta 엔드포인트와 모델명을 명확히 조합
+              const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+              const resp = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [{
+                    role: "user", // 역할을 명시해서 더 정확하게 호출
+                    parts: [{ text: finalPrompt }]
+                  }]
+                })
+              });
+
+              const result = await resp.json();
+              
+              if (result.error) {
+                console.error('API Error 상세:', JSON.stringify(result.error, null, 2));
+                process.exit(1);
+              }
+
+              if (!result.candidates || result.candidates.length === 0) {
+                console.error('응답 결과가 없습니다:', JSON.stringify(result));
+                process.exit(1);
+              }
+
+              let htmlContent = result.candidates[0].content.parts[0].text;
+              
+              // 마크다운 및 불필요한 텍스트 제거
+              htmlContent = htmlContent.replace(/```html|```/g, '').trim();
+
+              if (!fs.existsSync('public')) {
+                fs.mkdirSync('public', { recursive: true });
+              }
+              
+              fs.writeFileSync('public/gemini_adv.html', htmlContent);
+              console.log('gemini_adv.html 생성 및 저장 완료!');
+            } catch (e) {
+              console.error('스크립트 실행 에러:', e.message);
+              process.exit(1);
+            }
+          }
+          run();
+          EOF
+
+          # 2. 생성된 파일 실행
+          node generate_report.js
+          const fs = require('fs');
+
+          async function run() {
+            try {
+              const apiKey = process.env.GEMINI_API_KEY; // Corrected to GEMINI_API_KEY from env
+              const advisorDataRaw = process.env.ADVISOR_DATA;
+              
+              let advisorData = {};
+              try {
+                if (advisorDataRaw) {
+                  advisorData = JSON.parse(advisorDataRaw);
+                }
+              } catch (e) {
+                console.warn('Warning: Could not parse ADVISOR_DATA. Proceeding with empty data. Error:', e.message);
+              }
+
+              // 1. 템플릿 읽기
+              let promptTemplate = "";
+              if (fs.existsSync('advisor_set.txt')) {
+                promptTemplate = fs.readFileSync('advisor_set.txt', 'utf8');
+              } else {
+                console.warn('Warning: advisor_set.txt not found. Using default prompt.');
+              }
+
+              // Replace placeholders
+              promptTemplate = promptTemplate.replace('(1번 지표 값)', advisorData.individual_scores && advisorData.individual_scores[0] !== undefined ? advisorData.individual_scores[0].toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(2번 지표 값)', advisorData.individual_scores && advisorData.individual_scores[1] !== undefined ? advisorData.individual_scores[1].toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(3번 지표 값)', advisorData.individual_scores && advisorData.individual_scores[2] !== undefined ? advisorData.individual_scores[2].toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(4번 지표 값)', advisorData.individual_scores && advisorData.individual_scores[3] !== undefined ? advisorData.individual_scores[3].toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(5번 지표 값)', advisorData.individual_scores && advisorData.individual_scores[4] !== undefined ? advisorData.individual_scores[4].toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(코스피 값)', advisorData.kospi_value !== undefined ? advisorData.kospi_value.toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(코스피 등락률)', advisorData.kospi_change_rate !== undefined ? advisorData.kospi_change_rate.toFixed(2) : 'N/A');
+              promptTemplate = promptTemplate.replace('(코스피 등락 포인트)', advisorData.kospi_change_point !== undefined ? advisorData.kospi_change_point.toFixed(2) : 'N/A');
+
+
+              // 프롬프트 구성 (advisorData가 파싱되지 않았을 경우를 대비하여 추가 확인)
+              const finalPrompt = advisorDataRaw ? `${promptTemplate}\n\n현재 데이터(JSON): ${advisorDataRaw}\n\n위 데이터를 바탕으로 기존 gemini_adv.html 디자인(Tailwind CSS)을 완벽히 유지하며 HTML <div> 본문만 생성해줘.` : `${promptTemplate}\n\n데이터를 가져오지 못했습니다. 기존 gemini_adv.html 디자인(Tailwind CSS)을 유지하며 일반적인 시장 분석 HTML <div> 본문만 생성해줘.`;
+
+              console.log('Gemini API 호출 중 (v1beta / gemini-1.5-flash-latest)...');
+
+              // 모델 경로를 명확히 지정한 호출 주소
+              const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+              const resp = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -91,37 +179,31 @@ jobs:
                 })
               });
 
-              if (!resp.ok) {
-                const errorData = await resp.json();
-                console.error('API Error:', JSON.stringify(errorData, null, 2));
-                throw new Error(`API 호출 실패: ${resp.status} - ${resp.statusText}`);
-              }
-
               const result = await resp.json();
-              if (result.error) { // Check for error object directly in the result
-                console.error('API Error (from result):', JSON.stringify(result.error, null, 2));
-                throw new Error(`API 결과에 오류 포함: ${result.error.message}`);
+              
+              if (result.error) {
+                console.error('API Error 상세:', JSON.stringify(result.error, null, 2));
+                process.exit(1);
               }
 
-              if (!result.candidates || !result.candidates[0].content || !result.candidates[0].content.parts || !result.candidates[0].content.parts[0].text) {
-                console.error('Invalid API response structure:', JSON.stringify(result, null, 2));
-                throw new Error('Gemini API 응답 구조가 유효하지 않습니다.');
+              if (!result.candidates || result.candidates.length === 0) {
+                console.error('응답 결과가 없습니다:', JSON.stringify(result));
+                process.exit(1);
               }
 
               let htmlContent = result.candidates[0].content.parts[0].text;
-              // 마크다운 태그 제거 (```html 등)
+              
+              // 마크다운 및 불필요한 텍스트 제거
               htmlContent = htmlContent.replace(/```html|```/g, '').trim();
 
-              // 2. public 폴더가 없다면 생성
               if (!fs.existsSync('public')) {
                 fs.mkdirSync('public', { recursive: true });
               }
               
-              // 3. 파일 저장
               fs.writeFileSync('public/gemini_adv.html', htmlContent);
-              console.log('gemini_adv.html 생성 완료!');
+              console.log('gemini_adv.html 생성 및 저장 완료!');
             } catch (e) {
-              console.error('Error in generate_report.js:', e.message);
+              console.error('스크립트 실행 에러:', e.message);
               process.exit(1);
             }
           }
