@@ -432,6 +432,7 @@ if firestore_initialized:
 else:
     print("Firestore가 초기화되지 않아 데이터 저장을 건너뜁니다.")
 
+
 # Print data in JSON format for GitHub Actions
 output_data = {
     "final_score": score,
@@ -442,5 +443,7 @@ output_data = {
     "kospi_change_rate": kospi_change_rate,
     "individual_scores": individual_scores
 }
-print("::set-output name=advisor_data::%s" % json.dumps(output_data))
+if 'GITHUB_OUTPUT' in os.environ:
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+        f.write(f"advisor_data={json.dumps(output_data)}\n")
 
