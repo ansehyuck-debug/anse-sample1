@@ -402,6 +402,7 @@ def get_status(score):
     return {"phase": phase, "description": description}
 
 # [추가] 제미나이 리포트 생성 함수 (이름/정책 변화에 무관한 자동화 버전)
+# [교체할 부분] 제미나이 리포트 생성 함수
 def generate_gemini_report(data):
     from google import genai 
     from google.genai import types
@@ -415,32 +416,38 @@ def generate_gemini_report(data):
         # 1. 클라이언트 설정 (사용자님이 찾으신 문서 방식)
         client = genai.Client(
             api_key=api_key,
-            http_options=types.HttpOptions(api_version='v1beta')
+            http_options=types.HttpOptions(api_version='v1beta') # 버전 명시로 404 방지
         )
         
         # 2. [자동화] 내 계정에서 사용 가능한 모델 목록 확인
         all_models = client.models.list()
-        
-        # 에러 방지를 위해 속성 존재 여부를 따지지 않고, 
-        # 목록에 있는 모델 중 'gemini'가 포함된 이름들을 가져옵니다.
-        # 최신 SDK의 모델 객체는 보통 .name 속성을 가집니다.
         capable_models = [m for m in all_models if 'gemini' in m.name.lower()]
         
         if not capable_models:
             raise Exception("사용 가능한 Gemini 모델을 찾을 수 없습니다.")
 
-        # 1순위: 이름에 'flash'가 포함된 모델
-        # 2순위: 그 외 가장 첫 번째 모델
+        # 이름에 'flash'가 포함된 모델을 우선 선택 (없으면 첫 번째 모델)
         target_model = next((m.name for m in capable_models if 'flash' in m.name.lower()), capable_models[0].name)
-        
         print(f"시스템 자동 감지 모델 사용: {target_model}")
-        # 3. 프롬프트 준비
+
+        # 3. 프롬프트 준비 (기존 파일 읽기)
         prompt_template = ""
         if os.path.exists('advisor_set.txt'):
             with open('advisor_set.txt', 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
         
-        final_prompt = f"{prompt_template}\n\n현재 시장 데이터(JSON): {json.dumps(data)}\n\nHTML <div> 본문만 작성해줘."
+        # [핵심] 디자인 고정 지시사항을 포함한 최종 프롬프트
+        final_prompt = f"""
+        {prompt_template}
+        
+        [데이터]
+        현재 시장 데이터(JSON): {json.dumps(data)}
+        
+        [작성 지침]
+        - 반드시 제공된 '디자인 고정 규칙'을 100% 준수하여 HTML을 생성하세요.
+        - 다른 설명 없이 <div>로 시작하는 HTML 본문만 즉시 출력하세요.
+        - 마크다운 기호(```)를 쓰지 마세요.
+        """
         
         # 4. 결정된 모델로 콘텐츠 생성
         response = client.models.generate_content(
@@ -449,12 +456,12 @@ def generate_gemini_report(data):
         )
         
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 결과에서 불필요한 마크다운 제거
         html_content = f"\n" + response.text.replace('```html', '').replace('```', '').strip()
 
-        # 5. 파일 저장
+        # 5. 파일 저장 (public/gemini_adv.html)
         public_dir = os.path.join(os.getcwd(), 'public')
-        if not os.path.exists(public_dir):
-            os.makedirs(public_dir)
+        if not os.path.exists(public_dir): os.makedirs(public_dir)
         
         file_path = os.path.join(public_dir, 'gemini_adv.html')
         with open(file_path, 'w', encoding='utf-8') as f:
@@ -462,7 +469,6 @@ def generate_gemini_report(data):
         
         print(f"Gemini 리포트 생성 및 저장 성공: {file_path}")
     except Exception as e:
-        # 에러 로그는 사용자님의 원래 스타일대로 남겨둡니다.
         print(f"Gemini 리포트 생성 중 에러 발생: {e}")
 
 
