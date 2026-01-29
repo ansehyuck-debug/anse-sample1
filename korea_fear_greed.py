@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials, firestore
 import time # 재시도를 위한 시간 지연
+import google.generativeai as genai # Gemini API 사용을 위해 추가
 
 # 1. Firebase 초기화
 firestore_initialized = False
