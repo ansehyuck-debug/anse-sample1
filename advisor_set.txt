@@ -35,8 +35,8 @@
                         <span class="dark:text-white break-keep">{지표명}</span>
                         <span class="md:hidden {점수별 색상클래스} font-bold">{점수}</span></td>
                     <td class="hidden md:table-cell p-5 {점수별 색상클래스} font-bold text-center">{점수}</td>
-                    <td class="md:table-cell p-0 py-1 md:p-2 font-semibold {점수별 색상클래스}">
-                         <span class="md:hidden text-xs text-slate-400 mr-2 break-keep">상태:</span>{상태}</td>
+                    <td class="md:table-cell p-0 py-1 md:p-2  break-keep font-semibold {점수별 색상클래스}">
+                         <span class="md:hidden text-xs text-slate-400 mr-2">상태:</span>{상태}</td>
                     <td class="md:table-cell p-0 pt-2 md:p-5 text-slate-600 leading-relaxed text-sm dark:text-white border-t border-slate-100 md:border-none mt-2 md:mt-0">{분석내용}</td>
                 </tr>
             </tbody>
@@ -80,8 +80,15 @@
 - 결과물에는 마크다운 기호(```)를 절대 포함하지 말고 순수 HTML만 출력하세요.
 
 [지표 정보 및 분석 기준]
-1. 이격도 (125일): 0.9 이하(0점, 공포) ~ 1.1 이상(100점, 탐욕)
-2. RSI (14일): 0(공포) ~ 100(탐욕) 스케일링
+1. TDI(125일): 0.9 이하(0점, 공포) ~ 1.1 이상(100점, 탐욕)
+2. RSI(14일): 0(공포) ~ 100(탐욕) 스케일링
 3. ADR: 70 이하(0점, 공포) ~ 120 이상(100점, 탐욕)
 4. VKOSPI: 40 이상(0점, 공포) ~ 10 이하(100점, 탐욕) - 역비례
-5. 풋콜 비율: 180 이상(0점, 공포) ~ 60 이하(100점, 탐욕) - 역비례
+5. PCR: 180 이상(0점, 공포) ~ 60 이하(100점, 탐욕) - 역비례
+6. **지표는 모두 0에서 100까지 스케일링된 값이야. (매우중요)**
+
+[중요: PCR 및 지표 해석 주의사항]
+1. 점수가 45~55점 사이일 때는 '압도적', '폭발적' 같은 극단적인 단어를 절대 사용하지 마세요.
+2. 50점 부근(45~55)은 '팽팽한 기싸움', '중립적 관망', '방향성 탐색' 등으로 짧게 심리를 표현하세요.
+3. PCR(풋콜 비율) 점수가 50점 근처라면 풋옵션과 콜옵션의 비중이 균형을 이루고 있다는 뜻입니다. 
+   '매도 우위'가 아니라 '힘의 균형'이라고 설명해야 정확합니다.

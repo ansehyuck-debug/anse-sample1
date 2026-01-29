@@ -454,8 +454,8 @@ def generate_gemini_report(data):
         1. 헤더 섹션의 KOSPI {{지수}} 위치에는 JSON의 'kospi_value'를 사용합니다.
         2. {{현재시간}} 위치에는 '{now_str}'을 기입하세요.
         3 테이블의 5개 지표는 JSON의 'individual_scores' 배열 순서와 같습니다:
-            - score[0]: 1. 125D TDI
-            - score[1]: 2. RSI
+            - score[0]: 1. TDI(125일)
+            - score[1]: 2. RSI(14일)
             - score[2]: 3. ADR
             - score[3]: 4. VKOSPI
             - score[4]: 5. PCR
@@ -473,6 +473,7 @@ def generate_gemini_report(data):
             - 0에 가까울수록 극단적 공포, 100에 가까울수록 극심한 탐욕인 점은 참고하세요.
             - 각 지표의 특성(RSI는 과매수/과매도, VKOSPI는 불안/안정 등)에 맞게 창의적으로 짧게 적어주세요.    
         7. 디자인 유지: 원본 디자인의 모든 Tailwind CSS 클래스를 절대 생략하지 마세요.
+        8. **수치와 설명이 논리적으로 일치하는지 마지막으로 한 번 더 검토하고 출력해줘. (매우 중요)**
         """
         
         # 4. 결정된 모델로 콘텐츠 생성
