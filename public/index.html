@@ -27,6 +27,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -268,7 +269,7 @@
     <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
                             How it's calculated
                         </button>
-    <button class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+    <button id="download-btn" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
                             Export Data
                         </button>
@@ -1028,6 +1029,52 @@
             updateAdvisorDisplay('gemini');
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('download-btn').addEventListener('click', function() {
+        // 1. 캡처 대상: body 대신 리포트 본문인 'main' 태그를 지정
+        const target = document.querySelector('main'); 
 
+        if (!target) {
+            alert("캡처할 리포트 영역(main)을 찾을 수 없습니다.");
+            return;
+        }
+
+        // 2. 캡처 옵션 설정
+        html2canvas(target, {
+            allowTaint: true,
+            useCORS: true,
+            scale: 2,           // 고해상도 설정
+            backgroundColor: "#f8f9fa", // 배경색(투명 방지)
+            
+            // [핵심] 현재 스크롤 위치를 무시하고 요소의 절대 좌표(0,0)부터 전체를 계산
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: target.scrollWidth,
+            windowHeight: target.scrollHeight,
+            width: target.scrollWidth,
+            height: target.scrollHeight,
+            
+            // 복제본 생성 시 스크롤을 맨 위로 강제 고정하여 여백 방지
+            onclone: (clonedDoc) => {
+                const clonedMain = clonedDoc.querySelector('main');
+                if (clonedMain) {
+                    clonedMain.style.padding = "0";
+                    clonedMain.style.margin = "0";
+                }
+            }
+        }).then(canvas => {
+            // 3. 파일 다운로드 실행
+            const link = document.createElement('a');
+            link.download = 'anse_full_report.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error("캡처 오류:", err);
+        });
+    });
+});
+
+    </script>
 </body>
 </html>
