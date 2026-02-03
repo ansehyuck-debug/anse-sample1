@@ -314,6 +314,7 @@
             statusEl.textContent = i18n.translate(statusKey).toUpperCase();
             statusEl.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
             statusEl.classList.add(textColorClass);
+            statusEl.removeAttribute('data-i18n'); // Prevent reset on lang change
         }
 
         // US Market Status (NYSE/NASDAQ)
@@ -359,10 +360,12 @@
 
             if (isOpen) {
                 marketStatusText.textContent = i18n.translate("market-open");
+                marketStatusText.removeAttribute('data-i18n'); // Prevent reset on lang change
                 marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
                 marketStatusIndicator.classList.add('bg-emerald-100', 'text-emerald-600');
             } else {
                 marketStatusText.textContent = i18n.translate("market-closed");
+                marketStatusText.removeAttribute('data-i18n'); // Prevent reset on lang change
                 marketStatusDot.classList.add('bg-red-500');
                 marketStatusIndicator.classList.add('bg-slate-200/60', 'text-slate-600');
             }
