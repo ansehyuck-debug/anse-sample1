@@ -303,7 +303,7 @@
 
             let textColorClass = "";
             let statusKey = "";
-            if (score <= 25) { textColorClass = "text-red-500"; statusKey = "extreme-fear"; }
+            if (score <= 25) { textColorClass = "text-red-500"; statusKey = "extreme-fear"; } 
             else if (score <= 44) { textColorClass = "text-orange-500"; statusKey = "fear"; }
             else if (score <= 55) { textColorClass = "text-yellow-500"; statusKey = "neutral"; }
             else if (score <= 75) { textColorClass = "text-emerald-500"; statusKey = "greed"; }
@@ -383,19 +383,12 @@
                     updateGauge(value);
 
                     let quoteText = "";
-                    if (value >= 0 && value <= 24) {
-                        quoteText = i18n.translate("quote-extreme-fear");
-                    } else if (value >= 25 && value <= 44) {
-                        quoteText = i18n.translate("quote-fear");
-                    } else if (value >= 45 && value <= 55) {
-                        quoteText = i18n.translate("quote-neutral");
-                    } else if (value >= 56 && value <= 75) {
-                        quoteText = i18n.translate("quote-greed");
-                    } else if (value >= 76 && value <= 100) {
-                        quoteText = i18n.translate("quote-extreme-greed");
-                    } else {
-                        quoteText = i18n.translate("quote-unknown");
-                    }
+                    if (value >= 0 && value <= 24) { quoteText = i18n.translate("quote-extreme-fear"); }
+                    else if (value >= 25 && value <= 44) { quoteText = i18n.translate("quote-fear"); }
+                    else if (value >= 45 && value <= 55) { quoteText = i18n.translate("quote-neutral"); }
+                    else if (value >= 56 && value <= 75) { quoteText = i18n.translate("quote-greed"); }
+                    else if (value >= 76 && value <= 100) { quoteText = i18n.translate("quote-extreme-greed"); }
+                    else { quoteText = i18n.translate("quote-unknown"); }
 
                     quoteEl.textContent = quoteText;
                     
