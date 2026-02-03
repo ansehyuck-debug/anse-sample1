@@ -445,6 +445,7 @@
 
             if (isOpen) {
                 marketStatusText.textContent = i18n.translate("market-open");
+                marketStatusText.removeAttribute('data-i18n');
                 marketStatusDot.classList.remove('bg-red-500', 'bg-slate-400');
                 marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
                 marketStatusIndicator.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
@@ -455,6 +456,7 @@
                 
             } else {
                 marketStatusText.textContent = i18n.translate("market-closed");
+                marketStatusText.removeAttribute('data-i18n');
                 marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
                 marketStatusDot.classList.add('bg-red-500');
                 marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
@@ -701,6 +703,7 @@
                                 if (kospi_value !== undefined && kospi_change_point !== undefined && kospi_change_rate !== undefined) {
             
                                     kospiValueEl.textContent = kospi_value.toFixed(2);
+                                    kospiValueEl.removeAttribute('data-i18n'); // Prevent reset on lang change
             
                                     kospiChangeRateEl.textContent = `${kospi_change_rate > 0 ? '+' : ''}${kospi_change_rate.toFixed(2)}%`;
             
