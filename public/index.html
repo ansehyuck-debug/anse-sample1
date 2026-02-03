@@ -4,19 +4,19 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>국내 금융시장 심리</title> <!-- Keep original title -->
-<meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/> <!-- Keep original description -->
+<title data-i18n="title-korea">국내 금융시장 심리</title> <!-- Keep original title -->
+<meta name="description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요." data-i18n="desc-korea"/> <!-- Keep original description -->
 <link rel="canonical" href="https://anse.ai.kr/"/> <!-- Keep original canonical -->
 
-<meta property="og:title" content="국내 금융시장 심리"/> <!-- Keep original og tags -->
-<meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta property="og:title" content="국내 금융시장 심리" data-i18n="title-korea"/> <!-- Keep original og tags -->
+<meta property="og:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요." data-i18n="desc-korea"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse.ai.kr/"/>
 <meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
 
 <meta name="twitter:card" content="summary"/> <!-- Keep original twitter tags -->
-<meta name="twitter:title" content="국내 금융시장 심리"/>
-<meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta name="twitter:title" content="국내 금융시장 심리" data-i18n="title-korea"/>
+<meta name="twitter:description" content="한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요." data-i18n="desc-korea"/>
 <meta name="twitter:image" content="https://anse.ai.kr/images/neutral.png"/>
 
 <!-- Existing styles and icons -->
@@ -25,6 +25,8 @@
 
 <!-- Tailwind CSS and Fonts from code.html -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="translations.js"></script>
+<script src="i18n.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -101,8 +103,8 @@
 <h2 class="text-lg font-bold tracking-tight dark:text-white">KOSPI Fear &amp; Greed</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
-<a class="text-sm font-semibold text-primary" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 </div>
 </div>
 <div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
@@ -121,8 +123,8 @@
 </div>
 <div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
 <nav class="flex flex-col items-center gap-4 py-2">
-<a class="text-sm font-semibold text-primary" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 </nav>
 </div>
 </header>
@@ -130,20 +132,20 @@
 <!-- Page Heading -->
 <div class="mb-8 flex flex-wrap items-end justify-between gap-8">
 <div class="flex flex-col gap-1">
-<h1 class="text-3xl font-black tracking-tight dark:text-white">Market Sentiment Index</h1>
-<p class="text-base text-[#49699c] dark:text-slate-400">KOSPI fear and greed analysis based on market momentum and volatility.</p>
+<h1 class="text-3xl font-black tracking-tight dark:text-white" data-i18n="market-sentiment-index">Market Sentiment Index</h1>
+<p class="text-base text-[#49699c] dark:text-slate-400" data-i18n="kospi-analysis-desc">KOSPI fear and greed analysis based on market momentum and volatility.</p>
 </div>
 <div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-6 py-2 text-xs font-bold text-slate-600 dark:text-slate-400">
     <span id="market-status-dot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-    <span id="market-status-text">Updating...</span>
+    <span id="market-status-text" data-i18n="updating">Updating...</span>
 </div>
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
 <!-- Main Gauge Section -->
 <div class="lg:col-span-8">
 <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-<h3 class="text-lg font-bold">Current Sentiment</h3>
-<span id="last-updated-time" class="text-sm font-medium text-[#49699c]">Last updated: 14:30 KST</span>
+<h3 class="text-lg font-bold" data-i18n="current-sentiment">Current Sentiment</h3>
+<span id="last-updated-time" class="text-sm font-medium text-[#49699c]"><span data-i18n="last-updated">마지막 업데이트</span>: 14:30 KST</span>
 </div>
 <div class="relative flex flex-col items-center py-10">
 <!-- Gauge visualization -->
@@ -164,15 +166,15 @@
 <div class="mt-10 flex flex-wrap w-full justify-between px-4 gap-3">
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-red-400"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Fear</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="extreme-fear">Extreme Fear</span>
 </div>
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-yellow-400"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Neutral</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="neutral">Neutral</span>
 </div>
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-primary"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Greed</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="extreme-greed">Extreme Greed</span>
 </div>
 </div>
 </div>
@@ -180,7 +182,7 @@
 <!-- 30-Day Trend Chart -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
 <div class="mb-6 flex items-center justify-between gap-2">
-<h3 class="text-lg font-bold">Index Advisors</h3>
+<h3 class="text-lg font-bold" data-i18n="index-advisors">Index Advisors</h3>
 <div class="flex flex-wrap gap-2 justify-end">
 <button id="advisor-gemini" class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Gemini</button>
 <button id="advisor-gpt" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">GPT</button>
@@ -189,13 +191,13 @@
 </div>
 
 
-<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] px-2 py-6 md:px-6" shadow-sm">
-    <p class="text-sm dark:text-slate-200">Gemini의 조언 준비중</p>
+<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] px-2 py-6 md:px-6 shadow-sm">
+    <p class="text-sm dark:text-slate-200" data-i18n="updating">Gemini의 조언 준비중</p>
 </div>
 
 
 <div id="index-history-container" class="h-64 w-full relative"> <!-- Added ID and relative for absolute positioning -->
-    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]">
+    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]" data-i18n="preparing-data">
         Preparing data...
     </div>
     <div id="index-history-chart" class="h-full w-full" style="display: none;"> <!-- Added ID and initially hidden -->
@@ -230,13 +232,13 @@
 <!-- Comparison Cards -->
 <div class="grid grid-cols-1 gap-4">
 <div class="flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4">오늘의 주식 시장 격언</h4>
+         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4" data-i18n="today-proverb">오늘의 주식 시장 격언</h4>
         <p id="proverb-text" class="italic text-base text-gray-800 dark:text-gray-200 min-h-[50px] flex items-center justify-center text-center break-keep" style="white-space: pre-wrap;"></p>
-        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors">새 격언 확인하기</button>
+        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors" data-i18n="new-proverb">새 격언 확인하기</button>
 </div>
 <!-- Market Indicators section -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-    <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider">Market Indicators</h4>
+    <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider" data-i18n="market-indicators">Market Indicators</h4>
     <div id="dynamic-indicators-container" class="space-y-4">
         <!-- Dynamic indicators will be injected here by JavaScript -->
     </div>
@@ -249,7 +251,7 @@
 <a href="https://finance.naver.com/sise/" target="_blank"><span class="material-symbols-outlined">insights</span></a>
 </div>
 <div class="flex flex-col gap-1">
-<p id="kospi-value" class="text-3xl font-black">Loading...</p>
+<p id="kospi-value" class="text-3xl font-black" data-i18n="loading">Loading...</p>
 <div class="flex items-center gap-2">
 <span id="kospi-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded"></span>
 <span id="kospi-change-point" class="text-sm text-white/80"></span>
@@ -261,11 +263,11 @@
 <div class="flex flex-wrap gap-4">
     <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
-                            How it's calculated
+                            <span data-i18n="how-calculated">How it's calculated</span>
                         </button>
     <button id="download-btn" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
-                            Export Data
+                            <span data-i18n="export-data">Export Data</span>
                         </button>
     </div>
 </div>
@@ -273,7 +275,7 @@
 </div>
 
 <div id="indicator-explanation-section" style="display: none;" class="mt-8">
-<h2 class="text-2xl font-bold mb-4 dark:text-white">지표별 계산 방식 및 스케일링</h2>
+<h2 class="text-2xl font-bold mb-4 dark:text-white" data-i18n="how-calculated">지표별 계산 방식 및 스케일링</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
         <h3 class="text-lg font-bold mb-2">1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)</h3>
@@ -344,13 +346,13 @@
 <footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
 <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
 <div class="flex flex-col gap-2">
-<p class="text-sm font-medium dark:text-white">Data provided by KRX (Korea Exchange) and KOFIA.</p>
-<p class="max-w-md text-xs leading-relaxed dark:text-white">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
+<p class="text-sm font-medium dark:text-white" data-i18n="footer-desc-korea">Data provided by KRX (Korea Exchange) and KOFIA.</p>
+<p class="max-w-md text-xs leading-relaxed dark:text-white" data-i18n="fng-theory">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.</p>
 </div>
 <div class="flex gap-4">
     <a href="/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">policy</span>
-                            개인정보처리방침
+                            <span data-i18n="privacy-policy">개인정보처리방침</span>
                         </a>
     </div>
 
@@ -395,19 +397,21 @@
 
             scoreDisplay.textContent = score;
 
-            // Determine color based on score
+            // Determine color and status based on score
             let textColorClass = "";
-            if (score <= 25) { textColorClass = "text-red-500"; }
-            else if (score <= 45) { textColorClass = "text-orange-500"; }
-            else if (score <= 55) { textColorClass = "text-yellow-500"; }
-            else if (score <= 75) { textColorClass = "text-emerald-500"; }
-            else { textColorClass = "text-blue-500"; }
+            let statusKey = "";
+            if (score <= 25) { textColorClass = "text-red-500"; statusKey = "extreme-fear"; }
+            else if (score <= 45) { textColorClass = "text-orange-500"; statusKey = "fear"; }
+            else if (score <= 55) { textColorClass = "text-yellow-500"; statusKey = "neutral"; }
+            else if (score <= 75) { textColorClass = "text-emerald-500"; statusKey = "greed"; }
+            else { textColorClass = "text-blue-500"; statusKey = "extreme-greed"; }
 
             // Apply color to score display, preserving font size and other text styles
             scoreDisplay.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
             scoreDisplay.classList.add(textColorClass);
             
-            // Apply color to sentiment text, preserving font size and other text styles
+            // Apply color and translated text to sentiment text
+            sentimentText.textContent = i18n.translate(statusKey).toUpperCase();
             sentimentText.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary"); // Remove all possible color classes
             sentimentText.classList.add(textColorClass);
         }
@@ -440,7 +444,7 @@
             
 
             if (isOpen) {
-                marketStatusText.textContent = "MARKET OPEN";
+                marketStatusText.textContent = i18n.translate("market-open");
                 marketStatusDot.classList.remove('bg-red-500', 'bg-slate-400');
                 marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
                 marketStatusIndicator.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
@@ -450,7 +454,7 @@
                 marketStatusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
                 
             } else {
-                marketStatusText.textContent = "MARKET CLOSED";
+                marketStatusText.textContent = i18n.translate("market-closed");
                 marketStatusDot.classList.remove('bg-emerald-500', 'animate-pulse');
                 marketStatusDot.classList.add('bg-red-500');
                 marketStatusIndicator.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/30', 'text-emerald-600', 'dark:text-emerald-400');
@@ -490,13 +494,13 @@
             
                         // 로딩 상태 표시
             
-                        statusEl.textContent = "데이터를 불러오는 중..."; 
+                        statusEl.textContent = i18n.translate("loading"); 
             
                         if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
             
                         if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
             
-                        if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">데이터를 불러오는 중...</p>';
+                        if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = `<p class="text-sm text-[#49699c] dark:text-slate-400">${i18n.translate("loading")}</p>`;
             
             
             
@@ -504,7 +508,7 @@
             
                         // KOSPI Quick View 로딩 상태
             
-                        kospiValueEl.textContent = "Loading...";
+                        kospiValueEl.textContent = i18n.translate("loading");
             
                         kospiChangeRateEl.textContent = "";
             
@@ -536,25 +540,19 @@
             
                                 
             
-                                // Update main score, sentiment, and gauge
+                                                                // Update main score, sentiment, and gauge
             
-                                updateGauge(score); // This handles needle and score color/value
+                                
             
-                                lastUpdatedTimeEl.textContent = `Last updated: ${formattedTime}`; // Use template literal
+                                                                updateGauge(score); // This handles needle and score color/value
             
+                                
             
+                                                                lastUpdatedTimeEl.textContent = `${i18n.translate("last-updated")}: ${formattedTime}`; // Use template literal
             
-                                // Set sentiment text from Firestore object
+                                
             
-                                if (statusFromFirestore && statusFromFirestore.phase) {
-            
-                                    statusEl.textContent = statusFromFirestore.phase;
-            
-                                } else {
-            
-                                    statusEl.textContent = "업데이트된 데이터가 없습니다."; // Fallback if status object is missing
-            
-                                }
+                                
             
             
             
@@ -756,13 +754,13 @@
             
                             } else {
             
-                                statusEl.textContent = "업데이트된 데이터가 없습니다.";
+                                statusEl.textContent = i18n.translate("preparing-data");
             
                                 if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder if no data
             
                                 if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
             
-                                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 찾을 수 없습니다.</p>';
+                                if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = `<p class="text-sm text-[#49699c] dark:text-slate-400">${i18n.translate("preparing-data")}</p>`;
             
                                 kospiValueEl.textContent = "N/A";
             
@@ -770,7 +768,7 @@
             
                                 kospiChangePointEl.textContent = "N/A";
             
-                                kospiLastUpdatedEl.textContent = "KOSPI 데이터 없음";
+                                kospiLastUpdatedEl.textContent = i18n.translate("preparing-data");
             
                             }
             
@@ -778,13 +776,13 @@
             
                             console.error("Firebase 오류: ", error);
             
-                            statusEl.textContent = "연결 오류가 발생했습니다.";
+                            statusEl.textContent = i18n.translate("loading");
             
                             if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder on error
             
                             if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
             
-                            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = '<p class="text-sm text-[#49699c] dark:text-slate-400">지표 데이터를 불러오는 중 오류가 발생했습니다.</p>';
+                            if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = `<p class="text-sm text-[#49699c] dark:text-slate-400">${i18n.translate("loading")}</p>`;
             
                             kospiValueEl.textContent = "N/A";
             
@@ -792,7 +790,7 @@
             
                             kospiChangePointEl.textContent = "N/A";
             
-                            kospiLastUpdatedEl.textContent = "KOSPI 데이터 로드 오류";
+                            kospiLastUpdatedEl.textContent = i18n.translate("loading");
             
                         } finally {
             

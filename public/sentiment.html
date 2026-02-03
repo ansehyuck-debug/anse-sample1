@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>미국 금융시장 심리</title>
-<meta name="description" content="미국 주식시장의 공포 탐욕 지수(CNN Fear & Greed Index)를 확인하고 투자에 참고하세요."/>
+<title data-i18n="title-us">미국 금융시장 심리</title>
+<meta name="description" content="미국 주식시장의 공포 탐욕 지수(CNN Fear & Greed Index)를 확인하고 투자에 참고하세요." data-i18n="desc-us"/>
 <link rel="canonical" href="https://anse.ai.kr/sentiment.html"/>
 
-<meta property="og:title" content="미국 금융시장 심리"/>
-<meta property="og:description" content="미국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta property="og:title" content="미국 금융시장 심리" data-i18n="title-us"/>
+<meta property="og:description" content="미국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요." data-i18n="desc-us"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse.ai.kr/sentiment.html"/>
 <meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="미국 금융시장 심리"/>
-<meta name="twitter:description" content="미국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요."/>
+<meta name="twitter:title" content="미국 금융시장 심리" data-i18n="title-us"/>
+<meta name="twitter:description" content="미국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요." data-i18n="desc-us"/>
 <meta name="twitter:image" content="https://anse.ai.kr/images/neutral.png"/>
 
 <!-- Existing styles and icons -->
@@ -23,6 +23,8 @@
 
 <!-- Tailwind CSS and Fonts -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="translations.js"></script>
+<script src="i18n.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -97,8 +99,8 @@
 <h2 class="text-lg font-bold tracking-tight dark:text-white">US Fear &amp; Greed</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 </div>
 </div>
 <div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
@@ -117,8 +119,8 @@
 </div>
 <div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
 <nav class="flex flex-col items-center gap-4 py-2">
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-semibold text-primary" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 </nav>
 </div>
 </header>
@@ -126,20 +128,20 @@
 <!-- Page Heading -->
 <div class="mb-8 flex flex-wrap items-end justify-between gap-8">
 <div class="flex flex-col gap-1">
-<h1 class="text-3xl font-black tracking-tight dark:text-white">US Market Sentiment</h1>
-<p class="text-base text-[#49699c] dark:text-slate-400">CNN Business Fear &amp; Greed Index analysis.</p>
+<h1 class="text-3xl font-black tracking-tight dark:text-white" data-i18n="title-us">US Market Sentiment</h1>
+<p class="text-base text-[#49699c] dark:text-slate-400" data-i18n="us-sentiment-analysis-desc">CNN Business Fear &amp; Greed Index analysis.</p>
 </div>
 <div id="market-status-indicator" class="flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 px-6 py-2 text-xs font-bold text-slate-600 dark:text-slate-400">
     <span id="market-status-dot" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-    <span id="market-status-text">Updating...</span>
+    <span id="market-status-text" data-i18n="updating">Updating...</span>
 </div>
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
 <!-- Main Gauge Section -->
 <div class="lg:col-span-8">
 <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-<h3 class="text-lg font-bold">Current Sentiment</h3>
-<span id="last-updated-time" class="text-sm font-medium text-[#49699c]">Last updated: -</span>
+<h3 class="text-lg font-bold" data-i18n="current-sentiment">Current Sentiment</h3>
+<span id="last-updated-time" class="text-sm font-medium text-[#49699c]"><span data-i18n="last-updated">Last updated</span>: -</span>
 </div>
 <div class="relative flex flex-col items-center py-10">
 <!-- Gauge visualization -->
@@ -155,20 +157,20 @@
 </div>
 <div class="mt-6 flex flex-col items-center gap-1">
 <span id="score" class="text-5xl font-black text-primary"></span>
-<span id="status" class="text-2xl font-bold tracking-tight text-primary">LOADING</span>
+<span id="status" class="text-2xl font-bold tracking-tight text-primary" data-i18n="loading">LOADING</span>
 </div>
 <div class="mt-10 flex flex-wrap w-full justify-between px-4 gap-3">
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-red-400"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Fear</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="extreme-fear">Extreme Fear</span>
 </div>
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-yellow-400"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Neutral</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="neutral">Neutral</span>
 </div>
 <div class="flex flex-col items-center md:items-center gap-1">
 <span class="h-1.5 w-12 rounded-full bg-primary"></span>
-<span class="text-[10px] font-bold text-[#49699c] uppercase">Extreme Greed</span>
+<span class="text-[10px] font-bold text-[#49699c] uppercase" data-i18n="extreme-greed">Extreme Greed</span>
 </div>
 </div>
 </div>
@@ -177,10 +179,10 @@
 <!-- Advice/Quote Section -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
 <div class="mb-4 flex items-center justify-between gap-2">
-<h3 class="text-lg font-bold">Market Analysis</h3>
+<h3 class="text-lg font-bold" data-i18n="market-indicators">Market Analysis</h3>
 </div>
 <div id="sentiment-quote-display" class="flex flex-col gap-4">
-    <p id="sentiment-quote" class="text-sm dark:text-slate-200">데이터를 불러오는 중...</p>
+    <p id="sentiment-quote" class="text-sm dark:text-slate-200" data-i18n="updating">데이터를 불러오는 중...</p>
 </div>
 </div>
 </div>
@@ -189,9 +191,9 @@
 <div class="lg:col-span-4 flex flex-col gap-6">
 <!-- Proverb Card -->
 <div class="flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4">오늘의 주식 시장 격언</h4>
+         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4" data-i18n="today-proverb">오늘의 주식 시장 격언</h4>
         <p id="proverb-text" class="italic text-base text-gray-800 dark:text-gray-200 min-h-[50px] flex items-center justify-center text-center break-keep" style="white-space: pre-wrap;"></p>
-        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors">새 격언 확인하기</button>
+        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors" data-i18n="new-proverb">새 격언 확인하기</button>
 </div>
 
 <!-- US Market Indices (Static or Placeholder) -->
@@ -201,19 +203,19 @@
 <a href="https://www.google.com/finance/quote/.INX:INDEXSP" target="_blank"><span class="material-symbols-outlined">insights</span></a>
 </div>
 <div class="flex flex-col gap-1">
-<p id="market-index-value" class="text-3xl font-black">View Online</p>
-<p class="text-xs text-white/70 mt-2">Click icon to see real-time chart</p>
+<p id="market-index-value" class="text-3xl font-black" data-i18n="view-online">View Online</p>
+<p class="text-xs text-white/70 mt-2" data-i18n="click-to-chart">Click icon to see real-time chart</p>
 </div>
 </div>
 
 <div class="flex flex-wrap gap-4">
     <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">help_outline</span>
-                            How it's calculated
+                            <span data-i18n="how-calculated">How it's calculated</span>
                         </button>
     <button id="download-btn" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
-                            Export Data
+                            <span data-i18n="export-data">Export Data</span>
                         </button>
     </div>
 </div>
@@ -221,7 +223,7 @@
 </div>
 
 <div id="indicator-explanation-section" style="display: none;" class="mt-8">
-<h2 class="text-2xl font-bold mb-4 dark:text-white">지표별 계산 방식 (CNN Fear &amp; Greed)</h2>
+<h2 class="text-2xl font-bold mb-4 dark:text-white" data-i18n="how-calculated">지표별 계산 방식 (CNN Fear &amp; Greed)</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
         <h3 class="text-lg font-bold mb-2">1. 주가 모멘텀 (Stock Price Momentum)</h3>
@@ -258,13 +260,13 @@
 <footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
 <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
 <div class="flex flex-col gap-2">
-<p class="text-sm font-medium dark:text-white">Data provided by CNN Business.</p>
-<p class="max-w-md text-xs leading-relaxed dark:text-white">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. CNN examines seven different factors to establish how much fear and greed there is in the market.</p>
+<p class="text-sm font-medium dark:text-white" data-i18n="footer-desc-us">Data provided by CNN Business.</p>
+<p class="max-w-md text-xs leading-relaxed dark:text-white" data-i18n="fng-theory">The Fear &amp; Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. CNN examines seven different factors to establish how much fear and greed there is in the market.</p>
 </div>
 <div class="flex gap-4">
     <a href="/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">policy</span>
-                            개인정보처리방침
+                            <span data-i18n="privacy-policy">개인정보처리방침</span>
                         </a>
     </div>
 </div>
@@ -300,16 +302,16 @@
             scoreDisplay.textContent = Math.round(score);
 
             let textColorClass = "";
-            let statusText = "";
-            if (score <= 25) { textColorClass = "text-red-500"; statusText = "EXTREME FEAR"; }
-            else if (score <= 44) { textColorClass = "text-orange-500"; statusText = "FEAR"; }
-            else if (score <= 55) { textColorClass = "text-yellow-500"; statusText = "NEUTRAL"; }
-            else if (score <= 75) { textColorClass = "text-emerald-500"; statusText = "GREED"; }
-            else { textColorClass = "text-blue-500"; statusText = "EXTREME GREED"; }
+            let statusKey = "";
+            if (score <= 25) { textColorClass = "text-red-500"; statusKey = "extreme-fear"; }
+            else if (score <= 44) { textColorClass = "text-orange-500"; statusKey = "fear"; }
+            else if (score <= 55) { textColorClass = "text-yellow-500"; statusKey = "neutral"; }
+            else if (score <= 75) { textColorClass = "text-emerald-500"; statusKey = "greed"; }
+            else { textColorClass = "text-blue-500"; statusKey = "extreme-greed"; }
 
             scoreDisplay.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
             scoreDisplay.classList.add(textColorClass);
-            statusEl.textContent = statusText;
+            statusEl.textContent = i18n.translate(statusKey).toUpperCase();
             statusEl.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
             statusEl.classList.add(textColorClass);
         }
@@ -356,11 +358,11 @@
             }
 
             if (isOpen) {
-                marketStatusText.textContent = "MARKET OPEN";
+                marketStatusText.textContent = i18n.translate("market-open");
                 marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
                 marketStatusIndicator.classList.add('bg-emerald-100', 'text-emerald-600');
             } else {
-                marketStatusText.textContent = "MARKET CLOSED";
+                marketStatusText.textContent = i18n.translate("market-closed");
                 marketStatusDot.classList.add('bg-red-500');
                 marketStatusIndicator.classList.add('bg-slate-200/60', 'text-slate-600');
             }
@@ -379,30 +381,30 @@
 
                     let quoteText = "";
                     if (value >= 0 && value <= 24) {
-                        quoteText = "무섭게 떨어지네요.\n모두가 도망칠 때, 오히려 기회가 숨어 있다는데?!";
+                        quoteText = i18n.translate("quote-extreme-fear");
                     } else if (value >= 25 && value <= 44) {
-                        quoteText = "점점 무서워집니다.\n그래도 이런 구간에서는 그동안 사고 싶었던 주식을 잘 살펴봐요.";
+                        quoteText = i18n.translate("quote-fear");
                     } else if (value >= 45 && value <= 55) {
-                        quoteText = "팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요.";
+                        quoteText = i18n.translate("quote-neutral");
                     } else if (value >= 56 && value <= 75) {
-                        quoteText = "사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다.";
+                        quoteText = i18n.translate("quote-greed");
                     } else if (value >= 76 && value <= 100) {
-                        quoteText = "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회.";
+                        quoteText = i18n.translate("quote-extreme-greed");
                     } else {
-                        quoteText = "알 수 없는 시장 상태입니다.";
+                        quoteText = i18n.translate("quote-unknown");
                     }
 
                     quoteEl.textContent = quoteText;
                     
                     if (data.last_update) {
-                        lastUpdatedEl.textContent = `Last updated: ${data.last_update}`;
+                        lastUpdatedEl.textContent = `${i18n.translate("last-updated")}: ${data.last_update}`;
                     }
                 } else {
-                    quoteEl.textContent = "아직 데이터가 없습니다. GitHub Actions를 실행해주세요.";
+                    quoteEl.textContent = i18n.translate("preparing-data");
                 }
             } catch (error) {
                 console.error("Error fetching US sentiment:", error);
-                quoteEl.textContent = "데이터를 불러오는 데 실패했습니다.";
+                quoteEl.textContent = i18n.translate("loading");
             }
         }
 

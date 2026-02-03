@@ -22,6 +22,8 @@
 
     <!-- Tailwind CSS and Fonts from index.html -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script id="tailwind-config">
@@ -79,10 +81,10 @@
 <h2 class="text-lg font-bold tracking-tight dark:text-white">개인정보처리방침</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 
-<a class="text-sm font-semibold text-primary" href="/privacy.html">개인정보처리방침</a>
+<a class="text-sm font-semibold text-primary" href="/privacy.html" data-i18n="privacy-policy">개인정보처리방침</a>
 </div>
 </div>
 <div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
