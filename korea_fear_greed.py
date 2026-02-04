@@ -113,7 +113,15 @@ def get_adr_from_krx_api(date_str):
     
     for item in data["OutBlock_1"]:
         if item.get("MKT_NM") == "KOSPI": # KOSPI 시장만 필터링
-            fluc_rt = float(item.get("FLUC_RT").replace('-', '0')) # 등락률, '-'인 경우 0으로 처리
+            fluc_rt_str = item.get("FLUC_RT", "0")
+            if fluc_rt_str == "-":
+                fluc_rt = 0.0
+            else:
+                try:
+                    fluc_rt = float(fluc_rt_str)
+                except ValueError:
+                    fluc_rt = 0.0
+
             if fluc_rt > 0:
                 advancing_count += 1
             elif fluc_rt < 0:
