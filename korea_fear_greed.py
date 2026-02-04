@@ -6,7 +6,7 @@ import FinanceDataReader as fdr # 지표 1, 2에 필요
 from pykrx import stock # pykrx는 더 이상 사용하지 않지만 FinanceDataReader가 의존할 수 있으므로 남겨둠
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta, datetime # Add datetime import for use in generate_gemini_report
+from datetime import datetime, timedelta # Add datetime import for use in generate_gemini_report
 import firebase_admin
 from firebase_admin import credentials, firestore
 import time # 재시도를 위한 시간 지연
