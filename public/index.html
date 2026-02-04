@@ -1070,11 +1070,11 @@
                             })
                             .catch(error => {
                                 console.error(`Error loading advisor advice for ${activeAdvisor}:`, error);
-                                advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">데이터를 불러오는 데 실패했습니다.</p>`;
+                                advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">${i18n.translate("failed-to-load-advice")}</p>`;
                             });
                     } else {
                         // Fallback for advisors without a dedicated file
-                        advisorAdviceDisplay.innerHTML = `<p class="text-sm dark:text-slate-200">조언을 준비 중입니다.</p>`;
+                        advisorAdviceDisplay.innerHTML = `<p class="text-sm dark:text-slate-200">${i18n.translate("preparing-advice")}</p>`;
                     }
                 }
             }

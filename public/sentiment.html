@@ -399,11 +399,11 @@
                         lastUpdatedEl.textContent = `${i18n.translate("last-updated")}: ${data.last_update} ${timeSuffix}`;
                     }
                 } else {
-                    quoteEl.textContent = i18n.translate("preparing-data");
+                    quoteEl.textContent = i18n.translate("preparing-advice");
                 }
             } catch (error) {
                 console.error("Error fetching US sentiment:", error);
-                quoteEl.textContent = i18n.translate("loading");
+                quoteEl.textContent = i18n.translate("failed-to-load-advice");
             }
         }
 
@@ -553,7 +553,10 @@
                 const isOpening = section.style.display === 'none';
                 if (isOpening) {
                     section.style.display = 'block';
-                    section.scrollIntoView({ behavior: 'smooth' });
+                    // Small timeout to ensure DOM has rendered the block before scrolling
+                    setTimeout(() => {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 10);
                 } else {
                     section.style.display = 'none';
                 }

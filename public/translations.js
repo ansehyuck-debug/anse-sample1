@@ -84,7 +84,9 @@ const translations = {
         "us-exp-6-title": "6. 안전 자산 수요 (Safe Haven Demand)",
         "us-exp-6-desc": "주식 수익률과 국채 수익률의 차이를 분석합니다.",
         "us-exp-7-title": "7. 정크 본드 수요 (Junk Bond Demand)",
-        "us-exp-7-desc": "투자 등급 채권과 투기 등급 채권의 수익률 스프레드를 분석합니다."
+        "us-exp-7-desc": "투자 등급 채권과 투기 등급 채권의 수익률 스프레드를 분석합니다.",
+        "failed-to-load-advice": "데이터를 불러오는 데 실패했습니다.",
+        "preparing-advice": "조언을 준비 중입니다."
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -171,6 +173,8 @@ const translations = {
         "us-exp-6-title": "6. Safe Haven Demand",
         "us-exp-6-desc": "Analyzes the difference in returns between stocks and treasury bonds.",
         "us-exp-7-title": "7. Junk Bond Demand",
-        "us-exp-7-desc": "Analyzes the yield spread between investment-grade and speculative-grade bonds."
+        "us-exp-7-desc": "Analyzes the yield spread between investment-grade and speculative-grade bonds.",
+        "failed-to-load-advice": "Failed to load advice data.",
+        "preparing-advice": "Preparing advice..."
     }
 };
