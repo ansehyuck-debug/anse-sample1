@@ -254,26 +254,33 @@ def get_scores():
         print("지표 2 (RSI) 최종 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - 20일 이동평균 적용
+    # 지표 3: ADR (상승/하락 비율) - 20일 이동평균 (신뢰성 강화 버전)
     try:
-        # 최근 45일 중 실제 거래일 20일을 추출
+        # 최근 45일치 데이터를 가져와서 충분한 거래일 후보 확보
         df_ks = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=45))
-        trading_days = df_ks.index.strftime('%Y%m%d').tolist()[-20:] # 최근 20거래일
+        all_trading_days = df_ks.index.strftime('%Y%m%d').tolist()
+        all_trading_days.reverse() # 최신 날짜부터 역순으로 검사
         
         total_adv = 0
         total_dec = 0
         days_found = 0
         
-        print(f"지표 3 (ADR): {len(trading_days)}거래일 데이터 수집 및 합산 시작...")
-        for t_date in trading_days:
+        print(f"지표 3 (ADR): 유효 20거래일 데이터 보장 수집 시작 (후보군 {len(all_trading_days)}일)...")
+        for t_date in all_trading_days:
             adv, dec = get_adr_counts_from_krx_api(t_date)
-            if adv is not None and dec is not None:
+            
+            # 데이터가 존재하고 하락 종목이 0보다 큰 정상적인 데이터만 합산
+            if adv is not None and dec is not None and dec > 0:
                 total_adv += adv
                 total_dec += dec
                 days_found += 1
+            
+            # 정확히 20일치가 모이면 중단
+            if days_found == 20:
+                break
             time.sleep(0.1) # API 부하 방지
         
-        if days_found > 0 and total_dec > 0:
+        if days_found == 20 and total_dec > 0:
             adr_score_raw = (total_adv / total_dec) * 100
             
             # ADR 값을 0~100 스케일로 변환 (70~120 범위 사용)
@@ -285,9 +292,9 @@ def get_scores():
                 adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
             
             scores.append(adr_score_scaled)
-            print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값) [%d일 합산]" % (adr_score_raw, adr_score_scaled, days_found))
+            print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값) [정확히 %d일 데이터 합산]" % (adr_score_raw, adr_score_scaled, days_found))
         else:
-            print("지표 3 (ADR) 최종 오류: 유효한 데이터를 찾지 못했습니다. 기본값 50 사용.")
+            print("지표 3 (ADR) 최종 오류: 유효한 20거래일 데이터를 확보하지 못했습니다. (확보된 일수: %d일) 기본값 50 사용." % days_found)
             scores.append(50)
     except Exception as e:
         print("지표 3 (ADR) 최종 오류: %s" % str(e))
