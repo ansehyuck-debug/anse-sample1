@@ -278,67 +278,67 @@
 </div>
 
 <div id="indicator-explanation-section" style="display: none;" class="mt-8">
-<h2 class="text-2xl font-bold mb-4 dark:text-white" data-i18n="how-calculated">지표별 계산 방식 및 스케일링</h2>
+<h2 class="text-2xl font-bold mb-4 dark:text-white" data-i18n="exp-title-korea">지표별 계산 방식 및 스케일링</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-1-title">1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-1-desc">
             코스피 지수가 125일 이동평균선과 얼마나 떨어져 있는지를 나타내는 지표입니다. 이격도가 크면 과매수(탐욕), 작으면 과매도(공포)로 해석합니다.
         </p>
-        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400" data-i18n="exp-1-scaling">
             <strong>스케일링:</strong> 이격도 0.9 이하 → 0점 (극심한 공포), 이격도 1.1 이상 → 100점 (극심한 탐욕). 0.9 ~ 1.1 범위에서 선형적으로 스케일링됩니다.
         </p>
     
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">2. KOSPI 14일 RSI (주가 강도)</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-2-title">2. KOSPI 14일 RSI (주가 강도)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-2-desc">
             KOSPI 지수의 14일 상대강도지수(RSI)를 사용하여 주가의 상승 및 하락 강도를 측정합니다. RSI가 낮으면 과매도(공포), 높으면 과매수(탐욕)로 해석합니다.
         </p>
-        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400" data-i18n="exp-2-scaling">
             <strong>스케일링:</strong> RSI 값 0 ~ 100을 그대로 0점 ~ 100점으로 스케일링합니다. 0점은 극심한 공포, 100점은 극심한 탐욕을 나타냅니다.
         </p>
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">3. ADR (상승/하락 비율) (시장 폭)</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-3-title">3. ADR (상승/하락 비율) (시장 폭)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-3-desc">
             일정 기간 동안 상승한 종목 수와 하락한 종목 수의 비율을 나타내는 지표입니다. ADR이 낮으면 시장 전반의 하락세(공포), 높으면 상승세(탐욕)를 의미합니다.
         </p>
-        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400" data-i18n="exp-3-scaling">
             <strong>스케일링:</strong> ADR 70 이하 → 0점 (극심한 공포), ADR 120 이상 → 100점 (극심한 탐욕). 70 ~ 120 범위에서 선형적으로 스케일링됩니다.
         </p>
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">4. VKOSPI (변동성) (시장 변동성)</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-4-title">4. VKOSPI (변동성) (시장 변동성)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-4-desc">
             코스피200 변동성 지수(VKOSPI)는 시장의 예상 변동성을 나타내며, 투자자들의 공포 심리를 반영합니다. VKOSPI 값이 높으면 시장의 불확실성 증가(공포), 낮으면 안정(탐욕)으로 해석합니다.
         </p>
-        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400" data-i18n="exp-4-scaling">
             <strong>스케일링:</strong> VKOSPI 40 이상 → 0점 (극심한 공포), VKOSPI 10 이하 → 100점 (극심한 탐욕). 10 ~ 40 범위에서 역비례하여 선형적으로 스케일링됩니다.
         </p>
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">5. 코스피200 옵션 풋콜 비율 (옵션 풋콜 비율)</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-5-title">5. 코스피200 옵션 풋콜 비율 (옵션 풋콜 비율)</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-5-desc">
             코스피200 옵션 시장에서 풋옵션 거래량과 콜옵션 거래량의 비율을 나타내는 지표입니다. 풋옵션 거래량(하락에 베팅)이 많으면 공포, 콜옵션 거래량(상승에 베팅)이 많으면 탐욕으로 해석합니다.
         </p>
-        <p class="text-sm font-semibold text-primary dark:text-emerald-400">
+        <p class="text-sm font-semibold text-primary dark:text-emerald-400" data-i18n="exp-5-scaling">
             <strong>스케일링:</strong> PCR 1.8 이상 → 0점 (극심한 공포), PCR 0.6 이하 → 100점 (극심한 탐욕). 0.6 ~ 1.8 범위에서 역비례하여 선형적으로 스케일링됩니다.
         </p>
     </div>
     <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2">6. 최종 공포 탐욕 지수 계산</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2">
+        <h3 class="text-lg font-bold mb-2" data-i18n="exp-6-title">6. 최종 공포 탐욕 지수 계산</h3>
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-6-desc">
             최종 공포 탐욕 지수는 위 5가지 지표들의 가중 평균을 통해 산출됩니다. 각 지표는 시장 심리 분석에 있어 서로 다른 중요도를 가지므로, 다음과 같은 가중치를 적용합니다.
         </p>
         <ul class="text-sm font-semibold list-disc pl-5">
-            <li class="text-primary dark:text-emerald-400"><strong>지표 1 (KOSPI vs 125일 이평선 이격도):</strong> 25%</li>
-            <li class="text-primary dark:text-emerald-400"><strong>지표 2 (KOSPI 14일 RSI):</strong> 20%</li>
-            <li class="text-primary dark:text-emerald-400"><strong>지표 3 (ADR):</strong> 20%</li>
-            <li class="text-primary dark:text-emerald-400"><strong>지표 4 (VKOSPI):</strong> 20%</li>
-            <li class="text-primary dark:text-emerald-400"><strong>지표 5 (코스피200 옵션 풋콜 비율):</strong> 15%</li>
+            <li class="text-primary dark:text-emerald-400" data-i18n="exp-6-list-1"><strong>지표 1 (KOSPI vs 125일 이평선 이격도):</strong> 25%</li>
+            <li class="text-primary dark:text-emerald-400" data-i18n="exp-6-list-2"><strong>지표 2 (KOSPI 14일 RSI):</strong> 20%</li>
+            <li class="text-primary dark:text-emerald-400" data-i18n="exp-6-list-3"><strong>지표 3 (ADR):</strong> 20%</li>
+            <li class="text-primary dark:text-emerald-400" data-i18n="exp-6-list-4"><strong>지표 4 (VKOSPI):</strong> 20%</li>
+            <li class="text-primary dark:text-emerald-400" data-i18n="exp-6-list-5"><strong>지표 5 (코스피200 옵션 풋콜 비율):</strong> 15%</li>
         </ul>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mt-2">
+        <p class="text-sm text-[#49699c] dark:text-slate-400 mt-2" data-i18n="exp-6-footer">
             이러한 가중치를 통해 시장의 다양한 측면을 종합적으로 반영한 공포 탐욕 지수를 제공합니다.
         </p>
     </div>
