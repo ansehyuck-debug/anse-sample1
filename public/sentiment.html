@@ -586,14 +586,14 @@
     <script>
         // Supabase configuration
         // Values will be replaced by Cloudflare build/deployment environment
-        const SB_URL = 'SUPABASE_URL';
-        const SB_KEY = 'SUPABASE_ANON_KEY';
+        const SB_URL = 'NEXT_PUBLIC_SUPABASE_URL';
+        const SB_KEY = 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
         
         let supabaseClient;
         try {
             console.log("Initializing Supabase (Sentiment Page)...");
-            if (SB_URL === 'SUPABASE_URL' || !SB_URL.startsWith('http')) {
-                throw new Error("Supabase URL is not properly configured in environment variables.");
+            if (SB_URL === 'NEXT_PUBLIC_SUPABASE_URL' || !SB_URL.startsWith('http')) {
+                throw new Error("Supabase URL is not properly configured in environment variables (NEXT_PUBLIC_SUPABASE_URL).");
             }
             const { createClient } = supabase;
             supabaseClient = createClient(SB_URL, SB_KEY);
@@ -644,7 +644,7 @@
             loginButton.addEventListener('click', async () => {
                 console.log("Login button clicked.");
                 if (!supabaseClient) {
-                    const msg = "Supabase configuration missing. Please ensure SUPABASE_URL and SUPABASE_ANON_KEY are set in Cloudflare.";
+                    const msg = "Supabase configuration missing. Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in Cloudflare.";
                     console.error(msg);
                     alert(msg);
                     return;
