@@ -550,7 +550,13 @@
 
             document.getElementById('how-calculated-button').addEventListener('click', () => {
                 const section = document.getElementById('indicator-explanation-section');
-                section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                const isOpening = section.style.display === 'none';
+                if (isOpening) {
+                    section.style.display = 'block';
+                    section.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    section.style.display = 'none';
+                }
             });
 
             document.getElementById('download-btn').addEventListener('click', function() {
