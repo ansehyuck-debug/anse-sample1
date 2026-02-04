@@ -9,7 +9,10 @@
     pkgs.python3
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    NEXT_PUBLIC_SUPABASE_URL = "https://bksuhgixknsqzzxahuni.supabase.co";
+    NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_K47Ui76Xyb5hqjAOqJsbYg_u0ZFJTdf";
+  };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -37,8 +40,7 @@
       };
       # Runs when the workspace is (re)started
       onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
+        generate-config = "echo \"window.CONFIG_SUPABASE_URL = '$NEXT_PUBLIC_SUPABASE_URL'; window.CONFIG_SUPABASE_ANON_KEY = '$NEXT_PUBLIC_SUPABASE_ANON_KEY';\" > public/config.js";
       };
     };
   };

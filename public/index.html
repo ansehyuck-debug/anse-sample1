@@ -1152,17 +1152,19 @@
 });
 
     </script>
+    <script src="config.js"></script>
     <script>
         // Supabase configuration
-        // Values will be replaced by Cloudflare build/deployment environment
-        const SB_URL = 'NEXT_PUBLIC_SUPABASE_URL';
-        const SB_KEY = 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
+        // Priorities: 1. window.CONFIG (Local IDX) 2. Placeholder (Cloudflare Build)
+        const SB_URL = window.CONFIG_SUPABASE_URL || 'NEXT_PUBLIC_SUPABASE_URL';
+        const SB_KEY = window.CONFIG_SUPABASE_ANON_KEY || 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
         
         let supabaseClient;
         try {
             console.log("Initializing Supabase...");
+            // Check if it's still the placeholder and not provided by config.js
             if (SB_URL === 'NEXT_PUBLIC_SUPABASE_URL' || !SB_URL.startsWith('http')) {
-                throw new Error("Supabase URL is not properly configured in environment variables (NEXT_PUBLIC_SUPABASE_URL).");
+                throw new Error("Supabase URL is not properly configured. If you are local, check if config.js is generated.");
             }
             const { createClient } = supabase;
             supabaseClient = createClient(SB_URL, SB_KEY);
@@ -1170,7 +1172,6 @@
         } catch (e) {
             console.error("Supabase Initialization Error:", e.message);
             console.info("Falling back: Login functionality may be disabled until environment variables are correctly injected.");
-            // Ensure login button is visible to show error on click
             const btn = document.getElementById('login-button');
             if (btn) btn.classList.remove('hidden');
         }
@@ -1181,29 +1182,26 @@
         const userAvatar = document.getElementById('user-avatar');
 
         async function updateAuthState() {
-            if (!supabaseClient) {
-                console.warn("updateAuthState called but supabaseClient is not initialized.");
-                return;
-            }
+            if (!supabaseClient) return;
             
             try {
+                // getUser() can throw or return error if session is missing
                 const { data: { user }, error } = await supabaseClient.auth.getUser();
-                if (error) throw error;
                 
                 if (user) {
-                    console.log("User is logged in:", user.email);
+                    console.log("User session found:", user.email);
                     loginButton.classList.add('hidden');
                     userProfile.classList.remove('hidden');
                     if (user.user_metadata.avatar_url) {
                         userAvatar.style.backgroundImage = `url('${user.user_metadata.avatar_url}')`;
                     }
                 } else {
-                    console.log("No user session found.");
+                    // No session - this is normal for guests
                     loginButton.classList.remove('hidden');
                     userProfile.classList.add('hidden');
                 }
             } catch (err) {
-                console.error("Auth State Update Error:", err.message);
+                // Silent catch for initial load
                 loginButton.classList.remove('hidden');
                 userProfile.classList.add('hidden');
             }
