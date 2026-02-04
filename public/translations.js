@@ -43,7 +43,9 @@ const translations = {
         "indicator2": "주가 강도(RSI)",
         "indicator3": "시장의 폭(ADR)",
         "indicator4": "시장 변동성(VKOSPI)",
-        "indicator5": "옵션 풋콜 비율(PCR)"
+        "indicator5": "옵션 풋콜 비율(PCR)",
+        "updated-at": "업데이트",
+        "time-suffix": "(한국시간)"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -89,6 +91,8 @@ const translations = {
         "indicator2": "Price Strength (RSI)",
         "indicator3": "Market Breadth (ADR)",
         "indicator4": "Market Volatility (VKOSPI)",
-        "indicator5": "Put/Call Ratio (PCR)"
+        "indicator5": "Put/Call Ratio (PCR)",
+        "updated-at": "Updated",
+        "time-suffix": "(KST)"
     }
 };

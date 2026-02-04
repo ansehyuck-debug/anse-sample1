@@ -524,27 +524,45 @@
             
                             if (!querySnapshot.empty) {
             
-                                const doc = querySnapshot.docs[0].data();
+                                                                const doc = querySnapshot.docs[0].data();
             
-                                const score = doc.score;
+                                                                const score = doc.score;
             
-                                const statusFromFirestore = doc.status; // This will be the object
+                                                                const statusFromFirestore = doc.status; // This will be the object
             
-                                const timestamp = doc.timestamp.toDate(); // Corrected line
+                                                                const timestamp = doc.timestamp.toDate(); // Corrected line
             
-                                const formattedTime = timestamp.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+                                                                
             
-                                
+                                                                // Localize time formatting
+            
+                                                                const currentLang = i18n.getLanguage();
+            
+                                                                const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+            
+                                                                const formattedTime = timestamp.toLocaleString(locale, { 
+            
+                                                                    year: 'numeric', month: '2-digit', day: '2-digit', 
+            
+                                                                    hour: '2-digit', minute: '2-digit', hour12: false 
+            
+                                                                });
+            
+                                                                
+            
+                                                                const timeSuffix = i18n.translate("time-suffix");
+            
+                                                                
             
                                                                 // Update main score, sentiment, and gauge
             
-                                
-            
                                                                 updateGauge(score); // This handles needle and score color/value
             
-                                
+                                                                
             
-                                                                lastUpdatedTimeEl.textContent = `${i18n.translate("last-updated")}: ${formattedTime}`; // Use template literal
+                                                                lastUpdatedTimeEl.textContent = `${i18n.translate("last-updated")}: ${formattedTime} ${timeSuffix}`; 
+            
+                                
             
                                 
             
@@ -695,15 +713,13 @@
             
             
                                 if (kospi_value !== undefined && kospi_change_point !== undefined && kospi_change_rate !== undefined) {
-            
                                     kospiValueEl.textContent = kospi_value.toFixed(2);
                                     kospiValueEl.removeAttribute('data-i18n'); // Prevent reset on lang change
-            
                                     kospiChangeRateEl.textContent = `${kospi_change_rate > 0 ? '+' : ''}${kospi_change_rate.toFixed(2)}%`;
-            
                                     kospiChangePointEl.textContent = `${kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(kospi_change_point).toFixed(2)}`;
-            
-                                    kospiLastUpdatedEl.textContent = `업데이트: ${formattedTime}`; // Use Firestore doc timestamp
+                                    
+                                    const updatedAtLabel = i18n.translate("updated-at");
+                                    kospiLastUpdatedEl.textContent = `${updatedAtLabel}: ${formattedTime} ${timeSuffix}`; 
             
             
             
