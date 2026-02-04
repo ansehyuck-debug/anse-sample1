@@ -1154,10 +1154,26 @@
     </script>
     <script>
         // Supabase configuration
-        const SUPABASE_URL = 'VITE_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'VITE_SUPABASE_ANON_KEY';
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Values will be replaced by Cloudflare build/deployment environment
+        const SB_URL = 'SUPABASE_URL';
+        const SB_KEY = 'SUPABASE_ANON_KEY';
+        
+        let supabaseClient;
+        try {
+            console.log("Initializing Supabase...");
+            if (SB_URL === 'SUPABASE_URL' || !SB_URL.startsWith('http')) {
+                throw new Error("Supabase URL is not properly configured in environment variables.");
+            }
+            const { createClient } = supabase;
+            supabaseClient = createClient(SB_URL, SB_KEY);
+            console.log("Supabase Client initialized successfully.");
+        } catch (e) {
+            console.error("Supabase Initialization Error:", e.message);
+            console.info("Falling back: Login functionality may be disabled until environment variables are correctly injected.");
+            // Ensure login button is visible to show error on click
+            const btn = document.getElementById('login-button');
+            if (btn) btn.classList.remove('hidden');
+        }
 
         const loginButton = document.getElementById('login-button');
         const logoutButton = document.getElementById('logout-button');
@@ -1165,42 +1181,79 @@
         const userAvatar = document.getElementById('user-avatar');
 
         async function updateAuthState() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!supabaseClient) {
+                console.warn("updateAuthState called but supabaseClient is not initialized.");
+                return;
+            }
             
-            if (user) {
-                loginButton.classList.add('hidden');
-                userProfile.classList.remove('hidden');
-                if (user.user_metadata.avatar_url) {
-                    userAvatar.style.backgroundImage = `url('${user.user_metadata.avatar_url}')`;
+            try {
+                const { data: { user }, error } = await supabaseClient.auth.getUser();
+                if (error) throw error;
+                
+                if (user) {
+                    console.log("User is logged in:", user.email);
+                    loginButton.classList.add('hidden');
+                    userProfile.classList.remove('hidden');
+                    if (user.user_metadata.avatar_url) {
+                        userAvatar.style.backgroundImage = `url('${user.user_metadata.avatar_url}')`;
+                    }
+                } else {
+                    console.log("No user session found.");
+                    loginButton.classList.remove('hidden');
+                    userProfile.classList.add('hidden');
                 }
-            } else {
+            } catch (err) {
+                console.error("Auth State Update Error:", err.message);
                 loginButton.classList.remove('hidden');
                 userProfile.classList.add('hidden');
             }
         }
 
-        loginButton.addEventListener('click', async () => {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin
+        if (loginButton) {
+            loginButton.addEventListener('click', async () => {
+                console.log("Login button clicked.");
+                if (!supabaseClient) {
+                    const msg = "Supabase configuration missing. Please ensure SUPABASE_URL and SUPABASE_ANON_KEY are set in Cloudflare.";
+                    console.error(msg);
+                    alert(msg);
+                    return;
+                }
+                
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                if (error) {
+                    console.error('OAuth Login Error:', error.message);
+                    alert("Login failed: " + error.message);
                 }
             });
-            if (error) console.error('Error logging in:', error.message);
-        });
+        }
 
-        logoutButton.addEventListener('click', async () => {
-            const { error } = await supabaseClient.auth.signOut();
-            if (error) console.error('Error logging out:', error.message);
-            updateAuthState();
-        });
+        if (logoutButton) {
+            logoutButton.addEventListener('click', async () => {
+                console.log("Logout button clicked.");
+                if (!supabaseClient) return;
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) {
+                    console.error('Logout Error:', error.message);
+                } else {
+                    console.log("Logout successful.");
+                    updateAuthState();
+                }
+            });
+        }
 
         // Initialize auth state
-        supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (supabaseClient) {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                console.log("Auth State Changed Event:", event);
+                updateAuthState();
+            });
             updateAuthState();
-        });
-
-        updateAuthState();
+        }
     </script>
 </body>
 </html>
