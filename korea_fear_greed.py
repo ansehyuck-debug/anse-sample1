@@ -99,40 +99,43 @@ def get_vkospi_from_krx_api(date_str):
         
     return vkospi_value 
 
-def get_adr_from_krx_api(date_str):
+def get_adr_counts_from_krx_api(date_str):
     endpoint = "sto/stk_bydd_trd" # 유가증권 일별매매정보
     params = {"basDd": date_str}
 
-    data = _call_krx_api(endpoint, params)
+    try:
+        data = _call_krx_api(endpoint, params)
+        if data is None or "OutBlock_1" not in data or not data["OutBlock_1"]:
+            return None, None
+        
+        advancing_count = 0
+        declining_count = 0
+        
+        for item in data["OutBlock_1"]:
+            # KOSPI 시장의 '주권'(보통주/우선주)만 필터링하여 전통적 ADR 계산
+            if item.get("MKT_NM") == "KOSPI":
+                # SECT_TP_NM 필터링 (ETF, ETN 등 제외하고 주식만 집계)
+                sect_tp = item.get("SECT_TP_NM")
+                if sect_tp and sect_tp != "주권":
+                    continue
 
-    if "OutBlock_1" not in data or not data["OutBlock_1"]:
-        raise ValueError("KRX API 응답에 OutBlock_1이 없거나 비어있습니다.")
-    
-    advancing_count = 0
-    declining_count = 0
-    
-    for item in data["OutBlock_1"]:
-        if item.get("MKT_NM") == "KOSPI": # KOSPI 시장만 필터링
-            fluc_rt_str = item.get("FLUC_RT", "0")
-            if fluc_rt_str == "-":
-                fluc_rt = 0.0
-            else:
-                try:
-                    fluc_rt = float(fluc_rt_str)
-                except ValueError:
+                fluc_rt_str = item.get("FLUC_RT", "0")
+                if fluc_rt_str == "-":
                     fluc_rt = 0.0
+                else:
+                    try:
+                        fluc_rt = float(fluc_rt_str)
+                    except ValueError:
+                        fluc_rt = 0.0
 
-            if fluc_rt > 0:
-                advancing_count += 1
-            elif fluc_rt < 0:
-                declining_count += 1
-    
-    if declining_count == 0:
-        adr_score_raw = 100 if advancing_count > 0 else 50 # 하락 종목이 없으면 상승 종목에 따라 점수
-    else:
-        adr_score_raw = (advancing_count / declining_count) * 100
-    
-    return adr_score_raw
+                if fluc_rt > 0:
+                    advancing_count += 1
+                elif fluc_rt < 0:
+                    declining_count += 1
+        return advancing_count, declining_count
+    except Exception as e:
+        print(f"ADR 데이터 추출 중 오류 ({date_str}): {e}")
+        return None, None
 
 def get_put_call_ratio_from_krx_api(date_str):
     endpoint = "drv/opt_bydd_trd" # 옵션 일별매매정보 (주식옵션外)
