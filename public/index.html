@@ -379,15 +379,6 @@
       }
       const db = firebase.firestore();
 
-        // Define indicator names
-        const indicatorNames = {
-            1: "시장의 모멘텀(125D TDI)",
-            2: "주가 강도(RSI)",
-            3: "시장의 폭(ADR)",
-            4: "시장 변동성(VKOSPI)",
-            5: "옵션 풋콜 비율(PCR)"
-        };
-
         // Function to update gauge needle rotation and sentiment text/color
         function updateGauge(score) {
             const needle = document.getElementById('gauge-needle');
@@ -563,25 +554,25 @@
             
                                 const indicators = [];
             
-                                for (let i = 1; i <= 5; i++) {
+                                                                for (let i = 1; i <= 5; i++) {
             
-                                    const indicatorKey = `indicator${i}`;
+                                                                    const indicatorKey = `indicator${i}`;
             
-                                    if (doc[indicatorKey] !== undefined) {
+                                                                    if (doc[indicatorKey] !== undefined) {
             
-                                        indicators.push({
+                                                                        indicators.push({
             
-                                            id: i,
+                                                                            id: i,
             
-                                            name: indicatorNames[i],
+                                                                            name: i18n.translate(`indicator${i}`),
             
-                                            value: doc[indicatorKey]
+                                                                            value: doc[indicatorKey]
             
-                                        });
+                                                                        });
             
-                                    }
+                                                                    }
             
-                                }
+                                                                }
             
             
             

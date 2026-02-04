@@ -38,7 +38,12 @@ const translations = {
         "quote-neutral": "팔까, 살까… 헷갈리는 시기.\n타이밍을 재지 말고, 꾸준히 살 수 있는 주식을 잘 살펴봐요.",
         "quote-greed": "사람들의 욕심이 조금씩 느껴지네요.\n수익이 났다면, 신중한 매수가 필요한 때입니다. \n현금도 종목이다.",
         "quote-extreme-greed": "주린이도 주식 이야기뿐인 시장.\n나는 이제… 아무것도 안살란다. 떠나보낼 주식이라면 지금이 기회.",
-        "quote-unknown": "알 수 없는 시장 상태입니다."
+        "quote-unknown": "알 수 없는 시장 상태입니다.",
+        "indicator1": "시장의 모멘텀(125D TDI)",
+        "indicator2": "주가 강도(RSI)",
+        "indicator3": "시장의 폭(ADR)",
+        "indicator4": "시장 변동성(VKOSPI)",
+        "indicator5": "옵션 풋콜 비율(PCR)"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -79,6 +84,11 @@ const translations = {
         "quote-neutral": "To sell or to buy… it's a confusing time.\nDon't time the market, look for stocks you can buy consistently.",
         "quote-greed": "I can feel people's greed a little bit.\nIf you've made a profit, it's time to be careful about buying. \nCash is also a position.",
         "quote-extreme-greed": "Even beginners are only talking about stocks.\nI'm not going to buy anything now. If it's time to let go of your stocks, now is the chance.",
-        "quote-unknown": "Market state is unknown."
+        "quote-unknown": "Market state is unknown.",
+        "indicator1": "Market Momentum (125D TDI)",
+        "indicator2": "Price Strength (RSI)",
+        "indicator3": "Market Breadth (ADR)",
+        "indicator4": "Market Volatility (VKOSPI)",
+        "indicator5": "Put/Call Ratio (PCR)"
     }
 };
