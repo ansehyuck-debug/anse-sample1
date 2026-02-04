@@ -1152,26 +1152,22 @@
 });
 
     </script>
-    <script src="config.js"></script>
     <script>
-        // Supabase configuration
-        // Priorities: 1. window.CONFIG (Local IDX) 2. Placeholder (Cloudflare Build)
-        const SB_URL = window.CONFIG_SUPABASE_URL || 'NEXT_PUBLIC_SUPABASE_URL';
-        const SB_KEY = window.CONFIG_SUPABASE_ANON_KEY || 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
+        // Supabase configuration - Hardcoded for local development
+        const SB_URL = 'https://bksuhgixknsqzzxahuni.supabase.co'; 
+        const SB_KEY = 'sb_publishable_K47Ui76Xyb5hqjAOqJsbYg_u0ZFJTdf';
         
         let supabaseClient;
         try {
-            console.log("Initializing Supabase...");
-            // Check if it's still the placeholder and not provided by config.js
-            if (SB_URL === 'NEXT_PUBLIC_SUPABASE_URL' || !SB_URL.startsWith('http')) {
-                throw new Error("Supabase URL is not properly configured. If you are local, check if config.js is generated.");
+            console.log("Initializing Supabase (Hardcoded)...");
+            if (!SB_URL.startsWith('http')) {
+                throw new Error("Supabase URL is not provided.");
             }
             const { createClient } = supabase;
             supabaseClient = createClient(SB_URL, SB_KEY);
             console.log("Supabase Client initialized successfully.");
         } catch (e) {
             console.error("Supabase Initialization Error:", e.message);
-            console.info("Falling back: Login functionality may be disabled until environment variables are correctly injected.");
             const btn = document.getElementById('login-button');
             if (btn) btn.classList.remove('hidden');
         }

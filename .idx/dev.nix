@@ -40,7 +40,8 @@
       };
       # Runs when the workspace is (re)started
       onStart = {
-        generate-config = "echo \"window.CONFIG_SUPABASE_URL = '$NEXT_PUBLIC_SUPABASE_URL'; window.CONFIG_SUPABASE_ANON_KEY = '$NEXT_PUBLIC_SUPABASE_ANON_KEY';\" > public/config.js";
+        # Example: start a background task to watch and re-build backend code
+        # watch-backend = "npm run watch-backend";
       };
     };
   };
