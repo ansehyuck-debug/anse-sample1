@@ -100,6 +100,11 @@ def get_vkospi_from_krx_api(date_str):
     return vkospi_value 
 
 def get_adr_counts_from_krx_api(date_str):
+    """
+    KRX sto/stk_bydd_trd API로부터 상승/하락 종목 수를 가져옵니다.
+    NOTE: 이 API는 SECT_TP_NM(소속부)을 '-'로 반환하는 경우가 많아 주권/ETF 구분이 불가능합니다.
+    따라서 KOSPI 시장의 모든 상장 종목을 대상으로 ADR을 계산합니다.
+    """
     endpoint = "sto/stk_bydd_trd" # 유가증권 일별매매정보
     params = {"basDd": date_str}
 
@@ -112,13 +117,9 @@ def get_adr_counts_from_krx_api(date_str):
         declining_count = 0
         
         for item in data["OutBlock_1"]:
-            # KOSPI 시장의 '주권'(보통주/우선주)만 필터링하여 전통적 ADR 계산
-            if item.get("MKT_NM") == "KOSPI":
-                # SECT_TP_NM 필터링 (ETF, ETN 등 제외하고 주식만 집계)
-                sect_tp = item.get("SECT_TP_NM")
-                if sect_tp and sect_tp != "주권":
-                    continue
-
+            # KOSPI 시장 필터링 ("KOSPI" 또는 "유가증권" 대응)
+            mkt_nm = item.get("MKT_NM", "")
+            if mkt_nm in ["KOSPI", "유가증권"]:
                 fluc_rt_str = item.get("FLUC_RT", "0")
                 if fluc_rt_str == "-":
                     fluc_rt = 0.0
@@ -132,6 +133,11 @@ def get_adr_counts_from_krx_api(date_str):
                     advancing_count += 1
                 elif fluc_rt < 0:
                     declining_count += 1
+        
+        # 유효한 종목 데이터가 하나도 없는 날은 None 반환 (휴장일 등)
+        if advancing_count == 0 and declining_count == 0:
+            return None, None
+            
         return advancing_count, declining_count
     except Exception as e:
         print(f"ADR 데이터 추출 중 오류 ({date_str}): {e}")
@@ -274,6 +280,9 @@ def get_scores():
                 total_adv += adv
                 total_dec += dec
                 days_found += 1
+            else:
+                # 데이터 이상일 경우 로그 출력하여 추적 가능하게 함
+                print(f"[ADR SKIP] {t_date}: adv={adv}, dec={dec}")
             
             # 정확히 20일치가 모이면 중단
             if days_found == 20:
