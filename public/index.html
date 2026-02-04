@@ -54,6 +54,9 @@
         .gauge-gradient {
             background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
         }
+        /* Language-specific display rules */
+        html[lang="ko"] .lang-en { display: none !important; }
+        html[lang="en"] .lang-ko { display: none !important; }
     </style>
 
 <!-- Existing Google Analytics and Clarity scripts -->
@@ -950,7 +953,7 @@
 
 
             const advisorFiles = {
-                gemini: 'gemini_adv.html',
+                gemini: 'gemini_adv_ko_en.html',
                 gpt: 'gpt_adv.html', // Placeholder for future GPT advice file
                 grok: 'grok_adv.html' // Placeholder for future Grok advice file
             };

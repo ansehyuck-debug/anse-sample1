@@ -529,6 +529,39 @@ def generate_gemini_report(data):
             f.write(html_content)
         
         print(f"Gemini 리포트 생성 및 저장 성공: {file_path}")
+
+        # [추가] 다국어 버전(KO/EN) 생성 로직
+        try:
+            translate_prompt = ""
+            if os.path.exists('translate_prompt.txt'):
+                with open('translate_prompt.txt', 'r', encoding='utf-8') as f:
+                    translate_prompt = f.read()
+            
+            if translate_prompt:
+                print("다국어 버전 생성을 위한 번역 요청 중...")
+                # 제미나이에게 번역 요청
+                translation_response = client.models.generate_content(
+                    model=target_model,
+                    contents=f"{translate_prompt}\n\n[번역할 HTML]\n{html_content}"
+                )
+                english_html = translation_response.text.replace('```html', '').replace('```', '').strip()
+                
+                # 한국어와 영어를 각각의 div로 감싸서 합치기
+                bilingual_content = f"""
+<div class="lang-ko">
+{html_content}
+</div>
+<div class="lang-en">
+{english_html}
+</div>
+"""
+                bilingual_file_path = os.path.join(public_dir, 'gemini_adv_ko_en.html')
+                with open(bilingual_file_path, 'w', encoding='utf-8') as f:
+                    f.write(bilingual_content)
+                print(f"다국어 리포트 생성 및 저장 성공: {bilingual_file_path}")
+        except Exception as e:
+            print(f"다국어 리포트 생성 중 에러 발생: {e}")
+
     except Exception as e:
         print(f"Gemini 리포트 생성 중 에러 발생: {e}")
 
