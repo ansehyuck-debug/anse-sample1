@@ -86,7 +86,9 @@ const translations = {
         "us-exp-7-title": "7. 정크 본드 수요 (Junk Bond Demand)",
         "us-exp-7-desc": "투자 등급 채권과 투기 등급 채권의 수익률 스프레드를 분석합니다.",
         "failed-to-load-advice": "데이터를 불러오는 데 실패했습니다.",
-        "preparing-advice": "조언을 준비 중입니다."
+        "preparing-advice": "조언을 준비 중입니다.",
+        "login": "로그인",
+        "logout": "로그아웃"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
