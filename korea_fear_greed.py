@@ -254,25 +254,29 @@ def get_scores():
         print("지표 2 (RSI) 최종 오류: %s" % str(e))
         scores.append(50)
 
-    # 지표 3: ADR (상승/하락 비율) - KRX API 사용 
+    # 지표 3: ADR (상승/하락 비율) - 20일 이동평균 적용
     try:
-        adr_score_raw = None
-        for i in range(10): # 지난 10일간 데이터를 시도
-            target_date = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
-            try:
-                adr_score_raw = get_adr_from_krx_api(target_date)
-                if adr_score_raw is not None:
-                    print("지표 3 (ADR): %s 데이터 사용." % target_date)
-                    break
-            except Exception as e_inner:
-                print("지표 3 (ADR): %s 데이터 조회 실패. 재시도. 오류: %s" % (target_date, str(e_inner)))
-                time.sleep(1) # 짧은 지연
+        # 최근 45일 중 실제 거래일 20일을 추출
+        df_ks = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=45))
+        trading_days = df_ks.index.strftime('%Y%m%d').tolist()[-20:] # 최근 20거래일
         
-        if adr_score_raw is None:
-            print("지표 3 (ADR) 최종 오류: 10일 동안 데이터를 찾지 못했습니다. 기본값 50 사용.")
-            scores.append(50)
-        else:
-            # ADR 값을 0~100 스케일로 변환. 일반적으로 70~120 범위. 100이 중립.
+        total_adv = 0
+        total_dec = 0
+        days_found = 0
+        
+        print(f"지표 3 (ADR): {len(trading_days)}거래일 데이터 수집 및 합산 시작...")
+        for t_date in trading_days:
+            adv, dec = get_adr_counts_from_krx_api(t_date)
+            if adv is not None and dec is not None:
+                total_adv += adv
+                total_dec += dec
+                days_found += 1
+            time.sleep(0.1) # API 부하 방지
+        
+        if days_found > 0 and total_dec > 0:
+            adr_score_raw = (total_adv / total_dec) * 100
+            
+            # ADR 값을 0~100 스케일로 변환 (70~120 범위 사용)
             if adr_score_raw <= 70:
                 adr_score_scaled = 0
             elif adr_score_raw >= 120:
@@ -281,7 +285,10 @@ def get_scores():
                 adr_score_scaled = (adr_score_raw - 70) / (120 - 70) * 100
             
             scores.append(adr_score_scaled)
-            print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값)" % (adr_score_raw, adr_score_scaled))
+            print("지표 3 (ADR) 성공: %.2f (원시값), %.2f (스케일된 값) [%d일 합산]" % (adr_score_raw, adr_score_scaled, days_found))
+        else:
+            print("지표 3 (ADR) 최종 오류: 유효한 데이터를 찾지 못했습니다. 기본값 50 사용.")
+            scores.append(50)
     except Exception as e:
         print("지표 3 (ADR) 최종 오류: %s" % str(e))
         scores.append(50)
