@@ -1032,6 +1032,13 @@
 
             // Set initial advisor (Gemini) on page load
             updateAdvisorDisplay('gemini');
+
+            // Listen for language changes to refresh dynamic content
+            window.addEventListener('languageChanged', async () => {
+                await fetchLatestIndex();
+                displayRandomProverb(); // Refresh proverb too
+                updateKOSPIStatus(marketStatusText, marketStatusDot, marketStatusIndicator); // Refresh market status text
+            });
         });
     </script>
     <script>
