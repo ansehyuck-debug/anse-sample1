@@ -114,9 +114,23 @@
 </button>
 <div id="auth-container" class="flex items-center gap-2">
     <button id="login-button" class="hidden flex h-10 px-4 items-center justify-center rounded-lg bg-primary text-white font-bold hover:opacity-90 transition-opacity" data-i18n="login">Login</button>
-    <div id="user-profile" class="hidden flex items-center gap-3">
-        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar"></div>
-        <button id="logout-button" class="text-xs font-bold text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" data-i18n="logout">Logout</button>
+    <div id="user-profile" class="hidden relative flex items-center gap-3">
+        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20 cursor-pointer" data-alt="User profile avatar"></div>
+        <!-- Profile Dropdown -->
+        <div id="profile-dropdown" class="hidden absolute right-0 top-12 w-48 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] shadow-lg z-[60] overflow-hidden">
+            <div class="px-4 py-3 border-b border-[#e7ecf4] dark:border-[#1e293b]">
+                <p id="dropdown-user-name" class="text-sm font-bold truncate dark:text-white"></p>
+                <p id="dropdown-user-email" class="text-xs text-[#49699c] dark:text-slate-400 truncate"></p>
+            </div>
+            <button id="my-account-btn" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 dark:text-slate-200">
+                <span class="material-symbols-outlined text-sm">person</span>
+                <span data-i18n="my-account">My Account</span>
+            </button>
+            <button id="logout-button-dropdown" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                <span data-i18n="logout">Logout</span>
+            </button>
+        </div>
     </div>
 </div>
 </div>
@@ -128,6 +142,56 @@
 </nav>
 </div>
 </header>
+
+<!-- My Account Modal -->
+<div id="account-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-[#161f2c] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[500px]">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
+            <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
+            <nav class="space-y-1">
+                <button class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">grid_view</span>
+                    <span data-i18n="overview">Overview</span>
+                </button>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="p-6 flex items-center justify-between border-b border-[#e7ecf4] dark:border-[#1e293b]">
+                <h2 class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
+                <button id="close-modal" class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined dark:text-white">close</span>
+                </button>
+            </header>
+            <main class="flex-1 p-8 overflow-y-auto">
+                <div class="flex flex-col gap-8">
+                    <!-- User Profile Info -->
+                    <section class="flex items-center gap-4">
+                        <div id="modal-user-avatar" class="h-16 w-16 rounded-full bg-cover bg-center ring-4 ring-primary/10"></div>
+                        <div class="flex flex-col">
+                            <h4 id="modal-user-name" class="text-lg font-black dark:text-white"></h4>
+                            <p id="modal-user-email" class="text-sm text-[#49699c] dark:text-slate-400"></p>
+                        </div>
+                    </section>
+                    <!-- Subscription Status -->
+                    <section class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
+                                <p class="text-xs text-[#49699c] dark:text-slate-400">구독을 통해 더 상세한 분석과 리포트를 받아보세요.</p>
+                            </div>
+                            <a href="https://pola.so" target="_blank" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">stars</span>
+                                <span data-i18n="subscribe">구독하기</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
 <main class="mx-auto max-w-[1200px] px-6 py-8">
 <!-- Page Heading -->
 <div class="mb-8 flex flex-wrap items-end justify-between gap-8">
@@ -604,74 +668,88 @@
         }
 
         const loginButton = document.getElementById('login-button');
-        const logoutButton = document.getElementById('logout-button');
         const userProfile = document.getElementById('user-profile');
         const userAvatar = document.getElementById('user-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const myAccountBtn = document.getElementById('my-account-btn');
+        const logoutButtonDropdown = document.getElementById('logout-button-dropdown');
+        const accountModal = document.getElementById('account-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        // Dropdown toggle
+        if (userAvatar) {
+            userAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('hidden');
+            });
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', () => {
+            if (profileDropdown) profileDropdown.classList.add('hidden');
+        });
+
+        // Modal toggle
+        if (myAccountBtn) {
+            myAccountBtn.addEventListener('click', () => {
+                accountModal.classList.remove('hidden');
+                profileDropdown.classList.add('hidden');
+            });
+        }
+
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                accountModal.classList.add('hidden');
+            });
+        }
+
+        // Close modal when clicking background
+        if (accountModal) {
+            accountModal.addEventListener('click', (e) => {
+                if (e.target === accountModal) accountModal.classList.add('hidden');
+            });
+        }
 
         async function updateAuthState() {
             if (!supabaseClient) return;
             
             try {
-                // getUser() can throw or return error if session is missing
                 const { data: { user }, error } = await supabaseClient.auth.getUser();
                 
                 if (user) {
                     console.log("User session found:", user.email);
                     loginButton.classList.add('hidden');
                     userProfile.classList.remove('hidden');
-                    if (user.user_metadata.avatar_url) {
-                        userAvatar.style.backgroundImage = `url('${user.user_metadata.avatar_url}')`;
+                    
+                    const avatarUrl = user.user_metadata.avatar_url;
+                    const fullName = user.user_metadata.full_name || 'User';
+                    const email = user.email;
+
+                    if (avatarUrl) {
+                        userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                        document.getElementById('modal-user-avatar').style.backgroundImage = `url('${avatarUrl}')`;
                     }
+                    
+                    // Update texts in dropdown and modal
+                    document.getElementById('dropdown-user-name').textContent = fullName;
+                    document.getElementById('dropdown-user-email').textContent = email;
+                    document.getElementById('modal-user-name').textContent = fullName;
+                    document.getElementById('modal-user-email').textContent = email;
+
                 } else {
-                    // No session - this is normal for guests
                     loginButton.classList.remove('hidden');
                     userProfile.classList.add('hidden');
                 }
             } catch (err) {
-                // Silent catch for initial load
                 loginButton.classList.remove('hidden');
                 userProfile.classList.add('hidden');
             }
         }
 
-        if (loginButton) {
-            loginButton.addEventListener('click', async () => {
-                console.log("Login button clicked.");
-                if (!supabaseClient) {
-                    const msg = "Supabase configuration missing. Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in Cloudflare.";
-                    console.error(msg);
-                    alert(msg);
-                    return;
-                }
-                
-                const { error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        queryParams: {
-                            prompt: 'select_account',
-                            access_type: 'offline',
-                        },
-                        redirectTo: window.location.origin + '/sentiment.html'
-                    }
-                });
-                if (error) {
-                    console.error('OAuth Login Error:', error.message);
-                    alert("Login failed: " + error.message);
-                }
-            });
-        }
-
-        if (logoutButton) {
-            logoutButton.addEventListener('click', async () => {
-                console.log("Logout button clicked.");
-                if (!supabaseClient) return;
+        if (logoutButtonDropdown) {
+            logoutButtonDropdown.addEventListener('click', async () => {
                 const { error } = await supabaseClient.auth.signOut();
-                if (error) {
-                    console.error('Logout Error:', error.message);
-                } else {
-                    console.log("Logout successful.");
-                    updateAuthState();
-                }
+                if (!error) updateAuthState();
             });
         }
 

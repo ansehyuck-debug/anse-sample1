@@ -88,7 +88,13 @@ const translations = {
         "failed-to-load-advice": "데이터를 불러오는 데 실패했습니다.",
         "preparing-advice": "조언을 준비 중입니다.",
         "login": "로그인",
-        "logout": "로그아웃"
+        "logout": "로그아웃",
+        "my-account": "내 계정",
+        "overview": "개요",
+        "subscribe": "구독하기",
+        "email": "이메일",
+        "name": "이름",
+        "account-info": "계정 정보"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -177,6 +183,14 @@ const translations = {
         "us-exp-7-title": "7. Junk Bond Demand",
         "us-exp-7-desc": "Analyzes the yield spread between investment-grade and speculative-grade bonds.",
         "failed-to-load-advice": "Failed to load advice data.",
-        "preparing-advice": "Preparing advice..."
+        "preparing-advice": "Preparing advice...",
+        "login": "Login",
+        "logout": "Logout",
+        "my-account": "My Account",
+        "overview": "Overview",
+        "subscribe": "Subscribe",
+        "email": "Email",
+        "name": "Name",
+        "account-info": "Account Info"
     }
 };
