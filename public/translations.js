@@ -123,7 +123,7 @@ const translations = {
         "terms-section-2-li3": "기타 구독자 전용 프리미엄 데이터 및 기능",
         "disclaimer-desc": "본 서비스가 제공하는 모든 정보는 투자 참고용이며, 투자 권유나 종목 추천이 아닙니다.",
         "disclaimer-li1": "서비스에서 제공하는 지표와 AI 분석 결과는 데이터 제공처의 오류나 지연으로 인해 실제 시장 상황과 다를 수 있습니다.",
-        "disclaimer-li2": "모든 투자의 책임은 투자자 본인에게 있으며, 'anse'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.",
+        "disclaimer-li2": "모든 투자의 책임은 투자자 본인에게 있으며, 'anse.ai'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.",
         "disclaimer-li3": "본 서비스는 과거의 데이터를 기반으로 한 분석을 포함하며, 이는 미래의 수익을 보장하지 않습니다.",
 
         // Refund Policy Page
@@ -273,7 +273,7 @@ const translations = {
         // Terms of Service Page
         "terms-title": "Terms of Service",
         "terms-section-1-t": "Article 1 (Purpose)",
-        "terms-section-1-d": "The purpose of these terms is to regulate the conditions and procedures for using the financial information service and paid subscription service provided by 'anse' (hereinafter 'Service').",
+        "terms-section-1-d": "The purpose of these terms is to regulate the conditions and procedures for using the financial information service and paid subscription service provided by 'anse.ai' (hereinafter 'Service').",
         "terms-section-2-t": "Article 2 (Paid Service: Email Reports)",
         "terms-section-2-d": "Subscription members are provided with the following paid services:",
         "terms-section-2-li1": "Regular email reports 1-2 times a day (summary of KOSPI and US market indicators)",
@@ -281,7 +281,7 @@ const translations = {
         "terms-section-2-li3": "Other premium data and features exclusive to subscribers",
         "disclaimer-desc": "All information provided by this service is for investment reference only and does not constitute investment solicitation or stock recommendation.",
         "disclaimer-li1": "Indicators and AI analysis results may differ from actual market conditions due to errors or delays from data providers.",
-        "disclaimer-li2": "The responsibility for all investments lies with the investor themselves, and 'anse' bears no legal responsibility for investment results using information from this service.",
+        "disclaimer-li2": "The responsibility for all investments lies with the investor themselves, and 'anse.ai' bears no legal responsibility for investment results using information from this service.",
         "disclaimer-li3": "This service includes analysis based on historical data, which does not guarantee future returns.",
 
         // Refund Policy Page
