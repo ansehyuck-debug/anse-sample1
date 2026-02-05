@@ -109,7 +109,12 @@ const translations = {
         
         // About Us Page
         "about-intro-title": "anse.ai.kr의 정체성",
-        "about-intro-desc": "anse.ai.kr은 복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 조력자입니다.",
+        "about-intro-desc": "anse.ai.kr은 복잡한 금융 데이터 속에서 개인 투자자들이 시장의 심리를 직관적으로 파악하고, 최첨단 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 금융 조력자입니다.",
+        "about-tech-title": "활용 기술 및 데이터",
+        "about-tech-1-t": "실시간 데이터 분석",
+        "about-tech-1-d": "한국거래소(KRX)와 CNN Business 등 공신력 있는 기관의 데이터를 실시간으로 수집하여 자체적인 알고리즘으로 분석합니다.",
+        "about-tech-2-t": "멀티 AI 모델 앙상블",
+        "about-tech-2-d": "Google Gemini, OpenAI GPT, xAI Grok 등 세계 최고의 AI 모델들을 결합하여 시장 상황에 대한 다각도 분석 리포트를 생성합니다.",
         "about-value-title": "우리가 제공하는 가치",
         "about-value-1-t": "데이터의 시각화",
         "about-value-1-d": "어려운 지표를 공포와 탐욕 지수라는 직관적인 게이지로 보여줍니다.",
@@ -162,7 +167,31 @@ const translations = {
         "privacy-section-8-t": "8. 정책 변경 고지",
         "privacy-section-8-d": "본 방침의 수정이 있을 경우 최소 7일 전 웹사이트를 통해 공지합니다.",
         "privacy-effective-date": "시행일: 2026년 2월 5일",
-        "contact-us": "문의: info@anse.ai.kr"
+        "contact-us": "문의: info@anse.ai.kr",
+
+        // Educational Content
+        "what-is-fng-title": "공포와 탐욕 지수란 무엇인가?",
+        "what-is-fng-desc": "공포와 탐욕 지수(Fear & Greed Index)는 투자자들이 현재 시장을 어떻게 느끼고 있는지를 보여주는 심리 지표입니다. 시장이 과열되어 모두가 낙관적일 때는 '탐욕'이 지배하고, 시장이 급락하여 모두가 패닉에 빠졌을 때는 '공포'가 지배합니다. 이 지수는 숫자로 표현되어 투자자들이 객관적인 시각을 유지할 수 있도록 돕습니다.",
+        "why-important-title": "왜 이 지수가 중요한가?",
+        "why-important-desc": "역사적으로 주식 시장은 심리에 의해 크게 좌우되어 왔습니다. 워런 버핏의 유명한 말처럼 \"남들이 탐욕스러워할 때 두려워하고, 남들이 두려워할 때 탐욕스러워져라\"는 투자 원칙을 실천하기 위해서는 현재 시장의 심리 상태를 정확히 아는 것이 중요합니다. 이 지수는 감정에 휘둘리지 않는 냉정한 투자 판단의 기준이 되어줍니다.",
+        "understanding-us-fng-title": "미국 시장 심리 이해하기",
+        "understanding-us-fng-desc": "미국 주식 시장은 전 세계 금융의 중심이며, 투자 심리의 변화에 매우 민감하게 반응합니다. CNN Business의 공포와 탐욕 지수는 시장의 7가지 주요 지표를 종합하여 현재의 심리 상태를 나타냅니다. 이 지수가 극단적인 공포에 도달했을 때는 시장의 반등 기회를, 극단적인 탐욕에 도달했을 때는 조정의 위험을 경고하는 신호로 활용될 수 있습니다.",
+        "how-to-use-fng-title": "심리 지수 활용법",
+        "how-to-use-fng-desc": "현명한 투자자는 지수 자체보다는 '변화의 추이'에 주목합니다. 지수가 한 방향으로 급격히 쏠릴 때 감정적인 매매를 하기보다, 지표를 통해 자신의 편향을 점검하는 도구로 사용해야 합니다. 예를 들어, 탐욕 구간에서는 포트폴리오의 리스크를 재점검하고 현금 비중을 고민해보는 계기로 삼을 수 있습니다.",
+        "how-to-use-title": "공포 탐욕 지수 투자 활용법 3단계",
+        "how-to-step-1-t": "1단계: 극단적 공포 확인",
+        "how-to-step-1-d": "지수가 25 이하인 경우, 과도한 공포로 인한 저점 매수 기회인지 검토합니다.",
+        "how-to-step-2-t": "2단계: 탐욕 구간 리스크 관리",
+        "how-to-step-2-d": "지수가 75 이상이면 시장 과열을 경계하고 현금 비중 확보를 고민합니다.",
+        "how-to-step-3-t": "3단계: AI 어드바이저와 대조",
+        "how-to-step-3-d": "지수 숫자뿐만 아니라 Gemini나 GPT가 분석한 시장의 세부 지표를 함께 읽어 객관성을 높입니다.",
+        "how-to-us-title": "미국 시장 심리 활용 가이드",
+        "how-to-us-step-1-t": "1단계: S&P 500 모멘텀 체크",
+        "how-to-us-step-1-d": "CNN 지수가 지시하는 심리가 실제 S&P 500 지수의 추세와 일치하는지 확인합니다.",
+        "how-to-us-step-2-t": "2단계: VIX 변동성 대조",
+        "how-to-us-step-2-d": "공포 지수인 VIX가 급등할 때 나타나는 지수의 변화를 통해 시장의 바닥을 탐색합니다.",
+        "how-to-us-step-3-t": "3단계: 글로벌 자금 흐름 관찰",
+        "how-to-us-step-3-d": "극심한 탐욕 구간에서는 글로벌 자산 배분 전략을 통해 리스크를 분산합니다."
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -274,7 +303,12 @@ const translations = {
 
         // About Us Page
         "about-intro-title": "Identity of anse.ai.kr",
-        "about-intro-desc": "anse.ai.kr is a digital assistant designed to help individual investors (ants) intuitively grasp market sentiment amidst complex financial data and make wiser investment decisions with the help of artificial intelligence.",
+        "about-intro-desc": "anse.ai.kr is a digital financial assistant designed to help investors intuitively grasp market sentiment amidst complex data and make wiser investment decisions with cutting-edge AI.",
+        "about-tech-title": "Technology & Data",
+        "about-tech-1-t": "Real-time Data Analysis",
+        "about-tech-1-d": "We collect real-time data from authoritative institutions like KRX (Korea Exchange) and CNN Business, analyzing it through proprietary algorithms.",
+        "about-tech-2-t": "Multi-AI Ensemble",
+        "about-tech-2-d": "We combine world-leading AI models including Google Gemini, OpenAI GPT, and xAI Grok to generate multi-dimensional market analysis reports.",
         "about-value-title": "Values We Provide",
         "about-value-1-t": "Data Visualization",
         "about-value-1-d": "We present complex indicators through an intuitive gauge known as the Fear & Greed Index.",
@@ -327,6 +361,30 @@ const translations = {
         "privacy-section-8-t": "8. Policy Changes",
         "privacy-section-8-d": "Any changes to this policy will be notified on the website at least 7 days in advance.",
         "privacy-effective-date": "Effective Date: February 5, 2026",
-        "contact-us": "Contact: info@anse.ai.kr"
+        "contact-us": "Contact: info@anse.ai.kr",
+
+        // Educational Content
+        "what-is-fng-title": "What is the Fear & Greed Index?",
+        "what-is-fng-desc": "The Fear & Greed Index is a psychological indicator that shows how investors are currently feeling about the market. When the market is overheated and everyone is optimistic, 'greed' dominates; when the market plunges and everyone panics, 'fear' dominates. This index is expressed as a number to help investors maintain an objective perspective.",
+        "why-important-title": "Why is this index important?",
+        "why-important-desc": "Historically, stock markets have been heavily influenced by psychology. As Warren Buffett famously said, \"Be fearful when others are greedy, and greedy when others are fearful.\" To practice this investment principle, it is crucial to accurately know the current psychological state of the market. This index serves as a benchmark for cool-headed investment decisions, unaffected by emotions.",
+        "understanding-us-fng-title": "Understanding US Market Sentiment",
+        "understanding-us-fng-desc": "The US stock market is the center of global finance and reacts very sensitively to changes in investment sentiment. CNN Business's Fear & Greed Index aggregates seven key market indicators to represent the current psychological state. When this index reaches extreme fear, it can be used as a signal for a market rebound opportunity, and when it reaches extreme greed, it can warn of the risk of a correction.",
+        "how-to-use-fng-title": "How to Use the Sentiment Index",
+        "how-to-use-fng-desc": "Wise investors pay attention to the 'trend of change' rather than the index itself. Instead of making emotional trades when the index swings sharply in one direction, you should use the indicators as a tool to check your own biases. For example, in a greed zone, it can serve as an opportunity to re-examine your portfolio's risk and consider your cash position.",
+        "how-to-use-title": "3 Steps to Use the Fear & Greed Index",
+        "how-to-step-1-t": "Step 1: Identify Extreme Fear",
+        "how-to-step-1-d": "When the index is below 25, review if it presents a buying opportunity due to excessive market panic.",
+        "how-to-step-2-t": "Step 2: Risk Management in Greed",
+        "how-to-step-2-d": "When the index is above 75, be wary of market overheating and consider securing cash positions.",
+        "how-to-step-3-t": "Step 3: Cross-check with AI Advisors",
+        "how-to-step-3-d": "Don't just look at the number; read detailed analysis from Gemini or GPT to maintain objectivity.",
+        "how-to-us-title": "US Market Sentiment Usage Guide",
+        "how-to-us-step-1-t": "Step 1: Check S&P 500 Momentum",
+        "how-to-us-step-1-d": "Verify if the sentiment indicated by CNN index aligns with the actual S&P 500 trend.",
+        "how-to-us-step-2-t": "Step 2: Contrast with VIX Volatility",
+        "how-to-us-step-2-d": "Search for market bottoms by observing index changes during VIX spikes.",
+        "how-to-us-step-3-t": "Step 3: Observe Global Capital Flows",
+        "how-to-us-step-3-d": "In extreme greed zones, diversify risks through global asset allocation strategies."
     }
 };
