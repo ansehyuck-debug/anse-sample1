@@ -1,236 +1,377 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>개인정보처리방침 - 오늘 저녁 뭐 먹지?</title>
-    <meta name="description" content="본 웹사이트의 개인정보처리방침에 대해 안내합니다. 사용자의 개인정보 보호를 최우선으로 합니다.">
-    <link rel="canonical" href="https://anse.ai.kr/privacy.html">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title data-i18n="privacy-policy">개인정보처리방침 - anse</title>
+<meta name="description" content="본 웹사이트의 개인정보처리방침에 대해 안내합니다." data-i18n="privacy-intro"/>
+<link rel="canonical" href="https://anse.ai.kr/privacy.html"/>
 
-    <meta property="og:title" content="개인정보처리방침 - 오늘 저녁 뭐 먹지?">
-    <meta property="og:description" content="본 웹사이트의 개인정보처리방침에 대해 안내합니다. 사용자의 개인정보 보호를 최우선으로 합니다.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://anse.ai.kr/privacy.html">
-    <meta property="og:image" content="https://anse.ai.kr/favicon.svg">
+<meta property="og:title" content="개인정보처리방침 - anse" data-i18n="privacy-policy"/>
+<meta property="og:description" content="본 웹사이트의 개인정보처리방침에 대해 안내합니다." data-i18n="privacy-intro"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://anse.ai.kr/privacy.html"/>
+<meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
 
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="개인정보처리방침 - 오늘 저녁 뭐 먹지?">
-    <meta property="twitter:description" content="본 웹사이트의 개인정보처리방침에 대해 안내합니다. 사용자의 개인정보 보호를 최우선으로 합니다.">
-    <meta property="twitter:image" content="https://anse.ai.kr/favicon.svg">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
 
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
-
-    <!-- Tailwind CSS and Fonts from index.html -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="translations.js"></script>
-    <script src="i18n.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-            tailwind.config = {
-                darkMode: "class",
-                theme: {
-                    extend: {
-                        colors: {
-                            "primary": "#3d84f5",
-                            "background-light": "#f5f7f8",
-                            "background-dark": "#101722",
-                        },
-                        fontFamily: {
-                            "display": ["Inter", "sans-serif"]
-                        },
-                        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+<!-- Tailwind CSS and Fonts -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="translations.js"></script>
+<script src="i18n.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3d84f5",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
                     },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
                 },
-            }
-        </script>
-    <style>
-            body { font-family: 'Inter', sans-serif; }
-            .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24; }
-        </style>
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24; }
+    </style>
 
-    <!-- Google Analytics and Clarity scripts -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
-    <script>
+<!-- Google Analytics and Clarity -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C8QR98TVTB"></script>
+<script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-C8QR98TVTB');
     </script>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "v2qmp0i82b");
-    </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9750321636945438"
-     crossorigin="anonymous"></script>
-    <meta name="google-adsense-account" content="ca-pub-9750321636945438">
 </head>
 <body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
-    <div id="root">
 <!-- Top Navigation Bar -->
 <header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
 <div class="mx-auto flex max-w-[1200px] items-center justify-between px-3 py-3 md:px-6">
 <div class="flex items-center gap-8">
 <div class="flex items-center gap-3">
 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
-<span class="material-symbols-outlined text-[20px] text-white">policy</span>
+<span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
 </div>
-<h2 class="text-lg font-bold tracking-tight dark:text-white">개인정보처리방침</h2>
+<h2 class="text-lg font-bold tracking-tight dark:text-white">anse</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
-
-<a class="text-sm font-semibold text-primary" href="/privacy.html" data-i18n="privacy-policy">개인정보처리방침</a>
 </div>
 </div>
 <div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
 <button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
-<span class="material-symbols-outlined">menu</span>
+<span class="material-symbols-outlined dark:text-white">menu</span>
 </button>
+
 <button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
-<span class="material-symbols-outlined">light_mode</span>
+<span class="material-symbols-outlined dark:text-white">light_mode</span>
 </button>
-<button class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<div class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBneBh9BK99BKx2b26Ln0wWAXSWA-NkKD-lrrv98lVK_rJdPXTgQuGmdvqczD3UIKISPcMnzpf-BQOdedWBnyulZOQWc1ciJwX7DT6PMhaFrVawJq4F6y18XmDN29W32bH_6CzaUWabwqtdTvTlUIGfSvw74jtRHl327xyGMcu_5I55ABKEDpKDaOoVeIFo8NUFPEGK3dONKg3bls3I7AJT26lh-N-OCbGYRo4N6cdwNSvECRXQfW82pZjHea9vnYNYvU8yp9ZTwnIf')"></div>
+<div id="auth-container" class="flex items-center gap-2">
+    <button id="login-button" class="hidden flex h-10 px-4 items-center justify-center rounded-lg bg-primary text-white font-bold hover:opacity-90 transition-opacity" data-i18n="login">Login</button>
+    <div id="user-profile" class="hidden relative flex items-center gap-3">
+        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20 cursor-pointer" data-alt="User profile avatar"></div>
+        <!-- Profile Dropdown -->
+        <div id="profile-dropdown" class="hidden absolute right-0 top-12 w-48 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] shadow-lg z-[60] overflow-hidden">
+            <div class="px-4 py-3 border-b border-[#e7ecf4] dark:border-[#1e293b]">
+                <p id="dropdown-user-name" class="text-sm font-bold truncate dark:text-white"></p>
+                <p id="dropdown-user-email" class="text-xs text-[#49699c] dark:text-slate-400 truncate"></p>
+            </div>
+            <button id="my-account-btn" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 dark:text-slate-200">
+                <span class="material-symbols-outlined text-sm">person</span>
+                <span data-i18n="my-account">My Account</span>
+            </button>
+            <button id="logout-button-dropdown" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                <span data-i18n="logout">Logout</span>
+            </button>
+        </div>
+    </div>
+</div>
 </div>
 </div>
 <div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
 <nav class="flex flex-col items-center gap-4 py-2">
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html">한국 금융시장 심리</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html">미국 금융 시장 심리</a>
-
-<a class="text-sm font-semibold text-primary" href="/privacy.html">개인정보처리방침</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
 </nav>
 </div>
 </header>
-    <main class="mx-auto max-w-[1200px] px-6 py-8">
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div class="lg:col-span-12">
-                <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
-                    <article>
-                        <h1 class="text-3xl font-black tracking-tight dark:text-white">개인정보처리방침</h1>
-            <p>본 웹사이트 ("오늘 저녁 뭐 먹지?")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.</p>
 
-            <h2 class="text-lg font-bold">1. 수집하는 개인정보 항목 및 수집 방법</h2>
-            <p>본 웹사이트는 원칙적으로 사용자의 개인정보를 수집하지 않습니다. 다만, '제휴 문의' 양식을 통해 이름, 이메일 주소, 문의 내용을 자발적으로 제공하는 경우에 한해 해당 정보가 수집됩니다. 이 정보는 Formspree 서비스를 통해 전달됩니다.</p>
-            <ul>
-                <li><strong>수집 항목:</strong> 이름, 이메일 주소, 문의 내용 (사용자가 직접 입력)</li>
-                <li><strong>수집 목적:</strong> 문의 응대 및 서비스 개선</li>
-            </ul>
+<!-- My Account Modal -->
+<div id="account-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-[#161f2c] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[500px]">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
+            <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
+            <nav class="space-y-1">
+                <button class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">grid_view</span>
+                    <span data-i18n="overview">Overview</span>
+                </button>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="p-6 flex items-center justify-between border-b border-[#e7ecf4] dark:border-[#1e293b]">
+                <h2 class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
+                <button id="close-modal" class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined dark:text-white">close</span>
+                </button>
+            </header>
+            <main class="flex-1 p-8 overflow-y-auto">
+                <div class="flex flex-col gap-8">
+                    <!-- User Profile Info -->
+                    <section class="flex items-center gap-4">
+                        <div id="modal-user-avatar" class="h-16 w-16 rounded-full bg-cover bg-center ring-4 ring-primary/10"></div>
+                        <div class="flex flex-col">
+                            <h4 id="modal-user-name" class="text-lg font-black dark:text-white"></h4>
+                            <p id="modal-user-email" class="text-sm text-[#49699c] dark:text-slate-400"></p>
+                        </div>
+                    </section>
+                    <!-- Subscription Status -->
+                    <section class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
+                                <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
+                            </div>
+                            <a href="https://pola.so" target="_blank" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">stars</span>
+                                <span data-i18n="subscribe">구독하기</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
 
-            <h2 class="text-lg font-bold">2. 개인정보의 이용 및 보유 기간</h2>
-            <p>수집된 개인정보는 문의 응대를 위한 목적으로만 이용되며, 문의 처리가 완료되면 지체 없이 파기됩니다. 별도로 법령에 의해 보존할 필요가 있는 경우가 아니라면 장기간 보유하지 않습니다.</p>
-
-            <h2 class="text-lg font-bold">3. 개인정보의 제3자 제공</h2>
-            <p>본 웹사이트는 사용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 다만, 사용자의 동의가 있거나 법률의 특별한 규정에 따라 개인정보를 제공하는 경우는 예외로 합니다.</p>
-
-            <h2 class="text-lg font-bold">4. 개인정보 처리 위탁</h2>
-            <p>본 웹사이트는 '제휴 문의' 양식의 처리를 위해 Formspree (https://formspree.io/) 서비스를 이용합니다. Formspree는 사용자가 제출한 문의 내용을 처리하고 지정된 이메일로 전달하는 역할을 합니다. Formspree의 개인정보처리방침은 해당 서비스 웹사이트에서 확인하실 수 있습니다.</p>
-
-            <h2 class="text-lg font-bold">5. 사용자의 권리</h2>
-            <p>사용자는 언제든지 자신의 개인정보를 조회하거나 수정, 삭제를 요청할 수 있으며, 개인정보 처리 정지를 요청할 수 있습니다. 이에 대한 요청은 본 웹사이트의 '제휴 문의' 양식 또는 하단의 이메일 주소를 통해 문의하실 수 있습니다.</p>
-
-            <h2 class="text-lg font-bold">6. 쿠키(Cookie) 운영</h2>
-            <p>본 웹사이트는 사용자 경험 개선을 위해 쿠키를 사용할 수 있습니다. 쿠키는 웹사이트를 운영하는 데 이용되는 서버가 사용자의 컴퓨터 브라우저에게 보내는 소량의 정보이며 사용자의 PC 컴퓨터 내 하드디스크에 저장됩니다. 사용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부할 수 있습니다. 단, 쿠키 저장을 거부할 경우 일부 서비스 이용에 어려움이 있을 수 있습니다.</p>
-            <ul>
-                <li><strong>사용 목적:</strong> 테마 설정 유지 (다크 모드/라이트 모드)</li>
-                <li><strong>거부 방법:</strong> 웹 브라우저의 옵션을 선택함으로써 모든 쿠키를 허용하거나, 쿠키를 저장할 때마다 확인을 거치거나, 모든 쿠키의 저장을 거부할 수 있습니다.</li>
-            </ul>
-
-            <h2 class="text-lg font-bold">7. 개인정보 보호 책임자 및 담당자</h2>
-            <p>본 웹사이트의 개인정보 보호 책임자는 별도로 지정되어 있지 않으며, 문의사항은 '제휴 문의' 양식을 통해 주시면 신속하게 답변 드리겠습니다.</p>
+<main class="mx-auto max-w-[800px] px-6 py-12">
+    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 md:p-12 shadow-sm">
+        <article class="prose dark:prose-invert max-w-none">
+            <h1 class="text-3xl font-black mb-8 dark:text-white" data-i18n="privacy-policy">개인정보처리방침</h1>
             
-            <h2 class="text-lg font-bold">8. 정책 변경에 따른 고지의 의무</h2>
-            <p>이 개인정보처리방침은 2026년 1월 17일부터 적용됩니다. 법령 및 정책 또는 보안기술의 변경에 따라 내용의 추가, 삭제 및 수정이 있을 시에는 변경되는 개인정보처리방침을 시행하기 최소 7일 전부터 웹사이트를 통해 고지할 예정입니다.</p>
+            <p class="mb-8 leading-relaxed" data-i18n="privacy-intro">본 웹사이트 ("anse")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.</p>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-1-t">1. 수집하는 개인정보 항목</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-1-d">본 웹사이트는 구글 로그인을 통해 사용자의 이름, 이메일 주소, 프로필 이미지를 수집합니다. 이는 사용자 식별 및 구독 서비스(리포트 발송) 제공을 위함입니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-2-t">2. 수집 목적 및 이용 기간</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-2-d">수집된 정보는 서비스 제공 및 고객 응대를 위해 이용되며, 회원 탈퇴 시 또는 서비스 종료 시까지 보유 후 지체 없이 파기됩니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-3-t">3. 제3자 제공 및 위탁</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-3-d">본 웹사이트는 사용자의 동의 없이 개인정보를 외부에 제공하지 않습니다. 다만, 로그인 서비스 제공을 위해 구글(Google)과 협력하며, 인증 데이터는 Supabase를 통해 관리됩니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-4-t">4. 사용자의 권리</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-4-d">사용자는 언제든지 자신의 개인정보를 조회하거나 삭제(회원 탈퇴)를 요청할 수 있습니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-5-t">5. 쿠키(Cookie) 운영</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-5-d">사용자 환경 설정(다크 모드 등) 유지를 위해 브라우저 쿠키를 사용할 수 있습니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-6-t">6. 개인정보 보호 책임자</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-6-d">개인정보 관련 문의는 서비스 내 '문의하기' 또는 운영자 메일을 통해 주시기 바랍니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-7-t">7. 안전성 확보 조치</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-7-d">암호화 통신 등을 통해 개인정보를 안전하게 보호하고 있습니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="privacy-section-8-t">8. 정책 변경 고지</h2>
+                <p class="leading-relaxed" data-i18n="privacy-section-8-d">본 방침의 수정이 있을 경우 최소 7일 전 웹사이트를 통해 공지합니다.</p>
+            </section>
+
+            <p class="text-sm text-[#49699c] dark:text-slate-500 mt-12" data-i18n="privacy-effective-date">시행일: 2026년 2월 5일</p>
         </article>
+    </div>
 
-    
-
+    <!-- Footer -->
     <footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
-<div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
-<div class="flex flex-col gap-2">
-<p class="text-sm font-medium">본 웹사이트의 개인정보처리방침에 대해 안내합니다. 사용자의 개인정보 보호를 최우선으로 합니다.</p>
-<p class="max-w-md text-xs leading-relaxed">본 개인정보처리방침은 2026년 1월 17일부터 적용됩니다.</p>
-</div>
-<div class="flex gap-4">
-<a href="/privacy.html" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-<span class="material-symbols-outlined text-[18px]">policy</span>
-                        개인정보처리방침
-                    </a>
-</div>
-</div>
-</footer>
+        <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
+            <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium dark:text-white" data-i18n="privacy-policy">Privacy Policy</p>
+                <p class="max-w-md text-xs leading-relaxed dark:text-slate-400" data-i18n="privacy-intro">본 웹사이트의 개인정보처리방침에 대해 안내합니다.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="/about.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="about-us">서비스 소개</a>
+                <a href="/terms.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="terms-of-service">이용약관</a>
+                <a href="/privacy.html" class="text-xs font-bold text-primary" data-i18n="privacy-policy">개인정보처리방침</a>
+                <a href="/refund.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="refund-policy">환불정책</a>
+            </div>
+        </div>
+    </footer>
 </main>
 
+<script>
+    // Theme switcher logic
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const updateThemeIcon = (isDarkMode) => {
+        const icon = document.querySelector('#theme-switcher .material-symbols-outlined');
+        if (icon) {
+            icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
+        }
+    };
 
-    <script type="text/javascript">
-        // Theme switcher logic
-        const themeSwitcher = document.getElementById('theme-switcher');
-        const updateThemeIcon = (isDarkMode) => {
-            const icon = document.querySelector('#theme-switcher .material-symbols-outlined');
-            if (icon) {
-                icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
-            }
-        };
+    const applySavedTheme = () => {
+        const savedTheme = localStorage.getItem('theme');
+        const isDarkMode = savedTheme === 'dark';
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+            updateThemeIcon(true);
+        } else {
+            document.documentElement.classList.remove('dark');
+            updateThemeIcon(false);
+        }
+    };
 
-        const applySavedTheme = () => {
-            const savedTheme = localStorage.getItem('theme');
-            const isDarkMode = savedTheme === 'dark';
-            if (isDarkMode) {
-                document.documentElement.classList.add('dark');
-                updateThemeIcon(true);
-            } else {
-                document.documentElement.classList.remove('dark');
-                updateThemeIcon(false);
-            }
-        };
+    if (themeSwitcher) {
+        themeSwitcher.addEventListener('click', () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateThemeIcon(isDarkMode);
+        });
+    }
 
-        if (themeSwitcher) {
-            themeSwitcher.addEventListener('click', () => {
-                const isDarkMode = document.documentElement.classList.toggle('dark');
-                if (isDarkMode) {
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    localStorage.removeItem('theme');
-                }
-                updateThemeIcon(isDarkMode);
+    document.addEventListener('DOMContentLoaded', () => {
+        applySavedTheme();
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
         }
-        
-        // Initial theme application on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-            applySavedTheme();
-            // Mobile menu toggle logic
-            const menuButton = document.getElementById('menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+    });
+</script>
 
-            if (menuButton && mobileMenu) {
-                menuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
+<script>
+    // Supabase configuration - Hardcoded for local development
+    const SB_URL = 'https://bksuhgixknsqzzxahuni.supabase.co';
+    const SB_KEY = 'sb_publishable_K47Ui76Xyb5hqjAOqJsbYg_u0ZFJTdf';
+    
+    let supabaseClient;
+    try {
+        const { createClient } = supabase;
+        supabaseClient = createClient(SB_URL, SB_KEY);
+    } catch (e) {
+        console.error("Supabase Initialization Error:", e.message);
+    }
+
+    const loginButton = document.getElementById('login-button');
+    const userProfile = document.getElementById('user-profile');
+    const userAvatar = document.getElementById('user-avatar');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    const myAccountBtn = document.getElementById('my-account-btn');
+    const logoutButtonDropdown = document.getElementById('logout-button-dropdown');
+    const accountModal = document.getElementById('account-modal');
+    const closeModal = document.getElementById('close-modal');
+
+    if (userAvatar) {
+        userAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
         });
-    </script>
+    }
 
-    <script>
-        // Disqus configuration (remains unchanged)
-        var disqus_config = function () {
-            this.page.url = 'https://anse.ai.kr/privacy.html';
-            this.page.identifier = 'https://anse.ai.kr/privacy.html';
-        };
-        (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://ansebooktv.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
-    </script>
-     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    window.addEventListener('click', () => {
+        if (profileDropdown) profileDropdown.classList.add('hidden');
+    });
+
+    if (myAccountBtn) {
+        myAccountBtn.addEventListener('click', () => {
+            accountModal.classList.remove('hidden');
+            profileDropdown.classList.add('hidden');
+        });
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            accountModal.classList.add('hidden');
+        });
+    }
+
+    if (accountModal) {
+        accountModal.addEventListener('click', (e) => {
+            if (e.target === accountModal) accountModal.classList.add('hidden');
+        });
+    }
+
+    async function updateAuthState() {
+        if (!supabaseClient) return;
+        try {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (user) {
+                loginButton.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                const avatarUrl = user.user_metadata.avatar_url;
+                const fullName = user.user_metadata.full_name || 'User';
+                const email = user.email;
+                if (avatarUrl) {
+                    userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                    document.getElementById('modal-user-avatar').style.backgroundImage = `url('${avatarUrl}')`;
+                }
+                document.getElementById('dropdown-user-name').textContent = fullName;
+                document.getElementById('dropdown-user-email').textContent = email;
+                document.getElementById('modal-user-name').textContent = fullName;
+                document.getElementById('modal-user-email').textContent = email;
+            } else {
+                loginButton.classList.remove('hidden');
+                userProfile.classList.add('hidden');
+            }
+        } catch (err) {
+            loginButton.classList.remove('hidden');
+            userProfile.classList.add('hidden');
+        }
+    }
+
+    if (loginButton) {
+        loginButton.addEventListener('click', async () => {
+            await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    queryParams: { prompt: 'select_account', access_type: 'offline' },
+                    redirectTo: window.location.origin + '/privacy.html'
+                }
+            });
+        });
+    }
+
+    if (logoutButtonDropdown) {
+        logoutButtonDropdown.addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.reload(); 
+        });
+    }
+
+    if (supabaseClient) {
+        supabaseClient.auth.onAuthStateChange(() => updateAuthState());
+        updateAuthState();
+    }
+</script>
 </body>
 </html>
