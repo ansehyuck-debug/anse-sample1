@@ -102,8 +102,8 @@ const translations = {
         "subscription-benefit": "구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.",
         
         // About Us Page
-        "about-intro-title": "안세(anse)의 정체성",
-        "about-intro-desc": "안세(anse)는 'Ant's Sense' 혹은 '개미의 서재'의 의미를 담고 있습니다. 복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 서재이자 나침반입니다.",
+        "about-intro-title": "anse.ai의 정체성",
+        "about-intro-desc": "anse.ai는 복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 조력자입니다.",
         "about-value-title": "우리가 제공하는 가치",
         "about-value-1-t": "데이터의 시각화",
         "about-value-1-d": "어려운 지표를 공포와 탐욕 지수라는 직관적인 게이지로 보여줍니다.",
@@ -115,7 +115,7 @@ const translations = {
         // Terms of Service Page
         "terms-title": "이용약관",
         "terms-section-1-t": "제 1 조 (목적)",
-        "terms-section-1-d": "본 약관은 'anse'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.",
+        "terms-section-1-d": "본 약관은 'anse.ai'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.",
         "terms-section-2-t": "제 2 조 (유료 서비스: 이메일 리포트)",
         "terms-section-2-d": "구독 회원에게는 다음과 같은 유료 서비스가 제공됩니다.",
         "terms-section-2-li1": "일 1~2회 정기 이메일 리포트 발송 (KOSPI 및 US 시장 지표 요약)",
@@ -129,7 +129,7 @@ const translations = {
         // Refund Policy Page
         "refund-title": "환불정책",
         "refund-section-1-t": "구독 및 결제 안내",
-        "refund-section-1-d": "'anse'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.",
+        "refund-section-1-d": "'anse.ai'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.",
         "refund-section-2-t": "환불 규정",
         "refund-li1": "결제 후 7일 이내 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.",
         "refund-li2": "구독 중도 해지: 구독 기간 중간에 해지를 요청하실 경우, 이미 발송된 리포트와 이용 기간에 해당하는 금액을 일할 계산하여 공제한 후 잔여 금액을 환불해 드립니다.",
@@ -138,7 +138,7 @@ const translations = {
         "refund-section-3-d": "구독 해지는 'My Account' 페이지 내 구독 관리 메뉴를 통하거나, 고객센터(메일)로 문의해 주시면 신속히 처리해 드립니다. 해지 후에는 다음 결제 예정일에 자동 결제가 이루어지지 않습니다.",
 
         // Privacy Policy Page
-        "privacy-intro": "본 웹사이트 (\"anse\")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.",
+        "privacy-intro": "본 웹사이트 (\"anse.ai\")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.",
         "privacy-section-1-t": "1. 수집하는 개인정보 항목",
         "privacy-section-1-d": "본 웹사이트는 구글 로그인을 통해 사용자의 이름, 이메일 주소, 프로필 이미지를 수집합니다. 이는 사용자 식별 및 구독 서비스(리포트 발송) 제공을 위함입니다.",
         "privacy-section-2-t": "2. 수집 목적 및 이용 기간",
@@ -260,8 +260,8 @@ const translations = {
         "subscription-benefit": "Subscribers receive market indicator and AI analysis reports via email 1-2 times a day.",
 
         // About Us Page
-        "about-intro-title": "Identity of anse",
-        "about-intro-desc": "anse stands for 'Ant's Sense' or 'Ant's Library'. It is a digital library and compass designed to help individual investors (ants) intuitively grasp market sentiment amidst complex financial data and make wiser investment decisions with the help of artificial intelligence.",
+        "about-intro-title": "Identity of anse.ai",
+        "about-intro-desc": "anse.ai is a digital ally that empowers retail investors to intuitively grasp market psychology within complex financial data and make smarter investment decisions with the support of AI.",
         "about-value-title": "Values We Provide",
         "about-value-1-t": "Data Visualization",
         "about-value-1-d": "We present complex indicators through an intuitive gauge known as the Fear & Greed Index.",
@@ -287,7 +287,7 @@ const translations = {
         // Refund Policy Page
         "refund-title": "Refund Policy",
         "refund-section-1-t": "Subscription and Payment Info",
-        "refund-section-1-d": "'anse's paid services are billed on a prepaid subscription basis. Due to the nature of the report service, the following refund principles apply:",
+        "refund-section-1-d": "'anse.ai's paid services are billed on a prepaid subscription basis. Due to the nature of the report service, the following refund principles apply:",
         "refund-section-2-t": "Refund Rules",
         "refund-li1": "Within 7 days of payment (if unused): A full refund is possible if the service (e.g., receiving reports) has not been used within 7 days of payment.",
         "refund-li2": "Mid-term termination: If you request termination in the middle of a subscription period, a refund will be issued after deducting the amount for already sent reports and the used period calculated pro-rata.",
@@ -296,7 +296,7 @@ const translations = {
         "refund-section-3-d": "Subscription termination can be processed through the subscription management menu on the 'My Account' page or by contacting the customer center (email). After termination, automatic payment will not occur on the next billing date.",
 
         // Privacy Policy Page
-        "privacy-intro": "This website (\"anse\") values your personal information and complies with relevant laws and regulations.",
+        "privacy-intro": "This website (\"anse.ai\") values your personal information and complies with relevant laws and regulations.",
         "privacy-section-1-t": "1. Items of Personal Information Collected",
         "privacy-section-1-d": "This website collects user's name, email address, and profile image via Google Login for identification and subscription service (report delivery).",
         "privacy-section-2-t": "2. Purpose and Retention Period",
