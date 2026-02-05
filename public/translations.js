@@ -211,7 +211,7 @@ const translations = {
         "time-suffix": "(KST)",
         "exp-title-korea": "Calculation and Scaling per Indicator",
         "exp-1-title": "1. KOSPI vs 125-day MA Deviation (Market Momentum)",
-        "exp-1-desc": "Indicates how far the KOSPI index is from its 125-day moving average. A high deviation is interpreted as overbought (greed), and a low one as oversold (fear).",
+        "exp-1-desc": "Indicates how far the KOSPI index is from its 125-day moving average. A high deviation is interpreted as overbought (greed), and a low one as over-sold (fear).",
         "exp-1-scaling": "Scaling: Deviation ≤ 0.9 → 0 pts (Extreme Fear), Deviation ≥ 1.1 → 100 pts (Extreme Greed). Scaled linearly between 0.9 and 1.1.",
         "exp-2-title": "2. KOSPI 14-day RSI (Price Strength)",
         "exp-2-desc": "Uses the 14-day Relative Strength Index (RSI) of the KOSPI to measure the intensity of price movements. Low RSI means oversold (fear), high RSI means overbought (greed).",
@@ -262,7 +262,7 @@ const translations = {
 
         // About Us Page
         "about-intro-title": "Identity of anse.ai.kr",
-        "about-intro-desc": "anse.ai.kr is a digital ally that empowers retail investors to intuitively grasp market psychology within complex financial data and make smarter investment decisions with the support of AI.",
+        "about-intro-desc": "anse.ai.kr is a digital assistant designed to help individual investors (ants) intuitively grasp market sentiment amidst complex financial data and make wiser investment decisions with the help of artificial intelligence.",
         "about-value-title": "Values We Provide",
         "about-value-1-t": "Data Visualization",
         "about-value-1-d": "We present complex indicators through an intuitive gauge known as the Fear & Greed Index.",

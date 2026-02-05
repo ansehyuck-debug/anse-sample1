@@ -181,16 +181,22 @@
                         </div>
                     </section>
                     <!-- Subscription Status -->
-                    <section class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
+                    <section id="subscription-section" class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-1">
                                 <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
-                                <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
+                                <p id="subscription-status-text" class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
                             </div>
-                            <a href="https://pola.so" target="_blank" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                <span class="material-symbols-outlined text-sm">stars</span>
-                                <span data-i18n="subscribe">구독하기</span>
-                            </a>
+                            <div id="subscription-actions" class="flex gap-2">
+                                <button id="subscribe-btn" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">stars</span>
+                                    <span data-i18n="subscribe">구독하기</span>
+                                </button>
+                                <button id="cancel-subscription-btn" class="hidden w-fit px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                    <span>구독 취소</span>
+                                </button>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -1305,6 +1311,9 @@
                     document.getElementById('modal-user-name').textContent = fullName;
                     document.getElementById('modal-user-email').textContent = email;
 
+                    // 구독 상태 체크
+                    checkSubscriptionStatus(user.id);
+
                 } else {
                     loginButton.classList.remove('hidden');
                     userProfile.classList.add('hidden');
@@ -1314,6 +1323,94 @@
                 userProfile.classList.add('hidden');
             }
         }
+
+        async function checkSubscriptionStatus(userId) {
+            const statusText = document.getElementById('subscription-status-text');
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            const cancelBtn = document.getElementById('cancel-subscription-btn');
+
+            if (!statusText || !subscribeBtn || !cancelBtn) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('subscriptions')
+                    .select('status')
+                    .eq('user_id', userId)
+                    .maybeSingle();
+
+                if (data && data.status === 'active') {
+                    statusText.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span> (매일 리포트가 발송됩니다)';
+                    subscribeBtn.classList.add('hidden');
+                    cancelBtn.classList.remove('hidden');
+                } else {
+                    statusText.textContent = i18n.translate("subscription-benefit");
+                    subscribeBtn.classList.remove('hidden');
+                    cancelBtn.classList.add('hidden');
+                }
+            } catch (err) {
+                console.error("Subscription check error:", err);
+            }
+        }
+
+        // 구독 버튼 이벤트
+        document.getElementById('subscribe-btn')?.addEventListener('click', async () => {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return alert("로그인이 필요합니다.");
+
+            const btn = document.getElementById('subscribe-btn');
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.textContent = "연결 중...";
+
+            try {
+                const response = await fetch('/api/create-checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: user.id, user_email: user.email })
+                });
+                const result = await response.json();
+                if (result.url) {
+                    window.location.href = result.url;
+                } else {
+                    alert("결제 페이지를 불러오지 못했습니다: " + (result.error || "Unknown error"));
+                }
+            } catch (err) {
+                alert("오류가 발생했습니다: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+
+        // 구독 취소 이벤트
+        document.getElementById('cancel-subscription-btn')?.addEventListener('click', async () => {
+            if (!confirm("정말 구독을 취소하시겠습니까?")) return;
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            const btn = document.getElementById('cancel-subscription-btn');
+            btn.disabled = true;
+            btn.textContent = "처리 중...";
+
+            try {
+                const response = await fetch('/api/cancel-subscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: user.id })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("구독이 취소되었습니다.");
+                    window.location.reload();
+                } else {
+                    alert("취소 실패: " + result.error);
+                }
+            } catch (err) {
+                alert("오류 발생: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "구독 취소";
+            }
+        });
 
         if (loginButton) {
             loginButton.addEventListener('click', async () => {
