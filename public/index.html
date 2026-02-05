@@ -340,7 +340,27 @@
 </div>
 
 
+<!-- Index History Chart (Hidden for now to prevent script errors) -->
+<div id="index-history-container" class="hidden h-64 w-full relative"> <!-- Added hidden class -->
+    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]" data-i18n="preparing-data">
+        Preparing data...
+    </div>
+    <div id="index-history-chart" class="h-full w-full" style="display: none;"> <!-- Added ID and initially hidden -->
+        <svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+        <!-- Area background -->
+        <path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+        <!-- Line -->
+        <path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
+        <defs>
+        <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#3d84f5"></stop>
+        <stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
+        </lineargradient>
+        </defs>
+        </svg>
 
+    </div>
+</div>
 </div>
 </div>
 
@@ -635,15 +655,23 @@
             
             
             
-                        // 로딩 상태 표시
+                                    // 로딩 상태 표시
             
-                        statusEl.textContent = i18n.translate("loading"); 
             
-                        if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Show placeholder while loading
             
-                        if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none';
+                                    statusEl.textContent = i18n.translate("loading"); 
             
-                        if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = `<p class="text-sm text-[#49699c] dark:text-slate-400">${i18n.translate("loading")}</p>`;
+            
+            
+                                    if (chartPlaceholderEl) chartPlaceholderEl.style.display = 'flex'; // Null check
+            
+            
+            
+                                    if (indexHistoryChartEl) indexHistoryChartEl.style.display = 'none'; // Null check
+            
+            
+            
+                                    if (dynamicIndicatorsContainer) dynamicIndicatorsContainer.innerHTML = `<p class="text-sm text-[#49699c] dark:text-slate-400">${i18n.translate("loading")}</p>`;
             
             
             
