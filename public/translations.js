@@ -102,8 +102,8 @@ const translations = {
         "subscription-benefit": "구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.",
         
         // About Us Page
-        "about-intro-title": "anse.ai의 정체성",
-        "about-intro-desc": "anse.ai는 복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 조력자입니다.",
+        "about-intro-title": "anse.ai.kr의 정체성",
+        "about-intro-desc": "anse.ai.kr은 복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 조력자입니다.",
         "about-value-title": "우리가 제공하는 가치",
         "about-value-1-t": "데이터의 시각화",
         "about-value-1-d": "어려운 지표를 공포와 탐욕 지수라는 직관적인 게이지로 보여줍니다.",
@@ -115,7 +115,7 @@ const translations = {
         // Terms of Service Page
         "terms-title": "이용약관",
         "terms-section-1-t": "제 1 조 (목적)",
-        "terms-section-1-d": "본 약관은 'anse.ai'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.",
+        "terms-section-1-d": "본 약관은 'anse.ai.kr'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.",
         "terms-section-2-t": "제 2 조 (유료 서비스: 이메일 리포트)",
         "terms-section-2-d": "구독 회원에게는 다음과 같은 유료 서비스가 제공됩니다.",
         "terms-section-2-li1": "일 1~2회 정기 이메일 리포트 발송 (KOSPI 및 US 시장 지표 요약)",
@@ -123,22 +123,22 @@ const translations = {
         "terms-section-2-li3": "기타 구독자 전용 프리미엄 데이터 및 기능",
         "disclaimer-desc": "본 서비스가 제공하는 모든 정보는 투자 참고용이며, 투자 권유나 종목 추천이 아닙니다.",
         "disclaimer-li1": "서비스에서 제공하는 지표와 AI 분석 결과는 데이터 제공처의 오류나 지연으로 인해 실제 시장 상황과 다를 수 있습니다.",
-        "disclaimer-li2": "모든 투자의 책임은 투자자 본인에게 있으며, 'anse.ai'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.",
+        "disclaimer-li2": "모든 투자의 책임은 투자자 본인에게 있으며, 'anse.ai.kr'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.",
         "disclaimer-li3": "본 서비스는 과거의 데이터를 기반으로 한 분석을 포함하며, 이는 미래의 수익을 보장하지 않습니다.",
 
         // Refund Policy Page
         "refund-title": "환불정책",
         "refund-section-1-t": "구독 및 결제 안내",
-        "refund-section-1-d": "'anse.ai'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.",
+        "refund-section-1-d": "'anse.ai.kr'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.",
         "refund-section-2-t": "환불 규정",
         "refund-li1": "결제 후 7일 이내 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.",
         "refund-li2": "구독 중도 해지: 구독 기간 중간에 해지를 요청하실 경우, 이미 발송된 리포트와 이용 기간에 해당하는 금액을 일할 계산하여 공제한 후 잔여 금액을 환불해 드립니다.",
         "refund-li3": "환불 불가 사유: 디지털 콘텐츠 및 리포트 서비스의 특성상, 이미 수신한 정보에 대해서는 환불이 제한될 수 있습니다.",
         "refund-section-3-t": "해지 방법",
-        "refund-section-3-d": "구독 해지는 'My Account' 페이지 내 구독 관리 메뉴를 통하거나, 고객센터(메일)로 문의해 주시면 신속히 처리해 드립니다. 해지 후에는 다음 결제 예정일에 자동 결제가 이루어지지 않습니다.",
+        "refund-section-3-d": "구독 해지는 'My Account' 페이지 내 구독 관리 메뉴를 통하거나, 고객센터(info@anse.ai.kr)로 문의해 주시면 신속히 처리해 드립니다. 해지 후에는 다음 결제 예정일에 자동 결제가 이루어지지 않습니다.",
 
         // Privacy Policy Page
-        "privacy-intro": "본 웹사이트 (\"anse.ai\")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.",
+        "privacy-intro": "본 웹사이트 (\"anse.ai.kr\")는 사용자 여러분의 개인정보를 중요하게 생각하며, 「개인정보 보호법」 및 관련 법령을 준수하고 있습니다.",
         "privacy-section-1-t": "1. 수집하는 개인정보 항목",
         "privacy-section-1-d": "본 웹사이트는 구글 로그인을 통해 사용자의 이름, 이메일 주소, 프로필 이미지를 수집합니다. 이는 사용자 식별 및 구독 서비스(리포트 발송) 제공을 위함입니다.",
         "privacy-section-2-t": "2. 수집 목적 및 이용 기간",
@@ -150,12 +150,13 @@ const translations = {
         "privacy-section-5-t": "5. 쿠키(Cookie) 운영",
         "privacy-section-5-d": "사용자 환경 설정(다크 모드 등) 유지를 위해 브라우저 쿠키를 사용할 수 있습니다.",
         "privacy-section-6-t": "6. 개인정보 보호 책임자",
-        "privacy-section-6-d": "개인정보 관련 문의는 서비스 내 '문의하기' 또는 운영자 메일을 통해 주시기 바랍니다.",
+        "privacy-section-6-d": "개인정보 관련 문의는 서비스 내 '문의하기' 또는 운영자 메일(info@anse.ai.kr)을 통해 주시기 바랍니다.",
         "privacy-section-7-t": "7. 안전성 확보 조치",
         "privacy-section-7-d": "암호화 통신 등을 통해 개인정보를 안전하게 보호하고 있습니다.",
         "privacy-section-8-t": "8. 정책 변경 고지",
         "privacy-section-8-d": "본 방침의 수정이 있을 경우 최소 7일 전 웹사이트를 통해 공지합니다.",
-        "privacy-effective-date": "시행일: 2026년 2월 5일"
+        "privacy-effective-date": "시행일: 2026년 2월 5일",
+        "contact-us": "문의: info@anse.ai.kr"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -260,8 +261,8 @@ const translations = {
         "subscription-benefit": "Subscribers receive market indicator and AI analysis reports via email 1-2 times a day.",
 
         // About Us Page
-        "about-intro-title": "Identity of anse.ai",
-        "about-intro-desc": "anse.ai is a digital ally that empowers retail investors to intuitively grasp market psychology within complex financial data and make smarter investment decisions with the support of AI.",
+        "about-intro-title": "Identity of anse.ai.kr",
+        "about-intro-desc": "anse.ai.kr is a digital ally that empowers retail investors to intuitively grasp market psychology within complex financial data and make smarter investment decisions with the support of AI.",
         "about-value-title": "Values We Provide",
         "about-value-1-t": "Data Visualization",
         "about-value-1-d": "We present complex indicators through an intuitive gauge known as the Fear & Greed Index.",
@@ -273,7 +274,7 @@ const translations = {
         // Terms of Service Page
         "terms-title": "Terms of Service",
         "terms-section-1-t": "Article 1 (Purpose)",
-        "terms-section-1-d": "The purpose of these terms is to regulate the conditions and procedures for using the financial information service and paid subscription service provided by 'anse.ai' (hereinafter 'Service').",
+        "terms-section-1-d": "The purpose of these terms is to regulate the conditions and procedures for using the financial information service and paid subscription service provided by 'anse.ai.kr' (hereinafter 'Service').",
         "terms-section-2-t": "Article 2 (Paid Service: Email Reports)",
         "terms-section-2-d": "Subscription members are provided with the following paid services:",
         "terms-section-2-li1": "Regular email reports 1-2 times a day (summary of KOSPI and US market indicators)",
@@ -281,22 +282,22 @@ const translations = {
         "terms-section-2-li3": "Other premium data and features exclusive to subscribers",
         "disclaimer-desc": "All information provided by this service is for investment reference only and does not constitute investment solicitation or stock recommendation.",
         "disclaimer-li1": "Indicators and AI analysis results may differ from actual market conditions due to errors or delays from data providers.",
-        "disclaimer-li2": "The responsibility for all investments lies with the investor themselves, and 'anse.ai' bears no legal responsibility for investment results using information from this service.",
+        "disclaimer-li2": "The responsibility for all investments lies with the investor themselves, and 'anse.ai.kr' bears no legal responsibility for investment results using information from this service.",
         "disclaimer-li3": "This service includes analysis based on historical data, which does not guarantee future returns.",
 
         // Refund Policy Page
         "refund-title": "Refund Policy",
         "refund-section-1-t": "Subscription and Payment Info",
-        "refund-section-1-d": "'anse.ai's paid services are billed on a prepaid subscription basis. Due to the nature of the report service, the following refund principles apply:",
+        "refund-section-1-d": "'anse.ai.kr's paid services are billed on a prepaid subscription basis. Due to the nature of the report service, the following refund principles apply:",
         "refund-section-2-t": "Refund Rules",
         "refund-li1": "Within 7 days of payment (if unused): A full refund is possible if the service (e.g., receiving reports) has not been used within 7 days of payment.",
         "refund-li2": "Mid-term termination: If you request termination in the middle of a subscription period, a refund will be issued after deducting the amount for already sent reports and the used period calculated pro-rata.",
         "refund-li3": "Non-refundable cases: Due to the nature of digital content and report services, refunds may be restricted for information already received.",
         "refund-section-3-t": "How to Terminate",
-        "refund-section-3-d": "Subscription termination can be processed through the subscription management menu on the 'My Account' page or by contacting the customer center (email). After termination, automatic payment will not occur on the next billing date.",
+        "refund-section-3-d": "Subscription termination can be processed through the subscription management menu on the 'My Account' page or by contacting the customer center (info@anse.ai.kr). After termination, automatic payment will not occur on the next billing date.",
 
         // Privacy Policy Page
-        "privacy-intro": "This website (\"anse.ai\") values your personal information and complies with relevant laws and regulations.",
+        "privacy-intro": "This website (\"anse.ai.kr\") values your personal information and complies with relevant laws and regulations.",
         "privacy-section-1-t": "1. Items of Personal Information Collected",
         "privacy-section-1-d": "This website collects user's name, email address, and profile image via Google Login for identification and subscription service (report delivery).",
         "privacy-section-2-t": "2. Purpose and Retention Period",
@@ -308,11 +309,12 @@ const translations = {
         "privacy-section-5-t": "5. Cookie Operation",
         "privacy-section-5-d": "Browser cookies may be used to maintain user preferences such as dark mode.",
         "privacy-section-6-t": "6. Privacy Officer",
-        "privacy-section-6-d": "For privacy inquiries, please contact us via the support menu or administrator email.",
+        "privacy-section-6-d": "For privacy inquiries, please contact us via the support menu or administrator email (info@anse.ai.kr).",
         "privacy-section-7-t": "7. Security Measures",
         "privacy-section-7-d": "We protect personal information through encrypted communication and other security measures.",
         "privacy-section-8-t": "8. Policy Changes",
         "privacy-section-8-d": "Any changes to this policy will be notified on the website at least 7 days in advance.",
-        "privacy-effective-date": "Effective Date: February 5, 2026"
+        "privacy-effective-date": "Effective Date: February 5, 2026",
+        "contact-us": "Contact: info@anse.ai.kr"
     }
 };
