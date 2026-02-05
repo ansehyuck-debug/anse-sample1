@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title data-i18n="terms-of-service">이용약관 - anse</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#f5f7f8] dark:bg-[#101722] text-slate-900 dark:text-slate-200">
+    <header class="sticky top-0 z-50 w-full border-b border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-[#101722]/80 backdrop-blur-md">
+        <div class="mx-auto flex max-w-[800px] items-center justify-between px-6 py-4">
+            <a href="/index.html" class="flex items-center gap-2 font-black text-primary text-xl">anse</a>
+            <button id="theme-switcher" class="h-10 w-10 flex items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800">
+                <span class="material-symbols-outlined dark:text-white">light_mode</span>
+            </button>
+        </div>
+    </header>
+    <main class="mx-auto max-w-[800px] px-6 py-12">
+        <article class="prose dark:prose-invert max-w-none">
+            <h1 class="text-4xl font-black mb-8" data-i18n="terms-of-service">이용약관</h1>
+            
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">제 1 조 (목적)</h2>
+                <p>본 약관은 'anse'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">제 2 조 (유료 서비스: 이메일 리포트)</h2>
+                <p>구독 회원에게는 다음과 같은 유료 서비스가 제공됩니다.</p>
+                <ul class="list-disc pl-6">
+                    <li>일 1~2회 정기 이메일 리포트 발송 (KOSPI 및 US 시장 지표 요약)</li>
+                    <li>인공지능(AI) 기반 시장 상황 분석 및 제언 요약</li>
+                    <li>기타 구독자 전용 프리미엄 데이터 및 기능</li>
+                </ul>
+            </section>
+
+            <section class="mb-8 p-6 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/30">
+                <h2 class="text-2xl font-bold mb-4 text-red-600 dark:text-red-400" data-i18n="disclaimer">면책조항 (Disclaimer)</h2>
+                <p class="font-bold">본 서비스가 제공하는 모든 정보는 투자 참고용이며, 투자 권유나 종목 추천이 아닙니다.</p>
+                <ul class="list-disc pl-6 mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    <li>서비스에서 제공하는 지표와 AI 분석 결과는 데이터 제공처의 오류나 지연으로 인해 실제 시장 상황과 다를 수 있습니다.</li>
+                    <li>모든 투자의 책임은 투자자 본인에게 있으며, 'anse'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.</li>
+                    <li>본 서비스는 과거의 데이터를 기반으로 한 분석을 포함하며, 이는 미래의 수익을 보장하지 않습니다.</li>
+                </ul>
+            </section>
+
+            <section class="mb-8 text-sm text-slate-500">
+                <p>최초 시행일: 2026년 2월 5일</p>
+            </section>
+        </article>
+    </main>
+    <footer class="text-center py-12 border-t border-[#e7ecf4] dark:border-[#1e293b]">
+        <p class="text-sm text-[#49699c]">&copy; 2026 anse. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+            document.getElementById('theme-switcher').addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+        });
+    </script>
+</body>
+</html>

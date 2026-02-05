@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title data-i18n="about-us">서비스 소개 - anse</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#f5f7f8] dark:bg-[#101722] text-slate-900 dark:text-slate-200">
+    <header class="sticky top-0 z-50 w-full border-b border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-[#101722]/80 backdrop-blur-md">
+        <div class="mx-auto flex max-w-[800px] items-center justify-between px-6 py-4">
+            <a href="/index.html" class="flex items-center gap-2 font-black text-primary text-xl">anse</a>
+            <button id="theme-switcher" class="h-10 w-10 flex items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800">
+                <span class="material-symbols-outlined dark:text-white">light_mode</span>
+            </button>
+        </div>
+    </header>
+    <main class="mx-auto max-w-[800px] px-6 py-12">
+        <article class="prose dark:prose-invert max-w-none">
+            <h1 class="text-4xl font-black mb-8" data-i18n="about-us">서비스 소개</h1>
+            
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold mb-4">안세(anse)의 정체성</h2>
+                <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                    안세(anse)는 'Ant's Sense' 혹은 '개미의 서재'의 의미를 담고 있습니다. 
+                    복잡한 금융 데이터 속에서 개인 투자자(개미)들이 시장의 심리를 직관적으로 파악하고, 
+                    인공지능의 도움을 받아 더 현명한 투자 결정을 내릴 수 있도록 돕는 디지털 서재이자 나침반입니다.
+                </p>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold mb-4">우리가 제공하는 가치</h2>
+                <ul class="space-y-4">
+                    <li class="flex gap-4">
+                        <span class="font-bold text-primary">01</span>
+                        <div>
+                            <strong class="block text-lg">데이터의 시각화</strong>
+                            <span class="text-slate-600 dark:text-slate-400">어려운 지표를 공포와 탐욕 지수라는 직관적인 게이지로 보여줍니다.</span>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="font-bold text-primary">02</span>
+                        <div>
+                            <strong class="block text-lg">AI 기반 시장 분석</strong>
+                            <span class="text-slate-600 dark:text-slate-400">Gemini, GPT 등 최신 AI 모델들이 시장 상황을 다각도에서 분석하여 제언을 제공합니다.</span>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="font-bold text-primary">03</span>
+                        <div>
+                            <strong class="block text-lg">개인화된 리포트 (구독 서비스)</strong>
+                            <span class="text-slate-600 dark:text-slate-400">매일 시장의 핵심 지표와 AI의 인사이트를 정리하여 구독자의 메일함으로 직접 배달합니다.</span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </article>
+    </main>
+    <footer class="text-center py-12 border-t border-[#e7ecf4] dark:border-[#1e293b]">
+        <p class="text-sm text-[#49699c]">&copy; 2026 anse. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+            document.getElementById('theme-switcher').addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+        });
+    </script>
+</body>
+</html>

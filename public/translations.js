@@ -28,6 +28,10 @@ const translations = {
         "footer-desc-us": "데이터 제공: CNN Business.",
         "fng-theory": "공포와 탐욕 지수는 시장의 움직임과 주가가 적정하게 책정되었는지 가늠하는 방법입니다. 과도한 공포는 주가를 낮추고, 과도한 탐욕은 반대 효과를 낸다는 논리에 기반합니다.",
         "privacy-policy": "개인정보처리방침",
+        "terms-of-service": "이용약관",
+        "refund-policy": "환불정책",
+        "disclaimer": "면책조항",
+        "about-us": "서비스 소개",
         "market-open": "장 오픈",
         "market-closed": "장 마감",
         "loading": "로딩 중...",
@@ -94,7 +98,8 @@ const translations = {
         "subscribe": "구독하기",
         "email": "이메일",
         "name": "이름",
-        "account-info": "계정 정보"
+        "account-info": "계정 정보",
+        "subscription-benefit": "구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다."
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -125,6 +130,10 @@ const translations = {
         "footer-desc-us": "Data provided by CNN Business.",
         "fng-theory": "The Fear & Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.",
         "privacy-policy": "Privacy Policy",
+        "terms-of-service": "Terms of Service",
+        "refund-policy": "Refund Policy",
+        "disclaimer": "Disclaimer",
+        "about-us": "About Us",
         "market-open": "MARKET OPEN",
         "market-closed": "MARKET CLOSED",
         "loading": "Loading...",
@@ -191,6 +200,7 @@ const translations = {
         "subscribe": "Subscribe",
         "email": "Email",
         "name": "Name",
-        "account-info": "Account Info"
+        "account-info": "Account Info",
+        "subscription-benefit": "Subscribers receive market indicator and AI analysis reports via email 1-2 times a day."
     }
 };
