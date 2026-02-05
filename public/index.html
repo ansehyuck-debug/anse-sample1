@@ -121,8 +121,8 @@
 </button>
 <div id="auth-container" class="flex items-center gap-2">
     <button id="login-button" class="hidden flex h-10 px-4 items-center justify-center rounded-lg bg-primary text-white font-bold hover:opacity-90 transition-opacity" data-i18n="login">Login</button>
-    <div id="user-profile" class="relative flex items-center gap-3">
-        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20 cursor-pointer bg-slate-300" data-alt="User profile avatar"></div>
+    <div id="user-profile" class="hidden relative flex items-center gap-3">
+        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20 cursor-pointer" data-alt="User profile avatar"></div>
         <!-- Profile Dropdown -->
         <div id="profile-dropdown" class="hidden absolute right-0 top-12 w-48 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] shadow-lg z-[60] overflow-hidden">
             <div class="px-4 py-3 border-b border-[#e7ecf4] dark:border-[#1e293b]">
@@ -1281,7 +1281,6 @@
         }
 
         async function updateAuthState() {
-            return; // Bypass for test
             if (!supabaseClient) return;
             
             try {
