@@ -1207,10 +1207,58 @@
         // Modal toggle
         if (myAccountBtn) {
             myAccountBtn.addEventListener('click', () => {
+                if (typeof switchTab === 'function') switchTab('overview');
                 accountModal.classList.remove('hidden');
                 profileDropdown.classList.add('hidden');
             });
         }
+
+        // --- Modal Tab Management ---
+        function switchTab(tabId) {
+            const overviewSection = document.getElementById('section-overview');
+            const settingsSection = document.getElementById('section-settings');
+            const overviewBtn = document.getElementById('nav-overview');
+            const settingsBtn = document.getElementById('nav-settings');
+            const modalTitle = document.getElementById('modal-title');
+
+            if (!overviewSection || !settingsSection || !overviewBtn || !settingsBtn) return;
+
+            const isOverview = tabId === 'overview';
+            
+            // Toggle Sections
+            overviewSection.classList.toggle('hidden', !isOverview);
+            settingsSection.classList.toggle('hidden', isOverview);
+            
+            // Update Title & i18n
+            if (modalTitle) {
+                modalTitle.setAttribute('data-i18n', isOverview ? 'overview' : 'settings');
+                if (window.i18n) i18n.translateElement(modalTitle);
+            }
+
+            // UI Classes
+            const activeClasses = ['bg-primary', 'text-white'];
+            const inactiveClasses = ['text-[#49699c]', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-800'];
+
+            if (isOverview) {
+                activeClasses.forEach(c => overviewBtn.classList.add(c));
+                inactiveClasses.forEach(c => overviewBtn.classList.remove(c));
+                activeClasses.forEach(c => settingsBtn.classList.remove(c));
+                inactiveClasses.forEach(c => settingsBtn.classList.add(c));
+            } else {
+                activeClasses.forEach(c => settingsBtn.classList.add(c));
+                inactiveClasses.forEach(c => settingsBtn.classList.remove(c));
+                activeClasses.forEach(c => overviewBtn.classList.remove(c));
+                inactiveClasses.forEach(c => overviewBtn.classList.add(c));
+            }
+        }
+
+        document.getElementById('nav-overview')?.addEventListener('click', () => switchTab('overview'));
+        document.getElementById('nav-settings')?.addEventListener('click', () => switchTab('settings'));
+
+        document.getElementById('send-report-btn')?.addEventListener('click', () => {
+            const lang = document.querySelector('input[name="report-lang"]:checked')?.value || 'ko';
+            alert(`${lang === 'ko' ? '한국어' : 'English'} 리포트 발송 기능이 준비 중입니다.`);
+        });
 
         if (closeModal) {
             closeModal.addEventListener('click', () => {
