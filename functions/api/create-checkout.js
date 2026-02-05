@@ -33,7 +33,7 @@ export async function onRequest(context) {
 
       if (!user_email) throw new Error("user_email is required");
 
-      const POLAR_ACCESS_TOKEN = env.POLAR_ACCESS_TOKEN;
+      const POLAR_ACCESS_TOKEN = "polar_oat_XiviE9M2x1SnlJ69rhCec6c1qz6CDzteMXBvc4HNXKL";
       if (!POLAR_ACCESS_TOKEN) throw new Error("POLAR_ACCESS_TOKEN missing in environment variables. Check Cloudflare dashboard.");
 
       const PRODUCT_ID = "0d7cce5c-90e9-486a-9137-4c2d359130a5";
