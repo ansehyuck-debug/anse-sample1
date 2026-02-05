@@ -1262,9 +1262,45 @@
         document.getElementById('nav-overview')?.addEventListener('click', () => switchTab('overview'));
         document.getElementById('nav-settings')?.addEventListener('click', () => switchTab('settings'));
 
-        document.getElementById('send-report-btn')?.addEventListener('click', () => {
-            const lang = document.querySelector('input[name="report-lang"]:checked')?.value || 'ko';
-            alert(`${lang === 'ko' ? '한국어' : 'English'} 리포트 발송 기능이 준비 중입니다.`);
+        // 'Send Report' Button Click Logic
+        document.getElementById('send-report-btn')?.addEventListener('click', async () => {
+            const selectedLang = document.querySelector('input[name="report-lang"]:checked')?.value || 'ko';
+            const btn = document.getElementById('send-report-btn');
+            const originalContent = btn.innerHTML;
+
+            // Get user email from Supabase session
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                alert(i18n.translate("login-required") || "로그인이 필요합니다.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Sending...</span>`;
+
+            try {
+                const response = await fetch('/api/send-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_email: user.email, 
+                        language: selectedLang,
+                        test_mode: true // 헬로/안녕 테스트를 위해 true로 설정
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`${selectedLang === 'ko' ? '테스트 메일이 발송되었습니다!' : 'Test email has been sent!'}`);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
         });
 
         if (closeModal) {
