@@ -157,16 +157,20 @@
         <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
             <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
             <nav class="space-y-1">
-                <button class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
+                <button id="nav-overview" class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">grid_view</span>
                     <span data-i18n="overview">Overview</span>
+                </button>
+                <button id="nav-settings" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">settings</span>
+                    <span data-i18n="settings">Settings</span>
                 </button>
             </nav>
         </aside>
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="p-6 flex items-center justify-between border-b border-[#e7ecf4] dark:border-[#1e293b]">
-                <h2 class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
+                <h2 id="modal-title" class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
                 <button id="close-modal" class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <span class="material-symbols-outlined dark:text-white">close</span>
                 </button>
