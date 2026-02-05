@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -133,7 +132,7 @@
                 <span class="material-symbols-outlined text-sm">person</span>
                 <span data-i18n="my-account">My Account</span>
             </button>
-            <button id="logout-button" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
+            <button id="logout-button-dropdown" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">logout</span>
                 <span data-i18n="logout">Logout</span>
             </button>
@@ -1223,7 +1222,7 @@
         
         let supabaseClient;
         try {
-            console.log("Initializing Supabase (Hardcoded)...");
+            console.log("Initializing Supabase (Index Page - Hardcoded)...");
             if (!SB_URL.startsWith('http')) {
                 throw new Error("Supabase URL is not provided.");
             }
@@ -1330,7 +1329,7 @@
                             prompt: 'select_account',
                             access_type: 'offline',
                         },
-                        redirectTo: window.location.origin
+                        redirectTo: window.location.origin + '/index.html'
                     }
                 });
                 if (error) {
@@ -1349,7 +1348,6 @@
                 } else {
                     console.log("Logout successful.");
                     profileDropdown.classList.add('hidden');
-                    // Force UI update or refresh
                     window.location.reload(); 
                 }
             });
