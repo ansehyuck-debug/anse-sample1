@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title data-i18n="refund-policy">환불정책 - anse.ai</title>
-<meta name="description" content="anse.ai 서비스 환불 규정에 대해 안내합니다." data-i18n="refund-section-1-d"/>
+<title data-i18n="refund-policy">환불정책 - anse.ai.kr</title>
+<meta name="description" content="anse.ai.kr의 환불 및 구독 해지 정책에 대해 안내합니다." data-i18n="refund-title"/>
 <link rel="canonical" href="https://anse.ai.kr/refund.html"/>
 
-<meta property="og:title" content="환불정책 - anse.ai" data-i18n="refund-policy"/>
-<meta property="og:description" content="anse.ai 서비스 환불 규정에 대해 안내합니다." data-i18n="refund-section-1-d"/>
+<meta property="og:title" content="환불정책 - anse.ai.kr" data-i18n="refund-policy"/>
+<meta property="og:description" content="anse.ai.kr의 환불 및 구독 해지 정책에 대해 안내합니다." data-i18n="refund-title"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse.ai.kr/refund.html"/>
 <meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
@@ -63,7 +63,7 @@
 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
 <span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
 </div>
-<h2 class="text-lg font-bold tracking-tight dark:text-white">anse.ai</h2>
+<h2 class="text-lg font-bold tracking-tight dark:text-white">anse.ai.kr</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
@@ -141,16 +141,22 @@
                         </div>
                     </section>
                     <!-- Subscription Status -->
-                    <section class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
+                    <section id="subscription-section" class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-1">
                                 <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
-                                <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
+                                <p id="subscription-status-text" class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
                             </div>
-                            <a href="https://pola.so" target="_blank" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                <span class="material-symbols-outlined text-sm">stars</span>
-                                <span data-i18n="subscribe">구독하기</span>
-                            </a>
+                            <div id="subscription-actions" class="flex gap-2">
+                                <button id="subscribe-btn" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">stars</span>
+                                    <span data-i18n="subscribe">구독하기</span>
+                                </button>
+                                <button id="cancel-subscription-btn" class="hidden w-fit px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                    <span>구독 취소</span>
+                                </button>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -166,21 +172,27 @@
             
             <section class="mb-8">
                 <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="refund-section-1-t">구독 및 결제 안내</h2>
-                <p class="leading-relaxed" data-i18n="refund-section-1-d">'anse'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.</p>
+                <p class="leading-relaxed" data-i18n="refund-section-1-d">
+                    'anse.ai.kr'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.
+                </p>
             </section>
 
             <section class="mb-8">
                 <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="refund-section-2-t">환불 규정</h2>
-                <ul class="list-disc pl-6 space-y-4">
-                    <li class="leading-relaxed" data-i18n="refund-li1">결제 후 7일 이내 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.</li>
-                    <li class="leading-relaxed" data-i18n="refund-li2">구독 중도 해지: 구독 기간 중간에 해지를 요청하실 경우, 이미 발송된 리포트와 이용 기간에 해당하는 금액을 일할 계산하여 공제한 후 잔여 금액을 환불해 드립니다.</li>
-                    <li class="leading-relaxed" data-i18n="refund-li3">환불 불가 사유: 디지털 콘텐츠 및 리포트 서비스의 특성상, 이미 수신한 정보에 대해서는 환불이 제한될 수 있습니다.</li>
-                </ul>
+                <div class="flex flex-col gap-2">
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li data-i18n="refund-li1">결제 후 7일 이내 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.</li>
+                        <li data-i18n="refund-li2">구독 중도 해지: 구독 기간 중간에 해지를 요청하실 경우, 이미 발송된 리포트와 이용 기간에 해당하는 금액을 일할 계산하여 공제한 후 잔여 금액을 환불해 드립니다.</li>
+                        <li data-i18n="refund-li3">환불 불가 사유: 디지털 콘텐츠 및 리포트 서비스의 특성상, 이미 수신한 정보에 대해서는 환불이 제한될 수 있습니다.</li>
+                    </ul>
+                </div>
             </section>
 
             <section class="mb-8">
                 <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="refund-section-3-t">해지 방법</h2>
-                <p class="leading-relaxed" data-i18n="refund-section-3-d">구독 해지는 'My Account' 페이지 내 구독 관리 메뉴를 통하거나, 고객센터(메일)로 문의해 주시면 신속히 처리해 드립니다. 해지 후에는 다음 결제 예정일에 자동 결제가 이루어지지 않습니다.</p>
+                <p class="leading-relaxed" data-i18n="refund-section-3-d">
+                    구독 해지는 'My Account' 페이지 내 구독 관리 메뉴를 통하거나, 고객센터(info@anse.ai.kr)로 문의해 주시면 신속히 처리해 드립니다. 해지 후에는 다음 결제 예정일에 자동 결제가 이루어지지 않습니다.
+                </p>
             </section>
         </article>
     </div>
@@ -190,14 +202,14 @@
         <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
             <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium dark:text-white" data-i18n="refund-policy">Refund Policy</p>
-                <p class="max-w-md text-xs leading-relaxed dark:text-slate-400" data-i18n="refund-section-1-d">anse 서비스 환불 규정에 대해 안내합니다.</p>
+                <p class="max-w-md text-xs leading-relaxed dark:text-slate-400" data-i18n="refund-title">anse.ai.kr 환불 정책에 대해 안내합니다.</p>
             </div>
             <div class="flex flex-wrap gap-4">
-                <span class="text-xs font-bold text-[#49699c] dark:text-slate-400" data-i18n="contact-us">Contact: info@anse.ai.kr</span>
                 <a href="/about.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="about-us">서비스 소개</a>
                 <a href="/terms.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="terms-of-service">이용약관</a>
                 <a href="/privacy.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="privacy-policy">개인정보처리방침</a>
                 <a href="/refund.html" class="text-xs font-bold text-primary" data-i18n="refund-policy">환불정책</a>
+                <span class="text-xs font-bold text-[#49699c] dark:text-slate-400" data-i18n="contact-us">Contact: info@anse.ai.kr</span>
             </div>
         </div>
     </footer>
@@ -236,9 +248,8 @@
     let supabaseClient;
     try {
         supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
+
     const loginButton = document.getElementById('login-button');
     const userProfile = document.getElementById('user-profile');
     const userAvatar = document.getElementById('user-avatar');
@@ -270,12 +281,72 @@
                 document.getElementById('dropdown-user-email').textContent = user.email;
                 document.getElementById('modal-user-name').textContent = user.user_metadata.full_name || 'User';
                 document.getElementById('modal-user-email').textContent = user.email;
+                checkSubscriptionStatus(user.id);
             } else {
                 loginButton.classList.remove('hidden');
                 userProfile.classList.add('hidden');
             }
         } catch (err) { }
     }
+
+    async function checkSubscriptionStatus(userId) {
+        const statusText = document.getElementById('subscription-status-text');
+        const subscribeBtn = document.getElementById('subscribe-btn');
+        const cancelBtn = document.getElementById('cancel-subscription-btn');
+        if (!statusText || !subscribeBtn || !cancelBtn) return;
+        try {
+            const { data } = await supabaseClient.from('subscriptions').select('status').eq('user_id', userId).maybeSingle();
+            if (data && data.status === 'active') {
+                statusText.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span> (매일 리포트가 발송됩니다)';
+                subscribeBtn.classList.add('hidden');
+                cancelBtn.classList.remove('hidden');
+            } else {
+                statusText.textContent = i18n.translate("subscription-benefit");
+                subscribeBtn.classList.remove('hidden');
+                cancelBtn.classList.add('hidden');
+            }
+        } catch (err) { }
+    }
+
+    document.getElementById('subscribe-btn')?.addEventListener('click', async () => {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return alert("로그인이 필요합니다.");
+        const btn = document.getElementById('subscribe-btn');
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.textContent = "연결 중...";
+        try {
+            const response = await fetch('/api/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id, user_email: user.email })
+            });
+            const result = await response.json();
+            if (result.url) window.location.href = result.url;
+            else alert("결제 페이지를 불러오지 못했습니다.");
+        } catch (err) { alert("오류가 발생했습니다."); }
+        finally { btn.disabled = false; btn.innerHTML = originalText; }
+    });
+
+    document.getElementById('cancel-subscription-btn')?.addEventListener('click', async () => {
+        if (!confirm("정말 구독을 취소하시겠습니까?")) return;
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const btn = document.getElementById('cancel-subscription-btn');
+        btn.disabled = true;
+        btn.textContent = "처리 중...";
+        try {
+            const response = await fetch('/api/cancel-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id })
+            });
+            const result = await response.json();
+            if (result.success) { alert("구독이 취소되었습니다."); window.location.reload(); }
+            else alert("취소 실패.");
+        } catch (err) { alert("오류 발생."); }
+        finally { btn.disabled = false; btn.textContent = "구독 취소"; }
+    });
+
     if (loginButton) {
         loginButton.addEventListener('click', async () => {
             await supabaseClient.auth.signInWithOAuth({

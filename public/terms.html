@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title data-i18n="terms-of-service">이용약관 - anse.ai</title>
-<meta name="description" content="anse.ai 서비스 이용약관 및 면책조항에 대해 안내합니다." data-i18n="terms-section-1-d"/>
+<title data-i18n="terms-of-service">이용약관 - anse.ai.kr</title>
+<meta name="description" content="anse.ai.kr의 이용약관에 대해 안내합니다." data-i18n="terms-title"/>
 <link rel="canonical" href="https://anse.ai.kr/terms.html"/>
 
-<meta property="og:title" content="이용약관 - anse.ai" data-i18n="terms-of-service"/>
-<meta property="og:description" content="anse.ai 서비스 이용약관 및 면책조항에 대해 안내합니다." data-i18n="terms-section-1-d"/>
+<meta property="og:title" content="이용약관 - anse.ai.kr" data-i18n="terms-of-service"/>
+<meta property="og:description" content="anse.ai.kr의 이용약관에 대해 안내합니다." data-i18n="terms-title"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse.ai.kr/terms.html"/>
 <meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
@@ -63,7 +63,7 @@
 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
 <span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
 </div>
-<h2 class="text-lg font-bold tracking-tight dark:text-white">anse.ai/h2>
+<h2 class="text-lg font-bold tracking-tight dark:text-white">anse.ai.kr</h2>
 </div>
 <div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
@@ -104,7 +104,7 @@
 <div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
 <nav class="flex flex-col items-center gap-4 py-2">
 <a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
+<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/sentiment.html" data-i18n="nav-us">미국 금융시장 심리</a>
 </nav>
 </div>
 </header>
@@ -141,16 +141,22 @@
                         </div>
                     </section>
                     <!-- Subscription Status -->
-                    <section class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
+                    <section id="subscription-section" class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-1">
                                 <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
-                                <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
+                                <p id="subscription-status-text" class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
                             </div>
-                            <a href="https://pola.so" target="_blank" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                <span class="material-symbols-outlined text-sm">stars</span>
-                                <span data-i18n="subscribe">구독하기</span>
-                            </a>
+                            <div id="subscription-actions" class="flex gap-2">
+                                <button id="subscribe-btn" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">stars</span>
+                                    <span data-i18n="subscribe">구독하기</span>
+                                </button>
+                                <button id="cancel-subscription-btn" class="hidden w-fit px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                    <span>구독 취소</span>
+                                </button>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -166,27 +172,33 @@
             
             <section class="mb-8">
                 <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="terms-section-1-t">제 1 조 (목적)</h2>
-                <p class="leading-relaxed" data-i18n="terms-section-1-d">본 약관은 'anse'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+                <p class="leading-relaxed" data-i18n="terms-section-1-d">
+                    본 약관은 'anse.ai.kr'(이하 '서비스')가 제공하는 금융 정보 제공 서비스 및 유료 구독 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.
+                </p>
             </section>
 
             <section class="mb-8">
                 <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="terms-section-2-t">제 2 조 (유료 서비스: 이메일 리포트)</h2>
-                <p class="mb-4 leading-relaxed" data-i18n="terms-section-2-d">구독 회원에게는 다음과 같은 유료 서비스가 제공됩니다.</p>
-                <ul class="list-disc pl-6 space-y-2">
-                    <li data-i18n="terms-section-2-li1">일 1~2회 정기 이메일 리포트 발송 (KOSPI 및 US 시장 지표 요약)</li>
-                    <li data-i18n="terms-section-2-li2">인공지능(AI) 기반 시장 상황 분석 및 제언 요약</li>
-                    <li data-i18n="terms-section-2-li3">기타 구독자 전용 프리미엄 데이터 및 기능</li>
-                </ul>
+                <div class="flex flex-col gap-2">
+                    <p class="leading-relaxed" data-i18n="terms-section-2-d">구독 회원에게는 다음과 같은 유료 서비스가 제공됩니다.</p>
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li data-i18n="terms-section-2-li1">일 1~2회 정기 이메일 리포트 발송 (KOSPI 및 US 시장 지표 요약)</li>
+                        <li data-i18n="terms-section-2-li2">인공지능(AI) 기반 시장 상황 분석 및 제언 요약</li>
+                        <li data-i18n="terms-section-2-li3">기타 구독자 전용 프리미엄 데이터 및 기능</li>
+                    </ul>
+                </div>
             </section>
 
-            <section class="mb-8 p-6 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/30">
-                <h2 class="text-xl font-bold mb-4 text-red-600 dark:text-red-400" data-i18n="disclaimer">면책조항 (Disclaimer)</h2>
-                <p class="font-bold mb-4" data-i18n="disclaimer-desc">본 서비스가 제공하는 모든 정보는 투자 참고용이며, 투자 권유나 종목 추천이 아닙니다.</p>
-                <ul class="list-disc pl-6 space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                    <li data-i18n="disclaimer-li1">서비스에서 제공하는 지표와 AI 분석 결과는 데이터 제공처의 오류나 지연으로 인해 실제 시장 상황과 다를 수 있습니다.</li>
-                    <li data-i18n="disclaimer-li2">모든 투자의 책임은 투자자 본인에게 있으며, 'anse.ai'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.</li>
-                    <li data-i18n="disclaimer-li3">본 서비스는 과거의 데이터를 기반으로 한 분석을 포함하며, 이는 미래의 수익을 보장하지 않습니다.</li>
-                </ul>
+            <section class="mb-8">
+                <h2 class="text-xl font-bold mb-4 dark:text-white" data-i18n="disclaimer">면책조항</h2>
+                <div class="flex flex-col gap-2">
+                    <p class="leading-relaxed" data-i18n="disclaimer-desc">본 서비스가 제공하는 모든 정보는 투자 참고용이며, 투자 권유나 종목 추천이 아닙니다.</p>
+                    <ul class="list-disc pl-6 space-y-1 text-sm text-[#49699c] dark:text-slate-400">
+                        <li data-i18n="disclaimer-li1">서비스에서 제공하는 지표와 AI 분석 결과는 데이터 제공처의 오류나 지연으로 인해 실제 시장 상황과 다를 수 있습니다.</li>
+                        <li data-i18n="disclaimer-li2">모든 투자의 책임은 투자자 본인에게 있으며, 'anse.ai.kr'는 본 서비스의 정보를 이용한 투자 결과에 대해 어떠한 법적 책임도 지지 않습니다.</li>
+                        <li data-i18n="disclaimer-li3">본 서비스는 과거의 데이터를 기반으로 한 분석을 포함하며, 이는 미래의 수익을 보장하지 않습니다.</li>
+                    </ul>
+                </div>
             </section>
         </article>
     </div>
@@ -196,14 +208,14 @@
         <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
             <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium dark:text-white" data-i18n="terms-of-service">Terms of Service</p>
-                <p class="max-w-md text-xs leading-relaxed dark:text-slate-400" data-i18n="terms-section-1-d">anse.ai 서비스 이용약관 및 면책조항에 대해 안내합니다.</p>
+                <p class="max-w-md text-xs leading-relaxed dark:text-slate-400" data-i18n="terms-title">anse.ai.kr 이용약관에 대해 안내합니다.</p>
             </div>
             <div class="flex flex-wrap gap-4">
-                <span class="text-xs font-bold text-[#49699c] dark:text-slate-400" data-i18n="contact-us">Contact: info@anse.ai.kr</span>
                 <a href="/about.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="about-us">서비스 소개</a>
                 <a href="/terms.html" class="text-xs font-bold text-primary" data-i18n="terms-of-service">이용약관</a>
                 <a href="/privacy.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="privacy-policy">개인정보처리방침</a>
                 <a href="/refund.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="refund-policy">환불정책</a>
+                <span class="text-xs font-bold text-[#49699c] dark:text-slate-400" data-i18n="contact-us">Contact: info@anse.ai.kr</span>
             </div>
         </div>
     </footer>
@@ -242,9 +254,8 @@
     let supabaseClient;
     try {
         supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
+
     const loginButton = document.getElementById('login-button');
     const userProfile = document.getElementById('user-profile');
     const userAvatar = document.getElementById('user-avatar');
@@ -276,12 +287,72 @@
                 document.getElementById('dropdown-user-email').textContent = user.email;
                 document.getElementById('modal-user-name').textContent = user.user_metadata.full_name || 'User';
                 document.getElementById('modal-user-email').textContent = user.email;
+                checkSubscriptionStatus(user.id);
             } else {
                 loginButton.classList.remove('hidden');
                 userProfile.classList.add('hidden');
             }
         } catch (err) { }
     }
+
+    async function checkSubscriptionStatus(userId) {
+        const statusText = document.getElementById('subscription-status-text');
+        const subscribeBtn = document.getElementById('subscribe-btn');
+        const cancelBtn = document.getElementById('cancel-subscription-btn');
+        if (!statusText || !subscribeBtn || !cancelBtn) return;
+        try {
+            const { data } = await supabaseClient.from('subscriptions').select('status').eq('user_id', userId).maybeSingle();
+            if (data && data.status === 'active') {
+                statusText.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span> (매일 리포트가 발송됩니다)';
+                subscribeBtn.classList.add('hidden');
+                cancelBtn.classList.remove('hidden');
+            } else {
+                statusText.textContent = i18n.translate("subscription-benefit");
+                subscribeBtn.classList.remove('hidden');
+                cancelBtn.classList.add('hidden');
+            }
+        } catch (err) { }
+    }
+
+    document.getElementById('subscribe-btn')?.addEventListener('click', async () => {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return alert("로그인이 필요합니다.");
+        const btn = document.getElementById('subscribe-btn');
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.textContent = "연결 중...";
+        try {
+            const response = await fetch('/api/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id, user_email: user.email })
+            });
+            const result = await response.json();
+            if (result.url) window.location.href = result.url;
+            else alert("결제 페이지를 불러오지 못했습니다.");
+        } catch (err) { alert("오류가 발생했습니다."); }
+        finally { btn.disabled = false; btn.innerHTML = originalText; }
+    });
+
+    document.getElementById('cancel-subscription-btn')?.addEventListener('click', async () => {
+        if (!confirm("정말 구독을 취소하시겠습니까?")) return;
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const btn = document.getElementById('cancel-subscription-btn');
+        btn.disabled = true;
+        btn.textContent = "처리 중...";
+        try {
+            const response = await fetch('/api/cancel-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id })
+            });
+            const result = await response.json();
+            if (result.success) { alert("구독이 취소되었습니다."); window.location.reload(); }
+            else alert("취소 실패.");
+        } catch (err) { alert("오류 발생."); }
+        finally { btn.disabled = false; btn.textContent = "구독 취소"; }
+    });
+
     if (loginButton) {
         loginButton.addEventListener('click', async () => {
             await supabaseClient.auth.signInWithOAuth({
