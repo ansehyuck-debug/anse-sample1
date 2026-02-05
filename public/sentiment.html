@@ -746,10 +746,42 @@
             }
         }
 
+        if (loginButton) {
+            loginButton.addEventListener('click', async () => {
+                console.log("Login button clicked.");
+                if (!supabaseClient) {
+                    alert("Supabase configuration missing.");
+                    return;
+                }
+                
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        queryParams: {
+                            prompt: 'select_account',
+                            access_type: 'offline',
+                        },
+                        redirectTo: window.location.origin + '/sentiment.html'
+                    }
+                });
+                if (error) {
+                    console.error('OAuth Login Error:', error.message);
+                    alert("Login failed: " + error.message);
+                }
+            });
+        }
+
         if (logoutButtonDropdown) {
             logoutButtonDropdown.addEventListener('click', async () => {
+                console.log("Logout button clicked.");
                 const { error } = await supabaseClient.auth.signOut();
-                if (!error) updateAuthState();
+                if (error) {
+                    console.error('Logout Error:', error.message);
+                } else {
+                    console.log("Logout successful.");
+                    profileDropdown.classList.add('hidden');
+                    window.location.reload(); 
+                }
             });
         }
 
