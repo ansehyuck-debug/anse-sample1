@@ -1268,12 +1268,33 @@
             const btn = document.getElementById('send-report-btn');
             const originalContent = btn.innerHTML;
 
-            // Get user email from Supabase session
+            // 1. Get user email
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) {
                 alert(i18n.translate("login-required") || "로그인이 필요합니다.");
                 return;
             }
+
+            // 2. Collect Market Data from UI
+            const marketData = {
+                score: document.getElementById('score')?.textContent,
+                status: document.getElementById('status')?.textContent,
+                proverb: document.getElementById('proverb-text')?.textContent,
+                advice: document.getElementById('advisor-advice-display')?.innerHTML,
+                kospi: {
+                    value: document.getElementById('kospi-value')?.textContent,
+                    change_rate: document.getElementById('kospi-change-rate')?.textContent,
+                    change_point: document.getElementById('kospi-change-point')?.textContent,
+                },
+                indicators: []
+            };
+
+            // Collect dynamic indicators
+            document.querySelectorAll('#dynamic-indicators-container > div').forEach(el => {
+                const name = el.querySelector('span:first-child')?.textContent;
+                const value = el.querySelector('span:last-child')?.textContent;
+                if (name && value) marketData.indicators.push({ name, value });
+            });
 
             btn.disabled = true;
             btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Sending...</span>`;
@@ -1285,13 +1306,14 @@
                     body: JSON.stringify({ 
                         user_email: user.email, 
                         language: selectedLang,
-                        test_mode: true // 헬로/안녕 테스트를 위해 true로 설정
+                        market_data: marketData, // 실데이터 전송
+                        test_mode: false 
                     })
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`${selectedLang === 'ko' ? '테스트 메일이 발송되었습니다!' : 'Test email has been sent!'}`);
+                    alert(`${selectedLang === 'ko' ? '리포트가 발송되었습니다!' : 'Report has been sent!'}`);
                 } else {
                     throw new Error(result.error);
                 }

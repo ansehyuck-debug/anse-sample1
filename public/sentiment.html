@@ -680,6 +680,62 @@
             if (settingsClick) { e.preventDefault(); switchTab('settings'); }
         });
 
+        // 'Send Report' Button Click Logic
+        document.getElementById('send-report-btn')?.addEventListener('click', async () => {
+            const selectedLang = document.querySelector('input[name="report-lang"]:checked')?.value || 'ko';
+            const btn = document.getElementById('send-report-btn');
+            const originalContent = btn.innerHTML;
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                alert(i18n.translate("login-required") || "로그인이 필요합니다.");
+                return;
+            }
+
+            // Collect US Market Data
+            const marketData = {
+                score: document.getElementById('score')?.textContent,
+                status: document.getElementById('status')?.textContent,
+                proverb: document.getElementById('proverb-text')?.textContent,
+                advice: document.getElementById('sentiment-quote')?.textContent,
+                kospi: {
+                    value: document.getElementById('market-index-value')?.textContent,
+                    change_rate: "",
+                    change_point: "S&P 500 INDEX",
+                },
+                indicators: []
+            };
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Sending...</span>`;
+
+            try {
+                const response = await fetch('/api/send-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_email: user.email, 
+                        language: selectedLang,
+                        market_data: marketData,
+                        market: 'us',
+                        test_mode: false 
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`${selectedLang === 'ko' ? '리포트가 발송되었습니다!' : 'Report has been sent!'}`);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        });
+
         if (closeModal) {
             closeModal.addEventListener('click', () => {
                 accountModal.classList.add('hidden');
