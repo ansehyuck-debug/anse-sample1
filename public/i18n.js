@@ -13,6 +13,7 @@
         applyTranslations(lang);
     }
 
+    // 이 함수를 외부에서 호출할 수 있도록 수정할 예정
     function applyTranslations(lang) {
         const t = translations[lang];
         if (!t) return;
@@ -41,30 +42,7 @@
     function initLanguageSwitcher() {
         const lang = getLanguage();
         document.documentElement.lang = lang;
-
-        const headerActions = document.querySelector('header .flex.flex-wrap.items-center.justify-end');
-        if (headerActions) {
-            if (document.getElementById('language-switcher')) return;
-
-            const langBtn = document.createElement('button');
-            langBtn.id = 'language-switcher';
-            langBtn.className = 'flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white mr-2 shrink-0';
-            langBtn.innerHTML = `<span class="text-xs font-bold">${lang.toUpperCase()}</span>`;
-            langBtn.addEventListener('click', () => {
-                const currentLang = document.documentElement.lang;
-                const newLang = currentLang === 'ko' ? 'en' : 'ko';
-                setLanguage(newLang);
-                langBtn.querySelector('span').textContent = newLang.toUpperCase();
-                window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: newLang } }));
-            });
-            
-            const themeSwitcher = document.getElementById('theme-switcher');
-            if (themeSwitcher) {
-                headerActions.insertBefore(langBtn, themeSwitcher);
-            } else {
-                headerActions.appendChild(langBtn);
-            }
-        }
+        // 기존의 버튼 생성 로직은 헤더가 직접 가지고 있으므로 여기서는 초기 lang 설정만 유지
     }
 
     if (document.readyState === 'loading') {
@@ -77,9 +55,11 @@
         applyTranslations(getLanguage());
     }
 
+    // 외부 노출 객체
     window.i18n = {
         getLanguage: getLanguage,
         setLanguage: setLanguage,
+        applyTranslations: function() { applyTranslations(getLanguage()); }, // 핵심: 이 줄을 추가합니다.
         translate: function(key) {
             return (translations[getLanguage()] && translations[getLanguage()][key]) || key;
         }
