@@ -1175,34 +1175,57 @@
     </script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('download-btn').addEventListener('click', function() {
+    document.getElementById('download-btn').addEventListener('click', async function() {
         const target = document.querySelector('main'); 
         if (!target) return;
 
-        html2canvas(target, {
-            useCORS: true,
-            scale: 2,
-            backgroundColor: "#f8f9fa",
-            logging: false,
-            onclone: (clonedDoc) => {
-                const clonedMain = clonedDoc.querySelector('main');
-                if (clonedMain) {
-                    // 사용자 요청: 상하좌우 여백 없이 꽉 차게 설정
-                    clonedMain.style.margin = "0";
-                    clonedMain.style.padding = "0";
-                    clonedMain.style.maxWidth = "none";
-                    clonedMain.style.width = target.clientWidth + "px";
+        const btn = document.getElementById('download-btn');
+        const originalContent = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span>`;
+
+        try {
+            console.log("Starting capture...");
+            const canvas = await html2canvas(target, {
+                useCORS: true,
+                allowTaint: false,
+                scale: window.devicePixelRatio || 2,
+                backgroundColor: "#f8f9fa",
+                logging: true, // 에러 확인을 위해 로그 활성화
+                ignoreElements: (element) => {
+                    // 스크립트나 외부 트래킹 요소 제외 (보안 오류 방지)
+                    return element.tagName === 'SCRIPT' || element.tagName === 'NOSCRIPT';
+                },
+                onclone: (clonedDoc) => {
+                    const clonedMain = clonedDoc.querySelector('main');
+                    if (clonedMain) {
+                        clonedMain.style.margin = "0";
+                        clonedMain.style.padding = "20px";
+                        clonedMain.style.maxWidth = "none";
+                        clonedMain.style.width = target.offsetWidth + "px";
+                    }
                 }
-            }
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'anse_market_report.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
+            });
+
+            // toDataURL 대신 더 안정적인 toBlob 사용
+            canvas.toBlob((blob) => {
+                if (!blob) throw new Error("Canvas to Blob failed");
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `anse_report_${new Date().getTime()}.png`;
+                link.href = url;
+                link.click();
+                window.URL.revokeObjectURL(url);
+                console.log("Capture successful");
+            }, 'image/png');
+
+        } catch (err) {
             console.error("Capture error:", err);
-            alert("이미지 생성 중 오류가 발생했습니다.");
-        });
+            alert("이미지 저장 중 오류가 발생했습니다. 개발자 도구(F12)의 콘솔 로그를 확인해주세요.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
     });
 });
 
