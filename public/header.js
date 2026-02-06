@@ -20,8 +20,14 @@ async function initHeader() {
         const html = await resp.text();
         placeholder.innerHTML = html;
 
-        // 번역 적용 (헤더 및 모달 전체)
+        // 1. 초기 언어 설정 동기화
         if (window.i18n) {
+            const currentLang = window.i18n.getLanguage() || 'ko';
+            // 버튼 텍스트 설정
+            const langBtn = placeholder.querySelector('#language-switcher span');
+            if (langBtn) langBtn.textContent = currentLang.toUpperCase();
+            
+            // 헤더 및 모달 전체 번역 적용
             placeholder.querySelectorAll('[data-i18n]').forEach(el => {
                 if (typeof window.i18n.translateElement === 'function') {
                     window.i18n.translateElement(el);
