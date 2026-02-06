@@ -229,8 +229,7 @@
                     </section>
                 </div>
 
-                <!-- Settings Section -->
-                <div id="section-settings" class="hidden flex flex-col gap-8">
+                        <div id="section-settings" class="hidden flex flex-col gap-8">
                     <section class="flex flex-col gap-6">
                         <div class="flex flex-col gap-2">
                             <h5 class="font-bold dark:text-white" data-i18n="report-language">리포트 언어 설정</h5>
@@ -244,21 +243,6 @@
                                     <input type="radio" name="report-lang" value="en" class="w-4 h-4 text-primary border-slate-300 focus:ring-primary">
                                     <span class="text-sm font-medium dark:text-slate-300 group-hover:text-primary transition-colors">영어 (English)</span>
                                 </label>
-                            </div>
-                        </div>
-
-                        <div class="pt-6 border-t border-[#e7ecf4] dark:border-[#1e293b]">
-                            <h5 class="font-bold dark:text-white mb-2" data-i18n="instant-report">즉시 리포트 발송</h5>
-                            <p class="text-xs text-[#49699c] dark:text-slate-400 mb-4" data-i18n="instant-report-desc">현재 시장 분석 리포트를 즉시 이메일로 발송합니다.</p>
-                            <div class="flex flex-col gap-2">
-                                <button id="send-korea-report-btn" class="w-full px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg hover:bg-primary hover:text-white transition-all flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">flag</span>
-                                    <span data-i18n="send-korea-report">한국 시장 리포트 보내기</span>
-                                </button>
-                                <button id="send-us-report-btn" class="w-full px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold rounded-lg hover:bg-primary hover:text-white transition-all flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">public</span>
-                                    <span data-i18n="send-us-report">미국 시장 리포트 보내기</span>
-                                </button>
                             </div>
                         </div>
                     </section>
@@ -365,6 +349,10 @@
     <button id="download-btn" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
     <span class="material-symbols-outlined text-[18px] dark:text-white">download</span>
                             <span data-i18n="export-data">Export Data</span>
+                        </button>
+    <button id="send-report-email-btn" class="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20">
+    <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span data-i18n="send-report-email">리포트 이메일로 보내기</span>
                         </button>
     </div>
 </div>
@@ -802,21 +790,10 @@
             if (settingsClick) { e.preventDefault(); switchTab('settings'); }
         });
 
-        // 'Send Report' Button Click Logic
-        document.getElementById('send-korea-report-btn')?.addEventListener('click', () => {
-            if (confirm(i18n.translate("move-to-korea-confirm") || "한국 시장 리포트는 한국 금융시장 심리 페이지에서 보낼 수 있습니다. 이동하시겠습니까?")) {
-                window.location.href = "/index.html";
-            }
-        });
-
-        document.getElementById('send-us-report-btn')?.addEventListener('click', async () => {
-            await sendMarketReport('us');
-        });
-
-        async function sendMarketReport(market) {
-            const selectedLang = document.querySelector('input[name="report-lang"]:checked')?.value || 'ko';
-            const btnId = market === 'korea' ? 'send-korea-report-btn' : 'send-us-report-btn';
-            const btn = document.getElementById(btnId);
+        // 'Send Report to Email' Button Click Logic (Dashboard)
+        document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
+            const currentLang = document.documentElement.lang || 'ko';
+            const btn = document.getElementById('send-report-email-btn');
             const originalContent = btn.innerHTML;
 
             const { data: { user } } = await supabaseClient.auth.getUser();
@@ -825,7 +802,7 @@
                 return;
             }
 
-            // Collect US Market Data from UI
+            // Collect Market Data
             const marketData = {
                 score: document.getElementById('score')?.textContent,
                 status: document.getElementById('status')?.textContent,
@@ -849,16 +826,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         user_email: user.email, 
-                        language: selectedLang,
+                        language: currentLang,
                         market_data: marketData,
-                        market: market,
+                        market: 'us',
                         test_mode: false 
                     })
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`${selectedLang === 'ko' ? '리포트가 발송되었습니다!' : 'Report has been sent!'}`);
+                    alert(`${currentLang === 'ko' ? '리포트가 이메일로 발송되었습니다!' : 'Report has been sent to your email!'}`);
                 } else {
                     throw new Error(result.error);
                 }
@@ -868,7 +845,7 @@
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
             }
-        }
+        });
 
         if (closeModal) {
             closeModal.addEventListener('click', () => {
