@@ -268,10 +268,12 @@
 
         if (isMarketOpen) {
             txt.textContent = i18n.translate("market-open");
+            txt.setAttribute('data-i18n', 'market-open');
             dot.className = "h-2 w-2 rounded-full bg-emerald-500 animate-pulse";
             ind.className = "flex items-center gap-2 rounded-full px-6 py-2 text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
         } else {
             txt.textContent = i18n.translate("market-closed");
+            txt.setAttribute('data-i18n', 'market-closed');
             dot.className = "h-2 w-2 rounded-full bg-red-500";
             ind.className = "flex items-center gap-2 rounded-full px-6 py-2 text-xs font-bold bg-slate-200/60 dark:bg-slate-800/90 text-slate-400 dark:text-slate-400";
         }
