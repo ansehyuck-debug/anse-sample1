@@ -106,6 +106,8 @@ const translations = {
         "name": "이름",
         "account-info": "계정 정보",
         "subscription-benefit": "구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.",
+        "send-report-email": "리포트 이메일로 보내기",
+        "send-report-confirm": "선택한 언어로 리포트를 이메일 발송하시겠습니까?",
         
         // About Us Page
         "about-intro-title": "anse.ai.kr의 정체성",
@@ -300,6 +302,8 @@ const translations = {
         "name": "Name",
         "account-info": "Account Info",
         "subscription-benefit": "Subscribers receive market indicator and AI analysis reports via email 1-2 times a day.",
+        "send-report-email": "Send Report to Email",
+        "send-report-confirm": "Do you want to send the report to your email in the selected language?",
 
         // About Us Page
         "about-intro-title": "Identity of anse.ai.kr",

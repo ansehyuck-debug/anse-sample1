@@ -623,10 +623,29 @@
             });
 
             document.getElementById('download-btn').addEventListener('click', function() {
-                html2canvas(document.querySelector('main'), { scale: 2 }).then(canvas => {
+                const target = document.querySelector('main'); 
+                if (!target) return;
+
+                html2canvas(target, {
+                    allowTaint: true,
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: "#f8f9fa",
+                    logging: false,
+                    width: target.offsetWidth,
+                    height: target.scrollHeight,
+                    windowWidth: document.documentElement.offsetWidth,
+                    windowHeight: document.documentElement.scrollHeight,
+                    onclone: (clonedDoc) => {
+                        const clonedMain = clonedDoc.querySelector('main');
+                        if (clonedMain) {
+                            clonedMain.style.padding = "20px";
+                        }
+                    }
+                }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'us_sentiment_report.png';
-                    link.href = canvas.toDataURL();
+                    link.download = 'anse_us_market_report.png';
+                    link.href = canvas.toDataURL('image/png');
                     link.click();
                 });
             });
@@ -793,6 +812,10 @@
         // 'Send Report to Email' Button Click Logic (Dashboard)
         document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
             const currentLang = document.documentElement.lang || 'ko';
+            
+            // 전송 확인창 추가
+            if (!confirm(i18n.translate("send-report-confirm"))) return;
+
             const btn = document.getElementById('send-report-email-btn');
             const originalContent = btn.innerHTML;
 
@@ -802,7 +825,7 @@
                 return;
             }
 
-            // Extract ONLY the current language version of AI advice
+            // 현재 언어 버전의 AI 어드바이저 내용만 추출 (중복 방지)
             const adviceContainer = document.getElementById('advisor-advice-display');
             let filteredAdvice = "";
             if (adviceContainer) {

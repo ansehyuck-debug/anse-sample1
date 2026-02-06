@@ -84,7 +84,7 @@ export async function onRequest(context) {
               </div>
             </div>
             <div style="background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #64748b;">
-              <p>© 2026 anse.ai. All rights reserved.</p>
+              <p>© 2026 anse.ai.tv All rights reserved.</p>
               <p>${footerNote}</p>
             </div>
           </div>

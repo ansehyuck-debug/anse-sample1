@@ -1176,45 +1176,30 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('download-btn').addEventListener('click', function() {
-        // 1. 캡처 대상: body 대신 리포트 본문인 'main' 태그를 지정
         const target = document.querySelector('main'); 
+        if (!target) return;
 
-        if (!target) {
-            alert("캡처할 리포트 영역(main)을 찾을 수 없습니다.");
-            return;
-        }
-
-        // 2. 캡처 옵션 설정
         html2canvas(target, {
             allowTaint: true,
             useCORS: true,
-            scale: 2,           // 고해상도 설정
-            backgroundColor: "#f8f9fa", // 배경색(투명 방지)
-            
-            // [핵심] 현재 스크롤 위치를 무시하고 요소의 절대 좌표(0,0)부터 전체를 계산
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: target.scrollWidth,
-            windowHeight: target.scrollHeight,
-            width: target.scrollWidth,
+            scale: 2,
+            backgroundColor: "#f8f9fa",
+            logging: false,
+            width: target.offsetWidth,
             height: target.scrollHeight,
-            
-            // 복제본 생성 시 스크롤을 맨 위로 강제 고정하여 여백 방지
+            windowWidth: document.documentElement.offsetWidth,
+            windowHeight: document.documentElement.scrollHeight,
             onclone: (clonedDoc) => {
                 const clonedMain = clonedDoc.querySelector('main');
                 if (clonedMain) {
-                    clonedMain.style.padding = "0";
-                    clonedMain.style.margin = "0";
+                    clonedMain.style.padding = "20px";
                 }
             }
         }).then(canvas => {
-            // 3. 파일 다운로드 실행
             const link = document.createElement('a');
-            link.download = 'anse_full_report.png';
+            link.download = 'anse_market_report.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
-        }).catch(err => {
-            console.error("캡처 오류:", err);
         });
     });
 });
@@ -1323,6 +1308,10 @@
         // 'Send Report to Email' Button Click Logic (Dashboard)
         document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
             const currentLang = document.documentElement.lang || 'ko';
+            
+            // 전송 확인창 추가
+            if (!confirm(i18n.translate("send-report-confirm"))) return;
+
             const btn = document.getElementById('send-report-email-btn');
             const originalContent = btn.innerHTML;
 
@@ -1332,7 +1321,7 @@
                 return;
             }
 
-            // Extract ONLY the current language version of AI advice
+            // 현재 언어 버전의 AI 어드바이저 내용만 추출 (중복 방지)
             const adviceContainer = document.getElementById('advisor-advice-display');
             let filteredAdvice = "";
             if (adviceContainer) {
