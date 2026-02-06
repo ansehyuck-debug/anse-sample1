@@ -237,7 +237,7 @@
         if(needle) needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
         if(scoreDisplay) scoreDisplay.textContent = score;
 
-        let color = "text-primary";
+        let color = "text-yellow-400";
         let statusKey = "neutral";
         if (score < 20) { color = "text-red-500"; statusKey = "extreme-fear"; }
         else if (score < 40) { color = "text-orange-500"; statusKey = "fear"; }
