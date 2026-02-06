@@ -564,15 +564,15 @@
                     else if (value >= 76 && value <= 100) { quoteText = i18n.translate("quote-extreme-greed"); }
                     else { quoteText = i18n.translate("quote-unknown"); }
 
-                    quoteEl.textContent = quoteText;
+                    if (quoteEl) quoteEl.textContent = quoteText;
                     
                     if (data.last_update) {
-                        const currentLang = i18n.getLanguage();
                         const timeSuffix = i18n.translate("time-suffix");
-                        lastUpdatedEl.textContent = `${i18n.translate("last-updated")}: ${data.last_update} ${timeSuffix}`;
+                        const lastUpdatedLabel = i18n.translate("last-updated");
+                        lastUpdatedEl.innerHTML = `<span data-i18n="last-updated">${lastUpdatedLabel}</span>: ${data.last_update} ${timeSuffix}`;
                     }
                 } else {
-                    quoteEl.textContent = i18n.translate("preparing-advice");
+                    if (quoteEl) quoteEl.textContent = i18n.translate("preparing-advice");
                 }
             } catch (error) {
                 console.error("Error fetching US sentiment:", error);
