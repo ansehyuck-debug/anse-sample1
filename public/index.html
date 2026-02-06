@@ -1180,19 +1180,18 @@
         if (!target) return;
 
         html2canvas(target, {
-            allowTaint: true,
             useCORS: true,
             scale: 2,
             backgroundColor: "#f8f9fa",
             logging: false,
-            width: target.offsetWidth,
-            height: target.scrollHeight,
-            windowWidth: document.documentElement.offsetWidth,
-            windowHeight: document.documentElement.scrollHeight,
             onclone: (clonedDoc) => {
                 const clonedMain = clonedDoc.querySelector('main');
                 if (clonedMain) {
-                    clonedMain.style.padding = "20px";
+                    // 사용자 요청: 상하좌우 여백 없이 꽉 차게 설정
+                    clonedMain.style.margin = "0";
+                    clonedMain.style.padding = "0";
+                    clonedMain.style.maxWidth = "none";
+                    clonedMain.style.width = target.clientWidth + "px";
                 }
             }
         }).then(canvas => {
@@ -1200,6 +1199,9 @@
             link.download = 'anse_market_report.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        }).catch(err => {
+            console.error("Capture error:", err);
+            alert("이미지 생성 중 오류가 발생했습니다.");
         });
     });
 });
