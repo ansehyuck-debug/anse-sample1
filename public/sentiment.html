@@ -802,12 +802,20 @@
                 return;
             }
 
+            // Extract ONLY the current language version of AI advice
+            const adviceContainer = document.getElementById('advisor-advice-display');
+            let filteredAdvice = "";
+            if (adviceContainer) {
+                const langDiv = adviceContainer.querySelector(`.lang-${currentLang}`);
+                filteredAdvice = langDiv ? langDiv.innerHTML : adviceContainer.innerHTML;
+            }
+
             // Collect Market Data
             const marketData = {
                 score: document.getElementById('score')?.textContent,
                 status: document.getElementById('status')?.textContent,
                 proverb: document.getElementById('proverb-text')?.textContent,
-                advice: document.getElementById('advisor-advice-display')?.innerHTML, // Gemini HTML
+                advice: filteredAdvice, // Filtered HTML
                 kospi: {
                     value: document.getElementById('market-index-value')?.textContent,
                     change_rate: "",
