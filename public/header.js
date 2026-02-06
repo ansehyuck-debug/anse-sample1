@@ -20,15 +20,21 @@ async function initHeader() {
         const html = await resp.text();
         placeholder.innerHTML = html;
 
-        // 1. 초기 언어 설정 동기화
+        // --- 초기 언어 설정 및 번역 강제 적용 ---
         if (window.i18n) {
             const currentLang = window.i18n.getLanguage() || 'ko';
-            // 버튼 텍스트 설정
-            const langBtn = placeholder.querySelector('#language-switcher span');
-            if (langBtn) langBtn.textContent = currentLang.toUpperCase();
+            console.log('Syncing header language to:', currentLang);
             
-            // 헤더 및 모달 전체 번역 적용
-            placeholder.querySelectorAll('[data-i18n]').forEach(el => {
+            // 1. 버튼 텍스트 설정 (KO/EN)
+            const langBtnSpan = document.querySelector('#language-switcher span');
+            if (langBtnSpan) langBtnSpan.textContent = currentLang.toUpperCase();
+            
+            // 2. HTML lang 속성 동기화
+            document.documentElement.lang = currentLang;
+
+            // 3. 헤더 및 모달 내부 모든 data-i18n 요소 강제 번역
+            const i18nElements = placeholder.querySelectorAll('[data-i18n]');
+            i18nElements.forEach(el => {
                 if (typeof window.i18n.translateElement === 'function') {
                     window.i18n.translateElement(el);
                 }
@@ -45,9 +51,6 @@ async function initHeader() {
             updateAuthUI(user);
         }
 
-        if (window.i18n) {
-            placeholder.querySelectorAll('[data-i18n]').forEach(el => window.i18n.translateElement?.(el));
-        }
         updateThemeIcon(document.documentElement.classList.contains('dark'));
 
     } catch (err) {
@@ -99,11 +102,16 @@ function setupHeaderEventListeners() {
 
     const langBtn = document.getElementById('language-switcher');
     if (langBtn && window.i18n) {
-        langBtn.querySelector('span').textContent = window.i18n.getLanguage().toUpperCase();
         langBtn.addEventListener('click', () => {
             const next = window.i18n.getLanguage() === 'ko' ? 'en' : 'ko';
             window.i18n.setLanguage(next);
             langBtn.querySelector('span').textContent = next.toUpperCase();
+            
+            // 페이지 전체 번역 실행
+            if (typeof window.i18n.translatePage === 'function') {
+                window.i18n.translatePage();
+            }
+            
             window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: next } }));
         });
     }
@@ -131,8 +139,10 @@ function updateAuthUI(user) {
         }
         document.getElementById('dropdown-user-name').textContent = user.user_metadata.full_name || 'User';
         document.getElementById('dropdown-user-email').textContent = user.email;
-        document.getElementById('modal-user-name').textContent = user.user_metadata.full_name || 'User';
-        document.getElementById('modal-user-email').textContent = user.email;
+        const modalName = document.getElementById('modal-user-name');
+        const modalEmail = document.getElementById('modal-user-email');
+        if(modalName) modalName.textContent = user.user_metadata.full_name || 'User';
+        if(modalEmail) modalEmail.textContent = user.email;
         checkSubscriptionStatus(user.id);
     } else {
         btn?.classList.remove('hidden');
@@ -149,12 +159,12 @@ async function checkSubscriptionStatus(uid) {
         if (!txt) return;
         if (data && data.status === 'active') {
             txt.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span>';
-            sub?.classList.add('hidden');
-            can?.classList.remove('hidden');
+            if(sub) sub.classList.add('hidden');
+            if(can) can.classList.remove('hidden');
         } else {
             txt.textContent = window.i18n ? window.i18n.translate("subscription-benefit") : "";
-            sub?.classList.remove('hidden');
-            can?.classList.add('hidden');
+            if(sub) sub.classList.remove('hidden');
+            if(can) can.classList.add('hidden');
         }
     } catch (e) {}
 }
@@ -172,7 +182,12 @@ function switchTab(tid) {
         }
     });
     const t = document.getElementById('modal-title');
-    if (t) { t.setAttribute('data-i18n', tid); window.i18n?.translateElement?.(t); }
+    if (t) { 
+        t.setAttribute('data-i18n', tid); 
+        if (window.i18n && typeof window.i18n.translateElement === 'function') {
+            window.i18n.translateElement(t);
+        }
+    }
 }
 
 function setupModalActionListeners() {
