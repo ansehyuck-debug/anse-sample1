@@ -632,41 +632,29 @@
                 btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span>`;
 
                 try {
-                    console.log("Starting US report capture...");
                     const canvas = await html2canvas(target, {
+                        scale: 2,
                         useCORS: true,
-                        allowTaint: false,
-                        scale: window.devicePixelRatio || 2,
                         backgroundColor: "#f8f9fa",
-                        logging: true,
-                        ignoreElements: (element) => {
-                            return element.tagName === 'SCRIPT' || element.tagName === 'NOSCRIPT';
-                        },
+                        logging: false,
                         onclone: (clonedDoc) => {
                             const clonedMain = clonedDoc.querySelector('main');
                             if (clonedMain) {
+                                // 화면 그대로 여백 없이 저장되도록 설정
                                 clonedMain.style.margin = "0";
-                                clonedMain.style.padding = "20px";
-                                clonedMain.style.maxWidth = "none";
-                                clonedMain.style.width = target.offsetWidth + "px";
+                                clonedMain.style.padding = "0";
                             }
                         }
                     });
 
-                    canvas.toBlob((blob) => {
-                        if (!blob) throw new Error("Canvas to Blob failed");
-                        const url = window.URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.download = `anse_us_report_${new Date().getTime()}.png`;
-                        link.href = url;
-                        link.click();
-                        window.URL.revokeObjectURL(url);
-                        console.log("US Capture successful");
-                    }, 'image/png');
+                    const link = document.createElement('a');
+                    link.download = `anse_us_report_${new Date().getTime()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
 
                 } catch (err) {
                     console.error("Capture error:", err);
-                    alert("이미지 저장 중 오류가 발생했습니다. 콘솔 로그를 확인해주세요.");
+                    alert("이미지 저장 중 오류가 발생했습니다.");
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = originalContent;
