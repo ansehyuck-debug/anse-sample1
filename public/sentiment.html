@@ -649,8 +649,18 @@
                 html2canvas(target, {
                     scale: 2,
                     useCORS: true,
-                    logging: true,  // 콘솔에 상세 로그 출력
-                    backgroundColor: document.documentElement.classList.contains('dark') ? '#101722' : '#f5f7f8'
+                    logging: true,
+                    backgroundColor: document.documentElement.classList.contains('dark') ? '#101722' : '#f5f7f8',
+                    onclone: (clonedDoc) => {
+                        const clonedMain = clonedDoc.querySelector('main');
+                        if (clonedMain) {
+                            // 캡처본이 꽉 차도록 여백 및 최대 너비 제한 해제
+                            clonedMain.style.margin = "0";
+                            clonedMain.style.maxWidth = "none";
+                            clonedMain.style.width = target.offsetWidth + "px";
+                            clonedMain.style.padding = "20px";
+                        }
+                    }
                 }).then(canvas => {
                     console.log("미국 캡처 성공!");
 
