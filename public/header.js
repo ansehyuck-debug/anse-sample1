@@ -20,6 +20,15 @@ async function initHeader() {
         const html = await resp.text();
         placeholder.innerHTML = html;
 
+        // 번역 적용 (헤더 및 모달 전체)
+        if (window.i18n) {
+            placeholder.querySelectorAll('[data-i18n]').forEach(el => {
+                if (typeof window.i18n.translateElement === 'function') {
+                    window.i18n.translateElement(el);
+                }
+            });
+        }
+
         setupHeaderEventListeners();
 
         if (supabaseClient) {
