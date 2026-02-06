@@ -622,43 +622,40 @@
                 }
             });
 
-            document.getElementById('download-btn').addEventListener('click', async function() {
+            document.getElementById('download-btn').addEventListener('click', function() {
+                console.log("=== US DOWNLOAD BUTTON CLICKED ===");
+                alert("미국 시장 리포트 캡처를 시작합니다.");
+
                 const target = document.querySelector('main'); 
-                if (!target) return;
+                if (!target) {
+                    console.error("Target 'main' element not found in US page!");
+                    return;
+                }
 
                 const btn = document.getElementById('download-btn');
                 const originalContent = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span>`;
 
-                try {
-                    const canvas = await html2canvas(target, {
-                        scale: 2,
-                        useCORS: true,
-                        backgroundColor: "#f8f9fa",
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            const clonedMain = clonedDoc.querySelector('main');
-                            if (clonedMain) {
-                                // 화면 그대로 여백 없이 저장되도록 설정
-                                clonedMain.style.margin = "0";
-                                clonedMain.style.padding = "0";
-                            }
-                        }
-                    });
-
+                html2canvas(target, {
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: "#f8f9fa",
+                    logging: true,
+                }).then(canvas => {
+                    console.log("US Canvas generated successfully");
+                    const dataUrl = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
-                    link.download = `anse_us_report_${new Date().getTime()}.png`;
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = `us_report_${Date.now()}.png`;
+                    link.href = dataUrl;
                     link.click();
-
-                } catch (err) {
-                    console.error("Capture error:", err);
-                    alert("이미지 저장 중 오류가 발생했습니다.");
-                } finally {
+                    console.log("US Download triggered");
+                }).catch(err => {
+                    console.error("US html2canvas error:", err);
+                    alert("미국 리포트 저장 에러: " + err.message);
+                }).finally(() => {
                     btn.disabled = false;
                     btn.innerHTML = originalContent;
-                }
+                });
             });
 
             // Listen for language changes to refresh dynamic content
