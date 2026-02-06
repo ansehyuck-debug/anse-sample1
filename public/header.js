@@ -58,6 +58,15 @@ function setupEventListeners(p) {
     p.querySelector('#close-modal')?.addEventListener('click', () => mod?.classList.add('hidden'));
     mod?.addEventListener('click', (e) => e.target === mod && mod.classList.add('hidden'));
 
+    // Login/Logout
+    p.querySelector('#login-button')?.addEventListener('click', () => {
+        supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+    });
+    p.querySelector('#logout-button-dropdown')?.addEventListener('click', async () => {
+        await supabaseClient.auth.signOut();
+        location.reload();
+    });
+
     ['overview', 'settings', 'account'].forEach(id => {
         p.querySelector(`#nav-${id}`)?.addEventListener('click', () => switchTab(id));
     });
@@ -89,6 +98,13 @@ function updateAuthUI(user) {
     if (!loginBtn || !prof) return;
     if (user) {
         loginBtn.classList.add('hidden'); prof.classList.remove('hidden');
+        const url = user.user_metadata.avatar_url;
+        if (url) {
+            const av = document.getElementById('user-avatar');
+            const mav = document.getElementById('modal-user-avatar');
+            if (av) av.style.backgroundImage = `url('${url}')`;
+            if (mav) mav.style.backgroundImage = `url('${url}')`;
+        }
         document.getElementById('dropdown-user-name').textContent = user.user_metadata.full_name || 'User';
         document.getElementById('dropdown-user-email').textContent = user.email;
         const mN = document.getElementById('modal-user-name'), mE = document.getElementById('modal-user-email');
