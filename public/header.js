@@ -27,10 +27,7 @@ async function initHeader() {
         syncLang();
         setupEventListeners(placeholder);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('mock') === 'true') {
-            updateAuthUI({ id: 'mock', email: 'test@anse.ai.kr', user_metadata: { full_name: '테스트 계정' } });
-        } else if (supabaseClient) {
+        if (supabaseClient) {
             supabaseClient.auth.onAuthStateChange((_, session) => updateAuthUI(session?.user));
             const { data: { user } } = await supabaseClient.auth.getUser();
             updateAuthUI(user);
