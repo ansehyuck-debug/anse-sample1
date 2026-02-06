@@ -67,6 +67,22 @@ function setupEventListeners(p) {
         location.reload();
     });
 
+    // Subscription
+    p.querySelector('#subscribe-btn')?.addEventListener('click', async () => {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return alert(window.i18n?.translate("login-required") || "Login required");
+        const res = await fetch('/api/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: user.id, user_email: user.email }) });
+        const { url } = await res.json();
+        if (url) location.href = url;
+    });
+
+    p.querySelector('#cancel-subscription-btn')?.addEventListener('click', async () => {
+        if (!confirm("구독을 취소하시겠습니까?")) return;
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const res = await fetch('/api/cancel-subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: user.id }) });
+        if ((await res.json()).success) { alert("Cancelled"); location.reload(); }
+    });
+
     ['overview', 'settings', 'account'].forEach(id => {
         p.querySelector(`#nav-${id}`)?.addEventListener('click', () => switchTab(id));
     });
@@ -120,9 +136,18 @@ async function checkSubscriptionStatus(uid) {
     try {
         const { data } = await supabaseClient.from('subscriptions').select('status').eq('user_id', uid).maybeSingle();
         const txt = document.getElementById('subscription-status-text');
+        const sub = document.getElementById('subscribe-btn');
+        const can = document.getElementById('cancel-subscription-btn');
         if (txt) {
-            if (data?.status === 'active') txt.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span>';
-            else txt.textContent = window.i18n?.translate("subscription-benefit") || "";
+            if (data?.status === 'active') {
+                txt.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span>';
+                if(sub) sub.classList.add('hidden');
+                if(can) can.classList.remove('hidden');
+            } else {
+                txt.textContent = window.i18n?.translate("subscription-benefit") || "";
+                if(sub) sub.classList.remove('hidden');
+                if(can) can.classList.add('hidden');
+            }
         }
     } catch (e) {}
 }
