@@ -300,15 +300,18 @@
             for (let i = 1; i <= 5; i++) {
                 const val = doc[`indicator${i}`];
                 if(val === undefined) continue;
-                let color = "bg-primary";
-                if(val <= 45) color = "bg-orange-400";
-                if(val <= 25) color = "bg-red-400";
+                
+                let color = "bg-primary"; // Extreme Greed
+                if(val < 20) color = "bg-red-400"; // Extreme Fear
+                else if(val < 40) color = "bg-orange-400"; // Fear
+                else if(val < 60) color = "bg-yellow-400"; // Neutral
+                else if(val < 80) color = "bg-emerald-500"; // Greed
                 
                 container.innerHTML += `
                     <div class="flex flex-col gap-1">
                         <div class="flex justify-between text-xs font-bold">
                             <span class="dark:text-white">${i18n.translate(`indicator${i}`)}</span>
-                            <span>${val.toFixed(2)}</span>
+                            <span class="${color.replace('bg-', 'text-')}">${val.toFixed(2)}</span>
                         </div>
                         <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
                             <div class="h-full rounded-full ${color}" style="width: ${val}%;"></div>
