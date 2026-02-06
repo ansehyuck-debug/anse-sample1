@@ -16,8 +16,16 @@ jobs:
           python-version: '3.9'
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements.txt google-genai
       - name: Run script
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_INDEX_ADVISOR_KEY }}
         run: python -c 'from main import update_fng; update_fng()'
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/gemini_snp_adv.html public/gemini_snp_adv_ko_en.html
+          git commit -m "Auto-update US Gemini advisor report: $(date +'%Y-%m-%d')" || exit 0
+          git push

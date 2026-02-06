@@ -79,6 +79,9 @@
         .gauge-gradient {
             background: conic-gradient(from 180deg at 50% 100%, #f87171 0deg, #fbbf24 90deg, #3d84f5 180deg);
         }
+        /* Language-specific display rules */
+        html[lang="ko"] .lang-en { display: none !important; }
+        html[lang="en"] .lang-ko { display: none !important; }
     </style>
 
 <!-- Google Analytics and Clarity -->
@@ -310,13 +313,19 @@
 </div>
 </div>
 
-<!-- Advice/Quote Section -->
+<!-- Advice/Quote Section (Replaced with Index Advisors) -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-<div class="mb-4 flex items-center justify-between gap-2">
-<h3 class="text-lg font-bold" data-i18n="market-indicators">Market Analysis</h3>
+<div class="mb-6 flex items-center justify-between gap-2">
+<h3 class="text-lg font-bold" data-i18n="index-advisors">Index Advisors</h3>
+<div class="flex flex-wrap gap-2 justify-end">
+<button id="advisor-gemini" class="rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Gemini</button>
+<button id="advisor-gpt" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">GPT</button>
+<button id="advisor-grok" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Grok</button>
 </div>
-<div id="sentiment-quote-display" class="flex flex-col gap-4">
-    <p id="sentiment-quote" class="text-sm dark:text-slate-200" data-i18n="updating">데이터를 불러오는 중...</p>
+</div>
+
+<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] px-2 py-6 md:px-6 shadow-sm">
+    <p class="text-sm dark:text-slate-200" data-i18n="updating">Gemini의 조언 준비중</p>
 </div>
 </div>
 </div>
@@ -634,6 +643,59 @@
                 updateUSMarketStatus();
                 displayRandomProverb();
             });
+
+            // --- Advisor Display Logic (New) ---
+            const advisorFiles = {
+                gemini: 'gemini_snp_adv_ko_en.html',
+                gpt: 'gpt_snp_adv.html', 
+                grok: 'grok_snp_adv.html'
+            };
+
+            const advisorGeminiBtn = document.getElementById('advisor-gemini');
+            const advisorGptBtn = document.getElementById('advisor-gpt');
+            const advisorGrokBtn = document.getElementById('advisor-grok');
+            const advisorAdviceDisplay = document.getElementById('advisor-advice-display');
+            const advisorButtons = [advisorGeminiBtn, advisorGptBtn, advisorGrokBtn];
+
+            function updateAdvisorDisplay(activeAdvisor) {
+                // Reset all buttons
+                advisorButtons.forEach(button => {
+                    if (!button) return;
+                    button.classList.remove('bg-primary/10', 'text-primary');
+                    button.classList.add('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                });
+
+                // Set active button
+                const currentActiveButton = document.getElementById(`advisor-${activeAdvisor}`);
+                if (currentActiveButton) {
+                    currentActiveButton.classList.remove('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                    currentActiveButton.classList.add('bg-primary/10', 'text-primary');
+                }
+
+                // Fetch content
+                if (advisorAdviceDisplay) {
+                    const filePath = advisorFiles[activeAdvisor];
+                    fetch(filePath)
+                        .then(response => {
+                            if (!response.ok) throw new Error('File not found');
+                            return response.text();
+                        })
+                        .then(htmlContent => {
+                            advisorAdviceDisplay.innerHTML = htmlContent;
+                        })
+                        .catch(err => {
+                            console.error(`Error loading advisor ${activeAdvisor}:`, err);
+                            advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">${i18n.translate("failed-to-load-advice")}</p>`;
+                        });
+                }
+            }
+
+            if (advisorGeminiBtn) advisorGeminiBtn.addEventListener('click', () => updateAdvisorDisplay('gemini'));
+            if (advisorGptBtn) advisorGptBtn.addEventListener('click', () => updateAdvisorDisplay('gpt'));
+            if (advisorGrokBtn) advisorGrokBtn.addEventListener('click', () => updateAdvisorDisplay('grok'));
+
+            // Initial load
+            updateAdvisorDisplay('gemini');
         });
     </script>
     <script>
