@@ -55,6 +55,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="header.js" defer></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -118,158 +119,8 @@
 
 </head>
 <body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
-<!-- Top Navigation Bar -->
-<header class="sticky top-0 z-50 w-full border-b border-solid border-[#e7ecf4] dark:border-[#1e293b] bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
-<div class="mx-auto flex max-w-[1200px] items-center justify-between px-3 py-3 md:px-6">
-<div class="flex items-center gap-8">
-<div class="flex items-center gap-3">
-<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
-<span class="material-symbols-outlined text-[20px] text-white">leaderboard</span>
-</div>
-<h2 class="text-lg font-bold tracking-tight dark:text-white">US Fear &amp; Greed</h2>
-</div>
-<div class="hidden md:flex items-center gap-6"> <!-- Desktop Nav -->
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/sentiment.html" data-i18n="nav-us">미국 금융시장 심리</a>
-</div>
-</div>
-<div class="flex flex-wrap items-center justify-end gap-2 md:gap-4">
-<button id="menu-button" class="flex md:hidden h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
-<span class="material-symbols-outlined dark:text-white">menu</span>
-</button>
+    <div id="header-placeholder"></div>
 
-<button id="theme-switcher" class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f0f3f9] dark:bg-slate-800 text-[#0d131c] dark:text-white">
-<span class="material-symbols-outlined dark:text-white">light_mode</span>
-</button>
-<div id="auth-container" class="flex items-center gap-2">
-    <button id="login-button" class="hidden flex h-10 px-4 items-center justify-center rounded-lg bg-primary text-white font-bold hover:opacity-90 transition-opacity" data-i18n="login">Login</button>
-    <div id="user-profile" class="hidden relative flex items-center gap-3">
-        <div id="user-avatar" class="h-10 w-10 rounded-full bg-cover bg-center ring-2 ring-primary/20 cursor-pointer" data-alt="User profile avatar"></div>
-        <!-- Profile Dropdown -->
-        <div id="profile-dropdown" class="hidden absolute right-0 top-12 w-48 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] shadow-lg z-[60] overflow-hidden">
-            <div class="px-4 py-3 border-b border-[#e7ecf4] dark:border-[#1e293b]">
-                <p id="dropdown-user-name" class="text-sm font-bold truncate dark:text-white"></p>
-                <p id="dropdown-user-email" class="text-xs text-[#49699c] dark:text-slate-400 truncate"></p>
-            </div>
-            <button id="my-account-btn" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 dark:text-slate-200">
-                <span class="material-symbols-outlined text-sm">person</span>
-                <span data-i18n="my-account">My Account</span>
-            </button>
-            <button id="logout-button-dropdown" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">logout</span>
-                <span data-i18n="logout">Logout</span>
-            </button>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-<div id="mobile-menu" class="md:hidden hidden bg-white/80 dark:bg-background-dark/80 backdrop-blur-md pb-4 border-b border-solid border-[#e7ecf4] dark:border-[#1e293b]">
-<nav class="flex flex-col items-center gap-4 py-2">
-<a class="text-sm font-medium text-[#49699c] dark:text-slate-400 hover:text-primary transition-colors" href="/index.html" data-i18n="nav-korea">한국 금융시장 심리</a>
-<a class="text-sm font-semibold text-primary" href="/sentiment.html" data-i18n="nav-us">미국 금융 시장 심리</a>
-</nav>
-</div>
-</header>
-
-<!-- My Account Modal -->
-<div id="account-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-    <div class="bg-white dark:bg-[#161f2c] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[500px]">
-        <!-- Sidebar -->
-        <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
-            <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
-            <nav class="space-y-1">
-                <button id="nav-overview" class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2 transition-colors">
-                    <span class="material-symbols-outlined text-sm">grid_view</span>
-                    <span data-i18n="overview">Overview</span>
-                </button>
-                <button id="nav-settings" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
-                    <span class="material-symbols-outlined text-sm">settings</span>
-                    <span data-i18n="settings">Settings</span>
-                </button>
-                <button id="nav-account" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
-                    <span class="material-symbols-outlined text-sm">person</span>
-                    <span data-i18n="account">Account</span>
-                </button>
-            </nav>
-        </aside>
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="p-6 flex items-center justify-between border-b border-[#e7ecf4] dark:border-[#1e293b]">
-                <h2 id="modal-title" class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
-                <button id="close-modal" class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <span class="material-symbols-outlined dark:text-white">close</span>
-                </button>
-            </header>
-            <main class="flex-1 p-8 overflow-y-auto">
-                <!-- Overview Section -->
-                <div id="section-overview" class="flex flex-col gap-8">
-                    <!-- User Profile Info -->
-                    <section class="flex items-center gap-4">
-                        <div id="modal-user-avatar" class="h-16 w-16 rounded-full bg-cover bg-center ring-4 ring-primary/10"></div>
-                        <div class="flex flex-col">
-                            <h4 id="modal-user-name" class="text-lg font-black dark:text-white"></h4>
-                            <p id="modal-user-email" class="text-sm text-[#49699c] dark:text-slate-400"></p>
-                        </div>
-                    </section>
-                    <!-- Subscription Status -->
-                    <section id="subscription-section" class="rounded-xl border border-primary/20 bg-primary/5 p-6 border-dashed">
-                        <div class="flex flex-col gap-4">
-                            <div class="flex flex-col gap-1">
-                                <h5 class="font-bold dark:text-white" data-i18n="subscribe">구독하기</h5>
-                                <p id="subscription-status-text" class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="subscription-benefit">구독 시 일 1~2회 시장 지표 및 인공지능 분석 리포트를 이메일로 보내드립니다.</p>
-                            </div>
-                            <div id="subscription-actions" class="flex gap-2">
-                                <button id="subscribe-btn" class="w-fit px-6 py-2.5 bg-primary text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">stars</span>
-                                    <span data-i18n="subscribe">구독하기</span>
-                                </button>
-                                <button id="cancel-subscription-btn" class="hidden w-fit px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">cancel</span>
-                                    <span>구독 취소</span>
-                                </button>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                        <div id="section-settings" class="hidden flex flex-col gap-8">
-                    <section class="flex flex-col gap-6">
-                        <div class="flex flex-col gap-2">
-                            <h5 class="font-bold dark:text-white" data-i18n="report-language">리포트 언어 설정</h5>
-                            <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="report-lang-desc">이메일 리포트를 수신할 언어를 선택해주세요.</p>
-                            <div class="flex gap-3 mt-2">
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="radio" name="report-lang" value="ko" checked class="w-4 h-4 text-primary border-slate-300 focus:ring-primary">
-                                    <span class="text-sm font-medium dark:text-slate-300 group-hover:text-primary transition-colors">한국어 (Korean)</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="radio" name="report-lang" value="en" class="w-4 h-4 text-primary border-slate-300 focus:ring-primary">
-                                    <span class="text-sm font-medium dark:text-slate-300 group-hover:text-primary transition-colors">영어 (English)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <div id="section-account" class="hidden flex flex-col gap-8">
-                    <section class="flex flex-col gap-6">
-                        <div class="flex flex-col gap-2">
-                            <h5 class="font-bold dark:text-white" data-i18n="account">계정</h5>
-                            <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="withdraw-desc">회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
-                            <div class="mt-4">
-                                <button id="withdraw-btn" class="px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">person_remove</span>
-                                    <span data-i18n="withdraw">탈퇴하기</span>
-                                </button>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </main>
-        </div>
-    </div>
-</div>
 <main class="mx-auto max-w-[1200px] px-6 py-8">
 <!-- Page Heading -->
 <div class="mb-8 flex flex-wrap items-end justify-between gap-8">
@@ -511,16 +362,7 @@
             const marketStatusIndicator = document.getElementById('market-status-indicator');
 
             // US Market Hours: 9:30 AM - 4:00 PM ET
-            // We'll use a simple approach based on UTC
             const now = new Date();
-            const utcHour = now.getUTCHours();
-            const utcMinute = now.getUTCMinutes();
-            const day = now.getUTCDay(); // 0: Sun, 1: Mon, ..., 6: Sat
-
-            // Standard Time (EST): UTC-5 -> 14:30 - 21:00 UTC
-            // Daylight Saving (EDT): UTC-4 -> 13:30 - 20:00 UTC
-            // For simplicity, let's assume EDT (usually Mar-Nov) or just check a range
-            // More robust: use Intl.DateTimeFormat
             const nyTime = new Intl.DateTimeFormat('en-US', {
                 timeZone: 'America/New_York',
                 hour: 'numeric',
@@ -529,13 +371,9 @@
                 weekday: 'short'
             }).formatToParts(now);
 
-            const hourPart = nyTime.find(p => p.type === 'hour').value;
-            const minutePart = nyTime.find(p => p.type === 'minute').value;
-            const weekdayPart = nyTime.find(p => p.type === 'weekday').value;
-
-            const hour = parseInt(hourPart);
-            const minute = parseInt(minutePart);
-            const isWeekend = weekdayPart === 'Sat' || weekdayPart === 'Sun';
+            const hour = parseInt(nyTime.find(p => p.type === 'hour').value);
+            const minute = parseInt(nyTime.find(p => p.type === 'minute').value);
+            const isWeekend = ['Sat', 'Sun'].includes(nyTime.find(p => p.type === 'weekday').value);
 
             let isOpen = false;
             if (!isWeekend) {
@@ -545,16 +383,18 @@
                 }
             }
 
-            if (isOpen) {
-                marketStatusText.textContent = i18n.translate("market-open");
-                marketStatusText.removeAttribute('data-i18n'); // Prevent reset on lang change
-                marketStatusDot.classList.add('bg-emerald-500', 'animate-pulse');
-                marketStatusIndicator.classList.add('bg-emerald-100', 'text-emerald-600');
-            } else {
-                marketStatusText.textContent = i18n.translate("market-closed");
-                marketStatusText.removeAttribute('data-i18n'); // Prevent reset on lang change
-                marketStatusDot.classList.add('bg-red-500');
-                marketStatusIndicator.classList.add('bg-slate-200/60', 'text-slate-600');
+            if (marketStatusText && marketStatusDot && marketStatusIndicator) {
+                if (isOpen) {
+                    marketStatusText.textContent = i18n.translate("market-open");
+                    marketStatusText.removeAttribute('data-i18n');
+                    marketStatusDot.className = 'h-2 w-2 rounded-full bg-emerald-500 animate-pulse';
+                    marketStatusIndicator.className = 'flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-6 py-2 text-xs font-bold text-emerald-600 dark:text-emerald-400';
+                } else {
+                    marketStatusText.textContent = i18n.translate("market-closed");
+                    marketStatusText.removeAttribute('data-i18n');
+                    marketStatusDot.className = 'h-2 w-2 rounded-full bg-red-50';
+                    marketStatusIndicator.className = 'flex items-center gap-2 rounded-full bg-slate-200/60 dark:bg-slate-800/90 px-6 py-2 text-xs font-bold text-slate-400 dark:text-slate-400';
+                }
             }
         }
 
@@ -589,7 +429,7 @@
                 }
             } catch (error) {
                 console.error("Error fetching US sentiment:", error);
-                quoteEl.textContent = i18n.translate("failed-to-load-advice");
+                if (quoteEl) quoteEl.textContent = i18n.translate("failed-to-load-advice");
             }
         }
 
@@ -604,76 +444,37 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Theme switcher
-            const themeSwitcher = document.getElementById('theme-switcher');
-            themeSwitcher.addEventListener('click', () => {
-                const isDarkMode = document.documentElement.classList.toggle('dark');
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                const icon = themeSwitcher.querySelector('.material-symbols-outlined');
-                icon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
-            });
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-                themeSwitcher.querySelector('.material-symbols-outlined').textContent = 'dark_mode';
-            }
-
-            // Mobile menu
-            document.getElementById('menu-button').addEventListener('click', () => {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            });
-
             fetchUSSentiment();
             updateUSMarketStatus();
             displayRandomProverb();
-            document.getElementById('generate-proverb').addEventListener('click', displayRandomProverb);
+            document.getElementById('generate-proverb')?.addEventListener('click', displayRandomProverb);
 
-            document.getElementById('how-calculated-button').addEventListener('click', () => {
+            document.getElementById('how-calculated-button')?.addEventListener('click', () => {
                 const section = document.getElementById('indicator-explanation-section');
                 const isOpening = section.style.display === 'none';
                 if (isOpening) {
                     section.style.display = 'block';
-                    // Small timeout to ensure DOM has rendered the block before scrolling
-                    setTimeout(() => {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 10);
+                    setTimeout(() => { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 10);
                 } else {
                     section.style.display = 'none';
                 }
             });
 
-            document.getElementById('download-btn').addEventListener('click', function() {
-                console.log("미국 시장 버튼 클릭됨!");
+            document.getElementById('download-btn')?.addEventListener('click', function() {
                 const downloadBtn = document.getElementById('download-btn');
                 const originalContent = downloadBtn.innerHTML;
-
-                // html2canvas가 로드되었는지 확인
-                if (typeof html2canvas === 'undefined') {
-                    alert("html2canvas 라이브러리가 로드되지 않았습니다!");
-                    return;
-                }
-
+                if (typeof html2canvas === 'undefined') return;
                 const target = document.querySelector('main.mx-auto');
-                console.log("미국 타겟 찾음:", target);
-
-                if (!target) {
-                    alert("미국 대시보드 영역(main.mx-auto)을 찾을 수 없습니다!");
-                    return;
-                }
-
-                // 버튼 비활성화
+                if (!target) return;
                 downloadBtn.disabled = true;
-                downloadBtn.textContent = "캡처 중...";
-
-                // 캡처 실행
+                downloadBtn.textContent = "Capturing...";
                 html2canvas(target, {
                     scale: 2,
                     useCORS: true,
-                    logging: true,
                     backgroundColor: document.documentElement.classList.contains('dark') ? '#101722' : '#f5f7f8',
                     onclone: (clonedDoc) => {
                         const clonedMain = clonedDoc.querySelector('main');
                         if (clonedMain) {
-                            // 캡처본이 꽉 차도록 여백 및 최대 너비 제한 해제
                             clonedMain.style.margin = "0";
                             clonedMain.style.maxWidth = "none";
                             clonedMain.style.width = target.offsetWidth + "px";
@@ -681,473 +482,77 @@
                         }
                     }
                 }).then(canvas => {
-                    console.log("미국 캡처 성공!");
-
-                    // 다운로드
                     const link = document.createElement('a');
-                    const timestamp = new Date().toISOString().slice(0, 10);
-                    link.download = `US_Report_${timestamp}.png`;
+                    link.download = `US_Report_${new Date().toISOString().slice(0, 10)}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-
-                    console.log("미국 다운로드 완료!");
-                }).catch(err => {
-                    console.error("미국 캡처 실패:", err);
-                    alert("미국 리포트 캡처 실패: " + err.message);
                 }).finally(() => {
                     downloadBtn.disabled = false;
                     downloadBtn.innerHTML = originalContent;
                 });
             });
 
-            // Listen for language changes to refresh dynamic content
             window.addEventListener('languageChanged', () => {
                 fetchUSSentiment();
                 updateUSMarketStatus();
                 displayRandomProverb();
             });
 
-            // --- Advisor Display Logic (New) ---
-            const advisorFiles = {
-                gemini: 'gemini_snp_adv_ko_en.html',
-                gpt: 'gpt_snp_adv.html', 
-                grok: 'grok_snp_adv.html'
-            };
-
-            const advisorGeminiBtn = document.getElementById('advisor-gemini');
-            const advisorGptBtn = document.getElementById('advisor-gpt');
-            const advisorGrokBtn = document.getElementById('advisor-grok');
+            // Advisor logic
+            const advisorFiles = { gemini: 'gemini_snp_adv_ko_en.html', gpt: 'gpt_snp_adv.html', grok: 'grok_snp_adv.html' };
+            const advisorButtons = { gemini: document.getElementById('advisor-gemini'), gpt: document.getElementById('advisor-gpt'), grok: document.getElementById('advisor-grok') };
             const advisorAdviceDisplay = document.getElementById('advisor-advice-display');
-            const advisorButtons = [advisorGeminiBtn, advisorGptBtn, advisorGrokBtn];
 
             function updateAdvisorDisplay(activeAdvisor) {
-                // Reset all buttons
-                advisorButtons.forEach(button => {
-                    if (!button) return;
-                    button.classList.remove('bg-primary/10', 'text-primary');
-                    button.classList.add('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                Object.keys(advisorButtons).forEach(id => {
+                    const btn = advisorButtons[id];
+                    if (!btn) return;
+                    btn.className = (id === activeAdvisor) ? 'rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary' : 'rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors';
                 });
-
-                // Set active button
-                const currentActiveButton = document.getElementById(`advisor-${activeAdvisor}`);
-                if (currentActiveButton) {
-                    currentActiveButton.classList.remove('text-[#49699c]', 'hover:bg-slate-100', 'dark:hover:bg-slate-800');
-                    currentActiveButton.classList.add('bg-primary/10', 'text-primary');
-                }
-
-                // Fetch content
                 if (advisorAdviceDisplay) {
-                    const filePath = advisorFiles[activeAdvisor];
-                    fetch(filePath)
-                        .then(response => {
-                            if (!response.ok) throw new Error('File not found');
-                            return response.text();
-                        })
-                        .then(htmlContent => {
-                            advisorAdviceDisplay.innerHTML = htmlContent;
-                        })
-                        .catch(err => {
-                            console.error(`Error loading advisor ${activeAdvisor}:`, err);
-                            advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">${i18n.translate("failed-to-load-advice")}</p>`;
-                        });
+                    fetch(advisorFiles[activeAdvisor]).then(r => r.text()).then(html => { advisorAdviceDisplay.innerHTML = html; }).catch(() => { advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">${i18n.translate("failed-to-load-advice")}</p>`; });
                 }
             }
-
-            if (advisorGeminiBtn) advisorGeminiBtn.addEventListener('click', () => updateAdvisorDisplay('gemini'));
-            if (advisorGptBtn) advisorGptBtn.addEventListener('click', () => updateAdvisorDisplay('gpt'));
-            if (advisorGrokBtn) advisorGrokBtn.addEventListener('click', () => updateAdvisorDisplay('grok'));
-
-            // Initial load
+            if (advisorButtons.gemini) advisorButtons.gemini.addEventListener('click', () => updateAdvisorDisplay('gemini'));
+            if (advisorButtons.gpt) advisorButtons.gpt.addEventListener('click', () => updateAdvisorDisplay('gpt'));
+            if (advisorButtons.grok) advisorButtons.grok.addEventListener('click', () => updateAdvisorDisplay('grok'));
             updateAdvisorDisplay('gemini');
         });
-    </script>
-    <script>
-        // Supabase configuration - Hardcoded for local development
-        const SB_URL = 'https://bksuhgixknsqzzxahuni.supabase.co';
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrc3VoZ2l4a25zcXp6eGFodW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxOTUzNDMsImV4cCI6MjA4NTc3MTM0M30.bivQXNhnNoeWPToLmCmi_Ik74S2_NJg_PuVZe68Vtas';
-        
-        let supabaseClient;
-        try {
-            console.log("Initializing Supabase (Sentiment Page - Hardcoded)...");
-            if (!SB_URL.startsWith('http')) {
-                throw new Error("Supabase URL is not provided.");
-            }
-            const { createClient } = supabase;
-            supabaseClient = createClient(SB_URL, SB_KEY);
-            console.log("Supabase Client initialized successfully.");
-        } catch (e) {
-            console.error("Supabase Initialization Error:", e.message);
-            const btn = document.getElementById('login-button');
-            if (btn) btn.classList.remove('hidden');
-        }
 
-        const loginButton = document.getElementById('login-button');
-        const userProfile = document.getElementById('user-profile');
-        const userAvatar = document.getElementById('user-avatar');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const myAccountBtn = document.getElementById('my-account-btn');
-        const logoutButtonDropdown = document.getElementById('logout-button-dropdown');
-        const accountModal = document.getElementById('account-modal');
-        const closeModal = document.getElementById('close-modal');
-
-        // Dropdown toggle
-        if (userAvatar) {
-            userAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('hidden');
-            });
-        }
-
-        // Close dropdown when clicking outside
-        window.addEventListener('click', () => {
-            if (profileDropdown) profileDropdown.classList.add('hidden');
-        });
-
-        // Modal toggle
-        if (myAccountBtn) {
-            myAccountBtn.addEventListener('click', () => {
-                if (accountModal) accountModal.classList.remove('hidden');
-                if (profileDropdown) profileDropdown.classList.add('hidden');
-                switchTab('overview');
-            });
-        }
-
-        function switchTab(tabId) {
-            const overviewBtn = document.getElementById('nav-overview');
-            const settingsBtn = document.getElementById('nav-settings');
-            const accountBtn = document.getElementById('nav-account');
-            
-            const overviewSection = document.getElementById('section-overview');
-            const settingsSection = document.getElementById('section-settings');
-            const accountSection = document.getElementById('section-account');
-            
-            const modalTitle = document.getElementById('modal-title');
-
-            if (!overviewBtn || !settingsBtn || !accountBtn || !overviewSection || !settingsSection || !accountSection) return;
-
-            // Toggle Content
-            overviewSection.classList.toggle('hidden', tabId !== 'overview');
-            settingsSection.classList.toggle('hidden', tabId !== 'settings');
-            accountSection.classList.toggle('hidden', tabId !== 'account');
-            
-            // Toggle Title
-            if (modalTitle) {
-                modalTitle.setAttribute('data-i18n', tabId);
-                if (window.i18n && typeof i18n.translateElement === 'function') {
-                    i18n.translateElement(modalTitle);
-                }
-            }
-
-            // Toggle Styles
-            const activeStyle = "w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2 transition-colors";
-            const inactiveStyle = "w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors";
-
-            overviewBtn.className = (tabId === 'overview') ? activeStyle : inactiveStyle;
-            settingsBtn.className = (tabId === 'settings') ? activeStyle : inactiveStyle;
-            accountBtn.className = (tabId === 'account') ? activeStyle : inactiveStyle;
-        }
-
-        // Catch clicks even on child elements (icons/text)
-        document.addEventListener('click', function(e) {
-            const overviewClick = e.target.closest('#nav-overview');
-            const settingsClick = e.target.closest('#nav-settings');
-            const accountClick = e.target.closest('#nav-account');
-            
-            if (overviewClick) { e.preventDefault(); switchTab('overview'); }
-            if (settingsClick) { e.preventDefault(); switchTab('settings'); }
-            if (accountClick) { e.preventDefault(); switchTab('account'); }
-        });
-
-        // 회원 탈퇴 이벤트
-        document.getElementById('withdraw-btn')?.addEventListener('click', async () => {
-            if (!confirm(i18n.translate("withdraw-confirm"))) return;
-
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) return;
-
-            const btn = document.getElementById('withdraw-btn');
-            const originalContent = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Processing...</span>`;
-
-            try {
-                const response = await fetch('/api/withdraw', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: user.id })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert(i18n.getLanguage() === 'ko' ? "탈퇴 처리가 완료되었습니다." : "Account has been deleted.");
-                    await supabaseClient.auth.signOut();
-                    window.location.reload();
-                } else {
-                    alert("탈퇴 실패: " + result.error);
-                }
-            } catch (err) {
-                alert("오류 발생: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-            }
-        });
-
-        // 'Send Report to Email' Button Click Logic (Dashboard)
         document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
             const currentLang = document.documentElement.lang || 'ko';
-            
-            // 전송 확인창 추가
             if (!confirm(i18n.translate("send-report-confirm"))) return;
-
             const btn = document.getElementById('send-report-email-btn');
             const originalContent = btn.innerHTML;
-
             const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) {
-                alert(i18n.translate("login-required") || "로그인이 필요합니다.");
-                return;
-            }
-
-            // 현재 언어 버전의 AI 어드바이저 내용만 추출 (중복 방지)
+            if (!user) { alert(i18n.translate("login-required") || "로그인이 필요합니다."); return; }
             const adviceContainer = document.getElementById('advisor-advice-display');
             let filteredAdvice = "";
             if (adviceContainer) {
                 const langDiv = adviceContainer.querySelector(`.lang-${currentLang}`);
                 filteredAdvice = langDiv ? langDiv.innerHTML : adviceContainer.innerHTML;
             }
-
-            // Collect Market Data
             const marketData = {
                 score: document.getElementById('score')?.textContent,
                 status: document.getElementById('status')?.textContent,
                 proverb: document.getElementById('proverb-text')?.textContent,
-                advice: filteredAdvice, // Filtered HTML
-                kospi: {
-                    value: document.getElementById('market-index-value')?.textContent,
-                    change_rate: "",
-                    change_point: "S&P 500 INDEX",
-                    link: "https://www.google.com/finance/quote/.INX:INDEXSP"
-                },
+                advice: filteredAdvice,
+                kospi: { value: document.getElementById('market-index-value')?.textContent, change_rate: "", change_point: "S&P 500 INDEX", link: "https://www.google.com/finance/quote/.INX:INDEXSP" },
                 indicators: []
             };
-
             btn.disabled = true;
             btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Sending...</span>`;
-
             try {
                 const response = await fetch('/api/send-report', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        user_email: user.email, 
-                        language: currentLang,
-                        market_data: marketData,
-                        market: 'us',
-                        test_mode: false 
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert(`${currentLang === 'ko' ? '리포트가 이메일로 발송되었습니다!' : 'Report has been sent to your email!'}`);
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (err) {
-                alert("Error: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-            }
-        });
-
-        if (closeModal) {
-            closeModal.addEventListener('click', () => {
-                accountModal.classList.add('hidden');
-            });
-        }
-
-        // Close modal when clicking background
-        if (accountModal) {
-            accountModal.addEventListener('click', (e) => {
-                if (e.target === accountModal) accountModal.classList.add('hidden');
-            });
-        }
-
-        async function updateAuthState() {
-            if (!supabaseClient) return;
-            
-            try {
-                const { data: { user }, error } = await supabaseClient.auth.getUser();
-                
-                if (user) {
-                    console.log("User session found:", user.email);
-                    loginButton.classList.add('hidden');
-                    userProfile.classList.remove('hidden');
-                    
-                    const avatarUrl = user.user_metadata.avatar_url;
-                    const fullName = user.user_metadata.full_name || 'User';
-                    const email = user.email;
-
-                    if (avatarUrl) {
-                        userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                        document.getElementById('modal-user-avatar').style.backgroundImage = `url('${avatarUrl}')`;
-                    }
-                    
-                    // Update texts in dropdown and modal
-                    document.getElementById('dropdown-user-name').textContent = fullName;
-                    document.getElementById('dropdown-user-email').textContent = email;
-                    document.getElementById('modal-user-name').textContent = fullName;
-                    document.getElementById('modal-user-email').textContent = email;
-
-                    // 구독 상태 체크
-                    checkSubscriptionStatus(user.id);
-
-                } else {
-                    loginButton.classList.remove('hidden');
-                    userProfile.classList.add('hidden');
-                }
-            } catch (err) {
-                loginButton.classList.remove('hidden');
-                userProfile.classList.add('hidden');
-            }
-        }
-
-        async function checkSubscriptionStatus(userId) {
-            const statusText = document.getElementById('subscription-status-text');
-            const subscribeBtn = document.getElementById('subscribe-btn');
-            const cancelBtn = document.getElementById('cancel-subscription-btn');
-
-            if (!statusText || !subscribeBtn || !cancelBtn) return;
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('subscriptions')
-                    .select('status')
-                    .eq('user_id', userId)
-                    .maybeSingle();
-
-                if (data && data.status === 'active') {
-                    statusText.innerHTML = '<span class="text-emerald-500 font-black">구독 중</span> (매일 리포트가 발송됩니다)';
-                    subscribeBtn.classList.add('hidden');
-                    cancelBtn.classList.remove('hidden');
-                } else {
-                    statusText.textContent = i18n.translate("subscription-benefit");
-                    subscribeBtn.classList.remove('hidden');
-                    cancelBtn.classList.add('hidden');
-                }
-            } catch (err) {
-                console.error("Subscription check error:", err);
-            }
-        }
-
-        // 구독 버튼 이벤트
-        document.getElementById('subscribe-btn')?.addEventListener('click', async () => {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) return alert("로그인이 필요합니다.");
-
-            const btn = document.getElementById('subscribe-btn');
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.textContent = "연결 중...";
-
-            try {
-                const response = await fetch('/api/create-checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: user.id, user_email: user.email })
+                    body: JSON.stringify({ user_email: user.email, language: currentLang, market_data: marketData, market: 'us', test_mode: false })
                 });
                 const result = await response.json();
-                if (result.url) {
-                    window.location.href = result.url;
-                } else {
-                    alert("결제 페이지를 불러오지 못했습니다: " + (result.error || "Unknown error"));
-                }
-            } catch (err) {
-                alert("오류가 발생했습니다: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
+                if (result.success) alert(currentLang === 'ko' ? '리포트가 이메일로 발송되었습니다!' : 'Report sent!');
+                else throw new Error(result.error);
+            } catch (err) { alert("Error: " + err.message); } finally { btn.disabled = false; btn.innerHTML = originalContent; }
         });
-
-        // 구독 취소 이벤트
-        document.getElementById('cancel-subscription-btn')?.addEventListener('click', async () => {
-            if (!confirm("정말 구독을 취소하시겠습니까?")) return;
-
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            const btn = document.getElementById('cancel-subscription-btn');
-            btn.disabled = true;
-            btn.textContent = "처리 중...";
-
-            try {
-                const response = await fetch('/api/cancel-subscription', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: user.id })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert("구독이 취소되었습니다.");
-                    window.location.reload();
-                } else {
-                    alert("취소 실패: " + result.error);
-                }
-            } catch (err) {
-                alert("오류 발생: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "구독 취소";
-            }
-        });
-
-        if (loginButton) {
-            loginButton.addEventListener('click', async () => {
-                console.log("Login button clicked.");
-                if (!supabaseClient) {
-                    alert("Supabase configuration missing.");
-                    return;
-                }
-                
-                const { error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        queryParams: {
-                            prompt: 'select_account',
-                            access_type: 'offline',
-                        },
-                        redirectTo: window.location.origin + '/sentiment.html'
-                    }
-                });
-                if (error) {
-                    console.error('OAuth Login Error:', error.message);
-                    alert("Login failed: " + error.message);
-                }
-            });
-        }
-
-        if (logoutButtonDropdown) {
-            logoutButtonDropdown.addEventListener('click', async () => {
-                console.log("Logout button clicked.");
-                const { error } = await supabaseClient.auth.signOut();
-                if (error) {
-                    console.error('Logout Error:', error.message);
-                } else {
-                    console.log("Logout successful.");
-                    profileDropdown.classList.add('hidden');
-                    window.location.reload(); 
-                }
-            });
-        }
-
-        // Initialize auth state
-        if (supabaseClient) {
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                console.log("Auth State Changed Event:", event);
-                updateAuthState();
-            });
-            updateAuthState();
-        }
     </script>
 </body>
 </html>
