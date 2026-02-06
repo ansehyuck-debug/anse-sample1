@@ -22,33 +22,6 @@
 <meta name="twitter:description" content="실시간 KOSPI 공포 탐욕 지수와 AI 시장 리포트를 확인하세요." data-i18n="desc-korea"/>
 <meta name="twitter:image" content="https://anse.ai.kr/images/neutral.png"/>
 
-<!-- Structured Data (JSON-LD) for GEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "anse.ai KOSPI Fear & Greed Index",
-  "url": "https://anse.ai.kr/",
-  "description": "Real-time KOSPI Fear & Greed Index based on market momentum, volatility, and sentiment.",
-  "applicationCategory": "FinanceApplication",
-  "operatingSystem": "All",
-  "author": {
-    "@type": "Organization",
-    "name": "anse.ai"
-  },
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "공포와 탐욕 지수란 무엇인가요?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "투자자들의 심리 상태를 0에서 100 사이의 숫자로 나타낸 지표입니다. 0에 가까울수록 극심한 공포를, 100에 가까울수록 극심한 탐욕을 의미합니다."
-      }
-    }
-  ]
-}
-</script>
-
 <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
 
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -94,34 +67,12 @@
       gtag('js', new Date());
       gtag('config', 'G-C8QR98TVTB');
     </script>
-
-<script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "v2qmp0i82b");
-    </script>
-
-<script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "국내 금융시장 심리",
-      "url": "https://anse.ai.kr/",
-      "description": "한국 주식시장의 공포 탐욕 지수를 확인하고 투자에 참고하세요.",
-      "datePublished": "2026-01-17",
-      "author": {
-        "@type": "Person",
-        "name": "anse"
-      }
-    }
-    </script>
 </head>
 <body class="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200">
     <div id="header-placeholder"></div>
 
 <main class="mx-auto max-w-[1200px] px-6 py-8">
+<!-- Page Heading -->
 <div class="mb-8 flex flex-wrap items-end justify-between gap-8">
 <div class="flex flex-col gap-1">
 <h1 class="text-3xl font-black tracking-tight dark:text-white" data-i18n="market-sentiment-index">Market Sentiment Index</h1>
@@ -134,24 +85,27 @@
 </div>
 
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+<!-- Main Gauge Section -->
 <div class="lg:col-span-8">
 <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-8 shadow-sm">
 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
 <h3 class="text-lg font-bold" data-i18n="current-sentiment">Current Sentiment</h3>
-<span id="last-updated-time" class="text-sm font-medium text-[#49699c]"><span data-i18n="last-updated">마지막 업데이트</span>: 14:30 KST</span>
+<span id="last-updated-time" class="text-sm font-medium text-[#49699c]"><span data-i18n="last-updated">마지막 업데이트</span>: --:--</span>
 </div>
 <div class="relative flex flex-col items-center py-10">
+<!-- Gauge visualization -->
 <div class="relative h-48 w-80 overflow-hidden rounded-t-full bg-slate-100 dark:bg-slate-800">
-<div class="absolute inset-0 gauge-gradient opacity-80" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+<div class="absolute inset-0 gauge-gradient opacity-80"></div>
 <div class="absolute bottom-0 left-1/2 h-32 w-64 -translate-x-1/2 rounded-t-full bg-white dark:bg-[#161f2c]"></div>
-<div class="absolute bottom-0 left-1/2 h-40 w-1 -translate-x-1/2 origin-bottom transition-transform duration-1000 ease-out" id="gauge-needle">
+<!-- Needle -->
+<div class="absolute bottom-0 left-1/2 h-40 w-1 -translate-x-1/2 origin-bottom transition-transform duration-1000 ease-out" id="gauge-needle" style="transform: translateX(-50%) rotate(-90deg);">
 <div class="h-full w-full bg-slate-900 dark:bg-white rounded-full"></div>
 <div class="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-slate-900 dark:bg-white"></div>
 </div>
 </div>
 <div class="mt-6 flex flex-col items-center gap-1">
-<span id="score" class="text-5xl font-black text-primary"></span>
-<span id="status" class="text-2xl font-bold tracking-tight text-primary">GREED</span>
+<span id="score" class="text-5xl font-black text-primary">--</span>
+<span id="status" class="text-2xl font-bold tracking-tight text-primary">NEUTRAL</span>
 </div>
 <div class="mt-10 flex flex-wrap w-full justify-between px-4 gap-3">
 <div class="flex flex-col items-center gap-1">
@@ -170,6 +124,7 @@
 </div>
 </div>
 
+<!-- Index Advisors -->
 <div class="mt-8 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
 <div class="mb-6 flex items-center justify-between gap-2">
 <h3 class="text-lg font-bold" data-i18n="index-advisors">Index Advisors</h3>
@@ -179,88 +134,78 @@
 <button id="advisor-grok" class="rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Grok</button>
 </div>
 </div>
-<div id="advisor-advice-display" class="mt-0 flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] px-2 py-6 md:px-6 shadow-sm">
-    <p class="text-sm dark:text-slate-200" data-i18n="updating">Gemini의 조언 준비중</p>
-</div>
-<div id="index-history-container" class="hidden h-64 w-full relative">
-    <div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#49699c]" data-i18n="preparing-data">Preparing data...</div>
-    <div id="index-history-chart" class="h-full w-full" style="display: none;">
-        <svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
-        <path class="opacity-10" d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
-        <path d="M0 160 Q 100 140, 200 150 T 400 120 T 600 80 T 800 100 T 1000 60" fill="none" stroke="#3d84f5" stroke-linecap="round" stroke-width="3"></path>
-        <defs>
-        <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="#3d84f5"></stop>
-        <stop offset="100%" stop-color="#3d84f5" stop-opacity="0"></stop>
-        </lineargradient>
-        </defs>
-        </svg>
-    </div>
+<div id="advisor-advice-display" class="min-h-[200px] flex flex-col justify-center">
+    <p class="text-sm dark:text-slate-200 text-center" data-i18n="updating">Loading Advisor Advice...</p>
 </div>
 </div>
 </div>
 
+<!-- Sidebar -->
 <div class="lg:col-span-4 flex flex-col gap-6">
-<div class="grid grid-cols-1 gap-4">
+<!-- Proverbs -->
 <div class="flex flex-col gap-4 rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-         <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-4" data-i18n="today-proverb">오늘의 주식 시장 격언</h4>
-        <p id="proverb-text" class="italic text-base text-gray-800 dark:text-gray-200 min-h-[50px] flex items-center justify-center text-center break-keep" style="white-space: pre-wrap;"></p>
-        <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors" data-i18n="new-proverb">새 격언 확인하기</button>
+    <h4 class="text-sm font-bold text-[#49699c] uppercase tracking-wider mb-2" data-i18n="today-proverb">오늘의 주식 시장 격언</h4>
+    <p id="proverb-text" class="italic text-base text-gray-800 dark:text-gray-200 min-h-[60px] flex items-center justify-center text-center break-keep" style="white-space: pre-wrap;"></p>
+    <button id="generate-proverb" class="mt-2 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors" data-i18n="new-proverb">새 격언 확인하기</button>
 </div>
+
+<!-- Market Indicators -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
     <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider" data-i18n="market-indicators">Market Indicators</h4>
-    <div id="dynamic-indicators-container" class="space-y-4"></div>
+    <div id="dynamic-indicators-container" class="space-y-4">
+        <p class="text-xs text-slate-400">Loading indicators...</p>
+    </div>
 </div>
-</div>
+
+<!-- KOSPI Quick View -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-primary text-white p-6 shadow-sm">
 <div class="flex items-center justify-between mb-4">
 <h4 class="text-sm font-bold uppercase tracking-wider">KOSPI</h4>
 <a href="https://finance.naver.com/sise/" target="_blank"><span class="material-symbols-outlined text-white">insights</span></a>
 </div>
 <div class="flex flex-col gap-1">
-<p id="kospi-value" class="text-3xl font-black" data-i18n="loading">Loading...</p>
+<p id="kospi-value" class="text-3xl font-black">----.--</p>
 <div class="flex items-center gap-2">
-<span id="kospi-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded"></span>
-<span id="kospi-change-point" class="text-sm text-white/80"></span>
+<span id="kospi-change-rate" class="text-sm font-bold bg-white/20 px-2 py-0.5 rounded">--.--%</span>
+<span id="kospi-change-point" class="text-sm text-white/80">--.--</span>
 </div>
 </div>
-<p id="kospi-last-updated" class="text-xs text-white/70 mt-2"></p>
+<p id="kospi-last-updated" class="text-xs text-white/70 mt-2">--:--</p>
 </div>
 
+<!-- Actions -->
 <div class="flex flex-wrap gap-4">
-    <button id="how-calculated-button" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-    <span class="material-symbols-outlined text-[18px]">help_outline</span>
-                            <span data-i18n="how-calculated">How it's calculated</span>
-                        </button>
-    <button id="download-btn" class="flex items-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
-    <span class="material-symbols-outlined text-[18px]">download</span>
-                            <span data-i18n="export-data">Export Data</span>
-                        </button>
-    <button id="send-report-email-btn" class="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20">
+    <button id="how-calculated-button" class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+        <span class="material-symbols-outlined text-[18px]">help_outline</span>
+        <span data-i18n="how-calculated">How it's calculated</span>
+    </button>
+    <button id="download-btn" class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-[#e7ecf4] dark:bg-slate-800 px-4 py-2 text-sm font-bold text-[#0d131c] dark:text-white hover:opacity-80">
+        <span class="material-symbols-outlined text-[18px]">download</span>
+        <span data-i18n="export-data">Export Data</span>
+    </button>
+</div>
+<button id="send-report-email-btn" class="w-full flex items-center justify-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20">
     <span class="material-symbols-outlined text-[18px]">mail</span>
-                            <span data-i18n="send-report-email">리포트 이메일로 보내기</span>
-                        </button>
-    </div>
+    <span data-i18n="send-report-email">리포트 이메일로 보내기</span>
+</button>
 </div>
 </div>
 
-<div id="indicator-explanation-section" style="display: none;" class="mt-8">
-<h2 class="text-2xl font-bold mb-4 dark:text-white" data-i18n="exp-title-korea">지표별 계산 방식 및 스케일링</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- 지표 설명 섹션들... -->
-    <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
-        <h3 class="text-lg font-bold mb-2" data-i18n="exp-1-title">1. KOSPI vs 125일 이평선 이격도</h3>
-        <p class="text-sm text-[#49699c] dark:text-slate-400 mb-2" data-i18n="exp-1-desc">시장 모멘텀 분석...</p>
+<!-- Calculation Logic Section (Hidden by default) -->
+<div id="indicator-explanation-section" style="display: none;" class="mt-12">
+    <h2 class="text-2xl font-bold mb-6 dark:text-white" data-i18n="exp-title-korea">지표별 계산 방식 및 스케일링</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="flex flex-col overflow-hidden rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+            <h3 class="text-lg font-bold mb-2" data-i18n="exp-1-title">1. KOSPI vs 125일 이평선 이격도</h3>
+            <p class="text-sm text-[#49699c] dark:text-slate-400" data-i18n="exp-1-desc">코스피 지수가 125일 이동평균선과 얼마나 떨어져 있는지를 나타내는 지표입니다.</p>
+        </div>
+        <!-- More explanations... -->
     </div>
-    <!-- (나머지 지표들 생략 - 원본 구조 유지) -->
-</div>
 </div>
 
-<footer class="mt-12 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
+<footer class="mt-16 border-t border-[#e7ecf4] dark:border-[#1e293b] pt-8 pb-12">
 <div class="flex flex-wrap items-center justify-between gap-6 text-[#49699c] dark:text-slate-500">
-<div class="flex flex-col gap-2">
 <p class="text-sm font-medium dark:text-white" data-i18n="footer-desc-korea">Data provided by KRX and KOFIA.</p>
-</div>
 <div class="flex flex-wrap gap-4">
     <a href="/about.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="about-us">서비스 소개</a>
     <a href="/terms.html" class="text-xs font-bold hover:text-primary transition-colors" data-i18n="terms-of-service">이용약관</a>
@@ -273,110 +218,176 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script>
-      const firebaseConfig = {
+    const firebaseConfig = {
         apiKey: "AIzaSyBumYJj1X1KrjwjWTZhGuO0B-xZJj1fLsE",
         authDomain: "anse-sample1-46739525-2d1c0.firebaseapp.com",
         projectId: "anse-sample1-46739525-2d1c0",
         storageBucket: "anse-sample1-46739525-2d1c0.firebasestorage.app",
         messagingSenderId: "164266713411",
         appId: "1:164266713411:web:31e470b1a7320aa6028ff6"
-      };
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-      // 메인 기능들... (Gauge, KOSPI Status, Fetch 등)
-      function updateGauge(score) {
-          const needle = document.getElementById('gauge-needle');
-          const scoreDisplay = document.getElementById('score');
-          const statusEl = document.getElementById('status');
-          const deg = (score / 100) * 180 - 90;
-          if(needle) needle.style.transform = `translateX(-50%) rotate(${deg}deg)`;
-          if(scoreDisplay) scoreDisplay.textContent = score;
-          
-          let color = "text-primary";
-          let key = "neutral";
-          if (score <= 25) { color = "text-red-500"; key = "extreme-fear"; }
-          else if (score <= 45) { color = "text-orange-500"; key = "fear"; }
-          else if (score >= 75) { color = "text-blue-500"; key = "extreme-greed"; }
-          else if (score >= 55) { color = "text-emerald-500"; key = "greed"; }
+    function updateGauge(score) {
+        const needle = document.getElementById('gauge-needle');
+        const scoreDisplay = document.getElementById('score');
+        const sentimentText = document.getElementById('status');
+        const rotation = (score / 100) * 180 - 90;
+        if(needle) needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        if(scoreDisplay) scoreDisplay.textContent = score;
 
-          scoreDisplay?.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
-          scoreDisplay?.classList.add(color);
-          if(statusEl) {
-              statusEl.textContent = i18n.translate(key).toUpperCase();
-              statusEl.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
-              statusEl.classList.add(color);
-          }
-      }
+        let color = "text-primary";
+        let statusKey = "neutral";
+        if (score <= 25) { color = "text-red-500"; statusKey = "extreme-fear"; }
+        else if (score <= 45) { color = "text-orange-500"; statusKey = "fear"; }
+        else if (score >= 75) { color = "text-blue-500"; statusKey = "extreme-greed"; }
+        else if (score >= 55) { color = "text-emerald-500"; statusKey = "greed"; }
 
-      function updateKOSPIStatus() {
-          const txt = document.getElementById('market-status-text');
-          const dot = document.getElementById('market-status-dot');
-          // 단순화된 로직
-          if(txt) txt.textContent = i18n.translate("market-open");
-      }
+        [scoreDisplay, sentimentText].forEach(el => {
+            if(el) {
+                el.classList.remove("text-red-500", "text-orange-500", "text-yellow-500", "text-emerald-500", "text-blue-500", "text-primary");
+                el.classList.add(color);
+                if(el === sentimentText) el.textContent = i18n.translate(statusKey).toUpperCase();
+            }
+        });
+    }
 
-      async function fetchLatestIndex() {
-          try {
-              const snap = await db.collection("korea_index").orderBy("timestamp", "desc").limit(1).get();
-              if (!snap.empty) {
-                  const data = snap.docs[0].data();
-                  updateGauge(data.score);
-                  document.getElementById('kospi-value').textContent = data.kospi_value.toFixed(2);
-                  // 지표 렌더링 로직...
-              }
-          } catch(e) { console.error(e); }
-      }
+    function updateKOSPIStatus() {
+        const now = new Date();
+        const hour = now.getUTCHours() + 9; // KST
+        const min = now.getUTCMinutes();
+        const isWeekday = now.getUTCDay() >= 1 && now.getUTCDay() <= 5;
+        const isMarketOpen = isWeekday && (hour > 9 || (hour === 9 && min >= 0)) && (hour < 15 || (hour === 15 && min <= 30));
 
-      document.addEventListener('DOMContentLoaded', () => {
-          fetchLatestIndex();
-          updateKOSPIStatus();
-          
-          document.getElementById('generate-proverb')?.addEventListener('click', () => {
-              const p = proverbs[i18n.getLanguage()] || proverbs.en;
-              document.getElementById('proverb-text').textContent = p[Math.floor(Math.random()*p.length)];
-          });
+        const txt = document.getElementById('market-status-text');
+        const dot = document.getElementById('market-status-dot');
+        const ind = document.getElementById('market-status-indicator');
 
-          // Advisor Toggle
-          ['gemini', 'gpt', 'grok'].forEach(adv => {
-              document.getElementById(`advisor-${adv}`)?.addEventListener('click', () => {
-                  fetch(`${adv}_adv_ko_en.html`).then(r => r.text()).then(h => {
-                      document.getElementById('advisor-advice-display').innerHTML = h;
-                  });
-              });
-          });
+        if (!txt || !dot || !ind) return;
 
-          window.addEventListener('languageChanged', fetchLatestIndex);
-      });
+        if (isMarketOpen) {
+            txt.textContent = i18n.translate("market-open");
+            dot.className = "h-2 w-2 rounded-full bg-emerald-500 animate-pulse";
+            ind.className = "flex items-center gap-2 rounded-full px-6 py-2 text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
+        } else {
+            txt.textContent = i18n.translate("market-closed");
+            dot.className = "h-2 w-2 rounded-full bg-red-500";
+            ind.className = "flex items-center gap-2 rounded-full px-6 py-2 text-xs font-bold bg-slate-200/60 dark:bg-slate-800/90 text-slate-400 dark:text-slate-400";
+        }
+    }
+
+    async function fetchLatestIndex() {
+        try {
+            const querySnapshot = await db.collection("korea_index").orderBy("timestamp", "desc").limit(1).get();
+            if (querySnapshot.empty) return;
+            const doc = querySnapshot.docs[0].data();
+            
+            updateGauge(doc.score);
+            
+            // KOSPI Value
+            document.getElementById('kospi-value').textContent = doc.kospi_value.toFixed(2);
+            document.getElementById('kospi-change-rate').textContent = `${doc.kospi_change_rate > 0 ? '+' : ''}${doc.kospi_change_rate.toFixed(2)}%`;
+            document.getElementById('kospi-change-point').textContent = `${doc.kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(doc.kospi_change_point).toFixed(2)}`;
+            
+            const time = doc.timestamp.toDate().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('last-updated-time').innerHTML = `<span data-i18n="last-updated">${i18n.translate("last-updated")}</span>: ${time}`;
+            document.getElementById('kospi-last-updated').textContent = time;
+
+            // Dynamic Indicators
+            const container = document.getElementById('dynamic-indicators-container');
+            container.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const val = doc[`indicator${i}`];
+                if(val === undefined) continue;
+                let color = "bg-primary";
+                if(val <= 45) color = "bg-orange-400";
+                if(val <= 25) color = "bg-red-400";
+                
+                container.innerHTML += `
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-xs font-bold">
+                            <span class="dark:text-white">${i18n.translate(`indicator${i}`)}</span>
+                            <span>${val.toFixed(2)}</span>
+                        </div>
+                        <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+                            <div class="h-full rounded-full ${color}" style="width: ${val}%;"></div>
+                        </div>
+                    </div>`;
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function displayRandomProverb() {
+        const list = proverbs[i18n.getLanguage()] || proverbs.en;
+        const text = list[Math.floor(Math.random() * list.length)];
+        document.getElementById('proverb-text').textContent = text;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchLatestIndex();
+        displayRandomProverb();
+        updateKOSPIStatus();
+        
+        document.getElementById('generate-proverb')?.addEventListener('click', displayRandomProverb);
+        document.getElementById('how-calculated-button')?.addEventListener('click', () => {
+            const sec = document.getElementById('indicator-explanation-section');
+            sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+            if(sec.style.display === 'block') sec.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Advisors
+        const updateAdvisor = (id) => {
+            fetch(`${id}_adv_ko_en.html`).then(r => r.text()).then(html => {
+                document.getElementById('advisor-advice-display').innerHTML = html;
+                ['gemini', 'gpt', 'grok'].forEach(a => {
+                    const btn = document.getElementById(`advisor-${a}`);
+                    btn.className = (a === id) ? "rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary" : "rounded-md px-3 py-1 text-xs font-bold text-[#49699c] hover:bg-slate-100 dark:hover:bg-slate-800";
+                });
+            });
+        };
+        ['gemini', 'gpt', 'grok'].forEach(id => document.getElementById(`advisor-${id}`)?.addEventListener('click', () => updateAdvisor(id)));
+        updateAdvisor('gemini');
+
+        window.addEventListener('languageChanged', () => {
+            fetchLatestIndex();
+            displayRandomProverb();
+            updateKOSPIStatus();
+        });
+    });
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // 캡처 기능
     document.getElementById('download-btn')?.addEventListener('click', async () => {
         if (typeof html2canvas === 'undefined') return;
-        const target = document.querySelector('main');
-        const canvas = await html2canvas(target, { scale: 2, useCORS: true });
-        const link = document.createElement('a');
-        link.download = `anse-report-${new Date().getTime()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
+        const btn = document.getElementById('download-btn');
+        const original = btn.innerHTML;
+        btn.disabled = true; btn.textContent = "...";
+        try {
+            const canvas = await html2canvas(document.querySelector('main'), { scale: 2, useCORS: true });
+            const link = document.createElement('a');
+            link.download = `anse-report-${new Date().getTime()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        } finally { btn.disabled = false; btn.innerHTML = original; }
     });
 
-    // 이메일 전송 기능
     document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
-        if (!window.supabaseClient) return alert("Supabase loading...");
+        if (!window.supabaseClient) return;
         const { data: { user } } = await window.supabaseClient.auth.getUser();
         if (!user) return alert(i18n.translate("login-required"));
-
-        const response = await fetch('/api/send-report', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_email: user.email, market: 'korea' })
-        });
-        if ((await response.json()).success) alert("Sent!");
+        
+        const btn = document.getElementById('send-report-email-btn');
+        btn.disabled = true;
+        try {
+            const res = await fetch('/api/send-report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_email: user.email, market: 'korea' })
+            });
+            if((await res.json()).success) alert("Sent!");
+        } finally { btn.disabled = false; }
     });
-});
 </script>
 <script src="header.js"></script>
 </body>
