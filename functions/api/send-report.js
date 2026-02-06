@@ -11,7 +11,7 @@ export async function onRequest(context) {
 
   if (request.method === "POST") {
     try {
-      const { user_email, language, market_data, test_mode } = await request.json();
+      const { user_email, language, market_data, test_mode, market } = await request.json();
       const RESEND_API_KEY = env.RESEND_API_KEY;
 
       if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is missing.");
@@ -23,7 +23,6 @@ export async function onRequest(context) {
         htmlContent = `<h1>${language === 'ko' ? '안녕' : 'Hello'}</h1>`;
       } else {
         // [Real Report Mode]
-        const { market } = await request.json(); // Re-read to get market
         const isUS = market === 'us';
         const marketName = isUS ? "S&P 500" : "KOSPI";
         
