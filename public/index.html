@@ -239,10 +239,10 @@
 
         let color = "text-primary";
         let statusKey = "neutral";
-        if (score <= 25) { color = "text-red-500"; statusKey = "extreme-fear"; }
-        else if (score <= 45) { color = "text-orange-500"; statusKey = "fear"; }
-        else if (score >= 75) { color = "text-blue-500"; statusKey = "extreme-greed"; }
-        else if (score >= 55) { color = "text-emerald-500"; statusKey = "greed"; }
+        if (score < 20) { color = "text-red-500"; statusKey = "extreme-fear"; }
+        else if (score < 40) { color = "text-orange-500"; statusKey = "fear"; }
+        else if (score >= 80) { color = "text-blue-500"; statusKey = "extreme-greed"; }
+        else if (score >= 60) { color = "text-emerald-500"; statusKey = "greed"; }
 
         [scoreDisplay, sentimentText].forEach(el => {
             if(el) {
