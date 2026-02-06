@@ -11,7 +11,7 @@
   # Sets environment variables in the workspace
   env = {
     NEXT_PUBLIC_SUPABASE_URL = "https://bksuhgixknsqzzxahuni.supabase.co";
-    NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_K47Ui76Xyb5hqjAOqJsbYg_u0ZFJTdf";
+    NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrc3VoZ2l4a25zcXp6eGFodW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxOTUzNDMsImV4cCI6MjA4NTc3MTM0M30.bivQXNhnNoeWPToLmCmi_Ik74S2_NJg_PuVZe68Vtas";
   };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
