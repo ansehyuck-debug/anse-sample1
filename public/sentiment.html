@@ -623,38 +623,51 @@
             });
 
             document.getElementById('download-btn').addEventListener('click', function() {
-                console.log("=== US DOWNLOAD BUTTON CLICKED ===");
-                alert("미국 시장 리포트 캡처를 시작합니다.");
+                console.log("미국 시장 버튼 클릭됨!");
+                const downloadBtn = document.getElementById('download-btn');
+                const originalContent = downloadBtn.innerHTML;
 
-                const target = document.querySelector('main'); 
-                if (!target) {
-                    console.error("Target 'main' element not found in US page!");
+                // html2canvas가 로드되었는지 확인
+                if (typeof html2canvas === 'undefined') {
+                    alert("html2canvas 라이브러리가 로드되지 않았습니다!");
                     return;
                 }
 
-                const btn = document.getElementById('download-btn');
-                const originalContent = btn.innerHTML;
-                btn.disabled = true;
+                const target = document.querySelector('main');
+                console.log("미국 타겟 찾음:", target);
 
+                if (!target) {
+                    alert("main 요소를 찾을 수 없습니다!");
+                    return;
+                }
+
+                // 버튼 비활성화
+                downloadBtn.disabled = true;
+                downloadBtn.textContent = "캡처 중...";
+
+                // 캡처 실행
                 html2canvas(target, {
-                    useCORS: true,
                     scale: 2,
-                    backgroundColor: "#f8f9fa",
-                    logging: true,
+                    useCORS: true,
+                    logging: true,  // 콘솔에 상세 로그 출력
+                    backgroundColor: document.documentElement.classList.contains('dark') ? '#101722' : '#f5f7f8'
                 }).then(canvas => {
-                    console.log("US Canvas generated successfully");
-                    const dataUrl = canvas.toDataURL('image/png');
+                    console.log("미국 캡처 성공!");
+
+                    // 다운로드
                     const link = document.createElement('a');
-                    link.download = `us_report_${Date.now()}.png`;
-                    link.href = dataUrl;
+                    const timestamp = new Date().toISOString().slice(0, 10);
+                    link.download = `US_Report_${timestamp}.png`;
+                    link.href = canvas.toDataURL('image/png');
                     link.click();
-                    console.log("US Download triggered");
+
+                    console.log("미국 다운로드 완료!");
                 }).catch(err => {
-                    console.error("US html2canvas error:", err);
-                    alert("미국 리포트 저장 에러: " + err.message);
+                    console.error("미국 캡처 실패:", err);
+                    alert("미국 리포트 캡처 실패: " + err.message);
                 }).finally(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalContent;
                 });
             });
 
