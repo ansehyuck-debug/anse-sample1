@@ -196,6 +196,10 @@
                     <span class="material-symbols-outlined text-sm">settings</span>
                     <span data-i18n="settings">Settings</span>
                 </button>
+                <button id="nav-account" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    <span data-i18n="account">Account</span>
+                </button>
             </nav>
         </aside>
         <!-- Main Content -->
@@ -254,6 +258,21 @@
                                     <input type="radio" name="report-lang" value="en" class="w-4 h-4 text-primary border-slate-300 focus:ring-primary">
                                     <span class="text-sm font-medium dark:text-slate-300 group-hover:text-primary transition-colors">영어 (English)</span>
                                 </label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="section-account" class="hidden flex flex-col gap-8">
+                    <section class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-2">
+                            <h5 class="font-bold dark:text-white" data-i18n="account">계정</h5>
+                            <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="withdraw-desc">회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
+                            <div class="mt-4">
+                                <button id="withdraw-btn" class="px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">person_remove</span>
+                                    <span data-i18n="withdraw">탈퇴하기</span>
+                                </button>
                             </div>
                         </div>
                     </section>
@@ -1296,21 +1315,24 @@
         function switchTab(tabId) {
             const overviewSection = document.getElementById('section-overview');
             const settingsSection = document.getElementById('section-settings');
+            const accountSection = document.getElementById('section-account');
+            
             const overviewBtn = document.getElementById('nav-overview');
             const settingsBtn = document.getElementById('nav-settings');
+            const accountBtn = document.getElementById('nav-account');
+            
             const modalTitle = document.getElementById('modal-title');
 
-            if (!overviewSection || !settingsSection || !overviewBtn || !settingsBtn) return;
+            if (!overviewSection || !settingsSection || !accountSection || !overviewBtn || !settingsBtn || !accountBtn) return;
 
-            const isOverview = tabId === 'overview';
-            
             // Toggle Sections
-            overviewSection.classList.toggle('hidden', !isOverview);
-            settingsSection.classList.toggle('hidden', isOverview);
+            overviewSection.classList.toggle('hidden', tabId !== 'overview');
+            settingsSection.classList.toggle('hidden', tabId !== 'settings');
+            accountSection.classList.toggle('hidden', tabId !== 'account');
             
-            // Update Title & i18n (Keep multi-language support)
+            // Update Title & i18n
             if (modalTitle) {
-                modalTitle.setAttribute('data-i18n', isOverview ? 'overview' : 'settings');
+                modalTitle.setAttribute('data-i18n', tabId);
                 if (window.i18n && typeof i18n.translateElement === 'function') {
                     i18n.translateElement(modalTitle);
                 }
@@ -1320,21 +1342,27 @@
             const activeClasses = ['bg-primary', 'text-white'];
             const inactiveClasses = ['text-[#49699c]', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-800'];
 
-            if (isOverview) {
-                activeClasses.forEach(c => overviewBtn.classList.add(c));
-                inactiveClasses.forEach(c => overviewBtn.classList.remove(c));
-                activeClasses.forEach(c => settingsBtn.classList.remove(c));
-                inactiveClasses.forEach(c => settingsBtn.classList.add(c));
-            } else {
-                activeClasses.forEach(c => settingsBtn.classList.add(c));
-                inactiveClasses.forEach(c => settingsBtn.classList.remove(c));
-                activeClasses.forEach(c => overviewBtn.classList.remove(c));
-                inactiveClasses.forEach(c => overviewBtn.classList.add(c));
-            }
+            const btns = {
+                overview: overviewBtn,
+                settings: settingsBtn,
+                account: accountBtn
+            };
+
+            Object.keys(btns).forEach(id => {
+                const btn = btns[id];
+                if (id === tabId) {
+                    activeClasses.forEach(c => btn.classList.add(c));
+                    inactiveClasses.forEach(c => btn.classList.remove(c));
+                } else {
+                    activeClasses.forEach(c => btn.classList.remove(c));
+                    inactiveClasses.forEach(c => btn.classList.add(c));
+                }
+            });
         }
 
         document.getElementById('nav-overview')?.addEventListener('click', () => switchTab('overview'));
         document.getElementById('nav-settings')?.addEventListener('click', () => switchTab('settings'));
+        document.getElementById('nav-account')?.addEventListener('click', () => switchTab('account'));
 
         // 'Send Report to Email' Button Click Logic (Dashboard)
         document.getElementById('send-report-email-btn')?.addEventListener('click', async () => {
@@ -1549,6 +1577,40 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = "구독 취소";
+            }
+        });
+
+        // 회원 탈퇴 이벤트
+        document.getElementById('withdraw-btn')?.addEventListener('click', async () => {
+            if (!confirm(i18n.translate("withdraw-confirm"))) return;
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return;
+
+            const btn = document.getElementById('withdraw-btn');
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Processing...</span>`;
+
+            try {
+                const response = await fetch('/api/withdraw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: user.id })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(i18n.getLanguage() === 'ko' ? "탈퇴 처리가 완료되었습니다." : "Account has been deleted.");
+                    await supabaseClient.auth.signOut();
+                    window.location.reload();
+                } else {
+                    alert("탈퇴 실패: " + result.error);
+                }
+            } catch (err) {
+                alert("오류 발생: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
             }
         });
 

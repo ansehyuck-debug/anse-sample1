@@ -116,9 +116,13 @@
         <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
             <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
             <nav class="space-y-1">
-                <button class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
+                <button id="nav-overview" class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">grid_view</span>
                     <span data-i18n="overview">Overview</span>
+                </button>
+                <button id="nav-account" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    <span data-i18n="account">Account</span>
                 </button>
             </nav>
         </aside>
@@ -267,9 +271,64 @@
 
     if (userAvatar) userAvatar.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
     window.addEventListener('click', () => { if (profileDropdown) profileDropdown.classList.add('hidden'); });
-    if (myAccountBtn) myAccountBtn.addEventListener('click', () => { accountModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); });
+    if (myAccountBtn) myAccountBtn.addEventListener('click', () => { accountModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); switchTab('overview'); });
     if (closeModal) closeModal.addEventListener('click', () => accountModal.classList.add('hidden'));
     if (accountModal) accountModal.addEventListener('click', (e) => { if (e.target === accountModal) accountModal.classList.add('hidden'); });
+
+    function switchTab(tabId) {
+        const overviewBtn = document.getElementById('nav-overview');
+        const accountBtn = document.getElementById('nav-account');
+        const overviewSection = document.getElementById('section-overview');
+        const accountSection = document.getElementById('section-account');
+        const modalTitle = document.getElementById('modal-title');
+
+        if (!overviewBtn || !accountBtn || !overviewSection || !accountSection) return;
+
+        overviewSection.classList.toggle('hidden', tabId !== 'overview');
+        accountSection.classList.toggle('hidden', tabId !== 'account');
+
+        if (modalTitle) {
+            modalTitle.setAttribute('data-i18n', tabId);
+            if (window.i18n && typeof i18n.translateElement === 'function') {
+                i18n.translateElement(modalTitle);
+            }
+        }
+
+        const activeStyle = "w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2 transition-colors";
+        const inactiveStyle = "w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors";
+
+        overviewBtn.className = (tabId === 'overview') ? activeStyle : inactiveStyle;
+        accountBtn.className = (tabId === 'account') ? activeStyle : inactiveStyle;
+    }
+
+    document.addEventListener('click', function(e) {
+        const overviewClick = e.target.closest('#nav-overview');
+        const accountClick = e.target.closest('#nav-account');
+        if (overviewClick) { e.preventDefault(); switchTab('overview'); }
+        if (accountClick) { e.preventDefault(); switchTab('account'); }
+    });
+
+    document.getElementById('withdraw-btn')?.addEventListener('click', async () => {
+        if (!confirm(i18n.translate("withdraw-confirm"))) return;
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+        const btn = document.getElementById('withdraw-btn');
+        btn.disabled = true;
+        try {
+            const response = await fetch('/api/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert(i18n.getLanguage() === 'ko' ? "탈퇴 처리가 완료되었습니다." : "Account has been deleted.");
+                await supabaseClient.auth.signOut();
+                window.location.reload();
+            } else { alert("탈퇴 실패."); }
+        } catch (err) { alert("오류 발생."); }
+        finally { btn.disabled = false; }
+    });
 
     async function updateAuthState() {
         if (!supabaseClient) return;

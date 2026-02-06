@@ -116,22 +116,27 @@
         <aside class="w-full md:w-48 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-[#e7ecf4] dark:border-[#1e293b] p-4">
             <h3 class="text-xs font-black text-[#49699c] uppercase tracking-widest mb-4 px-2" data-i18n="my-account">My Account</h3>
             <nav class="space-y-1">
-                <button class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
+                <button id="nav-overview" class="w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">grid_view</span>
                     <span data-i18n="overview">Overview</span>
+                </button>
+                <button id="nav-account" class="w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    <span data-i18n="account">Account</span>
                 </button>
             </nav>
         </aside>
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="p-6 flex items-center justify-between border-b border-[#e7ecf4] dark:border-[#1e293b]">
-                <h2 class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
+                <h2 id="modal-title" class="text-xl font-bold dark:text-white" data-i18n="overview">Overview</h2>
                 <button id="close-modal" class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <span class="material-symbols-outlined dark:text-white">close</span>
                 </button>
             </header>
             <main class="flex-1 p-8 overflow-y-auto">
-                <div class="flex flex-col gap-8">
+                <!-- Overview Section -->
+                <div id="section-overview" class="flex flex-col gap-8">
                     <!-- User Profile Info -->
                     <section class="flex items-center gap-4">
                         <div id="modal-user-avatar" class="h-16 w-16 rounded-full bg-cover bg-center ring-4 ring-primary/10"></div>
@@ -155,6 +160,21 @@
                                 <button id="cancel-subscription-btn" class="hidden w-fit px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
                                     <span class="material-symbols-outlined text-sm">cancel</span>
                                     <span>구독 취소</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="section-account" class="hidden flex flex-col gap-8">
+                    <section class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-2">
+                            <h5 class="font-bold dark:text-white" data-i18n="account">계정</h5>
+                            <p class="text-xs text-[#49699c] dark:text-slate-400" data-i18n="withdraw-desc">회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
+                            <div class="mt-4">
+                                <button id="withdraw-btn" class="px-6 py-2.5 bg-red-500 text-white text-sm font-black rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">person_remove</span>
+                                    <span data-i18n="withdraw">탈퇴하기</span>
                                 </button>
                             </div>
                         </div>
@@ -280,9 +300,64 @@
 
     if (userAvatar) userAvatar.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
     window.addEventListener('click', () => { if (profileDropdown) profileDropdown.classList.add('hidden'); });
-    if (myAccountBtn) myAccountBtn.addEventListener('click', () => { accountModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); });
+    if (myAccountBtn) myAccountBtn.addEventListener('click', () => { accountModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); switchTab('overview'); });
     if (closeModal) closeModal.addEventListener('click', () => accountModal.classList.add('hidden'));
     if (accountModal) accountModal.addEventListener('click', (e) => { if (e.target === accountModal) accountModal.classList.add('hidden'); });
+
+    function switchTab(tabId) {
+        const overviewBtn = document.getElementById('nav-overview');
+        const accountBtn = document.getElementById('nav-account');
+        const overviewSection = document.getElementById('section-overview');
+        const accountSection = document.getElementById('section-account');
+        const modalTitle = document.getElementById('modal-title');
+
+        if (!overviewBtn || !accountBtn || !overviewSection || !accountSection) return;
+
+        overviewSection.classList.toggle('hidden', tabId !== 'overview');
+        accountSection.classList.toggle('hidden', tabId !== 'account');
+
+        if (modalTitle) {
+            modalTitle.setAttribute('data-i18n', tabId);
+            if (window.i18n && typeof i18n.translateElement === 'function') {
+                i18n.translateElement(modalTitle);
+            }
+        }
+
+        const activeStyle = "w-full text-left px-3 py-2 rounded-lg bg-primary text-white text-sm font-bold flex items-center gap-2 transition-colors";
+        const inactiveStyle = "w-full text-left px-3 py-2 rounded-lg text-[#49699c] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold flex items-center gap-2 transition-colors";
+
+        overviewBtn.className = (tabId === 'overview') ? activeStyle : inactiveStyle;
+        accountBtn.className = (tabId === 'account') ? activeStyle : inactiveStyle;
+    }
+
+    document.addEventListener('click', function(e) {
+        const overviewClick = e.target.closest('#nav-overview');
+        const accountClick = e.target.closest('#nav-account');
+        if (overviewClick) { e.preventDefault(); switchTab('overview'); }
+        if (accountClick) { e.preventDefault(); switchTab('account'); }
+    });
+
+    document.getElementById('withdraw-btn')?.addEventListener('click', async () => {
+        if (!confirm(i18n.translate("withdraw-confirm"))) return;
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+        const btn = document.getElementById('withdraw-btn');
+        btn.disabled = true;
+        try {
+            const response = await fetch('/api/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert(i18n.getLanguage() === 'ko' ? "탈퇴 처리가 완료되었습니다." : "Account has been deleted.");
+                await supabaseClient.auth.signOut();
+                window.location.reload();
+            } else { alert("탈퇴 실패."); }
+        } catch (err) { alert("오류 발생."); }
+        finally { btn.disabled = false; }
+    });
 
     async function updateAuthState() {
         if (!supabaseClient) return;
