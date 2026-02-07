@@ -150,7 +150,7 @@ const translations = {
         "refund-section-1-t": "구독 및 결제 안내",
         "refund-section-1-d": "'anse.ai.kr'의 유료 서비스는 선불 구독 방식으로 결제됩니다. 구독 기간 중 제공되는 리포트 서비스의 특성상 아래와 같은 환불 원칙을 적용합니다.",
         "refund-section-2-t": "환불 규정",
-        "refund-li1": "결제 후 7일 이내 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.",
+        "refund-li1": "결제 후 7일 이이 (미이용 시): 구독 결제 후 7일 이내에 리포트 수신 등 서비스를 이용하지 않았을 경우 전액 환불이 가능합니다.",
         "refund-li2": "구독 중도 해지: 구독 기간 중간에 해지를 요청하실 경우, 이미 발송된 리포트와 이용 기간에 해당하는 금액을 일할 계산하여 공제한 후 잔여 금액을 환불해 드립니다.",
         "refund-li3": "환불 불가 사유: 디지털 콘텐츠 및 리포트 서비스의 특성상, 이미 수신한 정보에 대해서는 환불이 제한될 수 있습니다.",
         "refund-section-3-t": "해지 방법",
@@ -204,7 +204,7 @@ const translations = {
         "vix": "VIX 지수",
         "payems": "비농업 고용",
         "unrate": "실업률",
-        "dgs10": "10년물 국채 수익률",
+        "dgs10": "10년물 금리",
         "sp500": "S&P 500 지수"
     },
     en: {
@@ -408,11 +408,11 @@ const translations = {
         "how-to-us-step-2-d": "Search for market bottoms by observing index changes during VIX spikes.",
         "how-to-us-step-3-t": "Step 3: Observe Global Capital Flows",
         "how-to-us-step-3-d": "In extreme greed zones, diversify risks through global asset allocation strategies.",
-        "fedfunds": "Fed Funds Rate",
-        "vix": "VIX Index",
-        "payems": "Non-farm Payrolls",
-        "unrate": "Unemployment Rate",
-        "dgs10": "10-Year Treasury Yield",
-        "sp500": "S&P 500 Index"
+        "fedfunds": "FED FUNDS RATE",
+        "vix": "VIX INDEX",
+        "payems": "NON-FARM JOBS",
+        "unrate": "UNEMPLOYMENT",
+        "dgs10": "10Y TREASURY",
+        "sp500": "S&P 500 INDEX"
     }
 };
