@@ -420,9 +420,19 @@
                     if (quoteEl) quoteEl.textContent = quoteText;
                     
                     if (data.last_update) {
-                        const timeSuffix = i18n.translate("time-suffix");
+                        const dateObj = data.last_update.toDate ? data.last_update.toDate() : new Date(data.last_update);
+                        const currentLang = i18n.getLanguage();
+                        const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+                        const time = dateObj.toLocaleString(locale, { 
+                            year: 'numeric', 
+                            month: '2-digit', 
+                            day: '2-digit', 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            hour12: true 
+                        }) + ' ' + i18n.translate("time-suffix");
                         const lastUpdatedLabel = i18n.translate("last-updated");
-                        lastUpdatedEl.innerHTML = `<span data-i18n="last-updated">${lastUpdatedLabel}</span>: ${data.last_update} ${timeSuffix}`;
+                        lastUpdatedEl.innerHTML = `<span data-i18n="last-updated">${lastUpdatedLabel}</span>: ${time}`;
                     }
                 } else {
                     if (quoteEl) quoteEl.textContent = i18n.translate("preparing-advice");

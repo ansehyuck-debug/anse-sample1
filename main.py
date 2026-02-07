@@ -133,7 +133,7 @@ def update_fng():
         doc_ref.set({
             'value': index_data.value,
             'description': index_data.description,
-            'last_update': str(index_data.last_update)
+            'last_update': index_data.last_update
         })
         print(f"CNN FNG 업데이트 완료: {index_data.value}")
 

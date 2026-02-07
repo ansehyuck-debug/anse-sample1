@@ -49,7 +49,7 @@ const translations = {
         "indicator4": "시장 변동성(VKOSPI)",
         "indicator5": "옵션 풋콜 비율(PCR)",
         "updated-at": "업데이트",
-        "time-suffix": "(한국시간)",
+        "time-suffix": "(KST)",
         "exp-title-korea": "지표별 계산 방식 및 스케일링",
         "exp-1-title": "1. KOSPI vs 125일 이평선 이격도 (시장 모멘텀)",
         "exp-1-desc": "코스피 지수가 125일 이동평균선과 얼마나 떨어져 있는지를 나타내는 지표입니다. 이격도가 크면 과매수(탐욕), 작으면 과매도(공포)로 해석합니다.",
