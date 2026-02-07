@@ -199,7 +199,13 @@ const translations = {
         "how-to-us-step-2-t": "2단계: VIX 변동성 대조",
         "how-to-us-step-2-d": "공포 지수인 VIX가 급등할 때 나타나는 지수의 변화를 통해 시장의 바닥을 탐색합니다.",
         "how-to-us-step-3-t": "3단계: 글로벌 자금 흐름 관찰",
-        "how-to-us-step-3-d": "극심한 탐욕 구간에서는 글로벌 자산 배분 전략을 통해 리스크를 분산합니다."
+        "how-to-us-step-3-d": "극심한 탐욕 구간에서는 글로벌 자산 배분 전략을 통해 리스크를 분산합니다.",
+        "fedfunds": "기준금리",
+        "vix": "VIX 지수",
+        "payems": "비농업 고용",
+        "unrate": "실업률",
+        "dgs10": "10년물 국채 수익률",
+        "sp500": "S&P 500 지수"
     },
     en: {
         "nav-korea": "Korea Market Sentiment",
@@ -401,6 +407,12 @@ const translations = {
         "how-to-us-step-2-t": "Step 2: Contrast with VIX Volatility",
         "how-to-us-step-2-d": "Search for market bottoms by observing index changes during VIX spikes.",
         "how-to-us-step-3-t": "Step 3: Observe Global Capital Flows",
-        "how-to-us-step-3-d": "In extreme greed zones, diversify risks through global asset allocation strategies."
+        "how-to-us-step-3-d": "In extreme greed zones, diversify risks through global asset allocation strategies.",
+        "fedfunds": "Fed Funds Rate",
+        "vix": "VIX Index",
+        "payems": "Non-farm Payrolls",
+        "unrate": "Unemployment Rate",
+        "dgs10": "10-Year Treasury Yield",
+        "sp500": "S&P 500 Index"
     }
 };

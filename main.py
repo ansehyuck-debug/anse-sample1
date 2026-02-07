@@ -26,6 +26,27 @@ if key_dict:
 else:
     db = None 
 
+def get_fred_data(series_id):
+    api_key = os.environ.get("FRED_API_KEY")
+    if not api_key:
+        print(f"Warning: FRED_API_KEY not set. Cannot fetch {series_id}")
+        return None
+    
+    url = f"https://api.stlouisfed.org/fred/series/observations?series_id={series_id}&api_key={api_key}&file_type=json&sort_order=desc&limit=1"
+    try:
+        import requests
+        response = requests.get(url)
+        data = response.json()
+        if 'observations' in data and data['observations']:
+            obs = data['observations'][0]
+            return {
+                'value': obs['value'],
+                'date': obs['date']
+            }
+    except Exception as e:
+        print(f"Error fetching FRED data for {series_id}: {e}")
+    return None
+
 def generate_gemini_snp_report(data):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -57,22 +78,30 @@ def generate_gemini_snp_report(data):
         now = datetime.utcnow() + timedelta(hours=9)
         now_str = now.strftime("%Y. %m. %d. %p %I:%M").replace("AM", "오전").replace("PM", "오후")
 
-        # 최종 프롬프트 구성 (미국 시장은 단순 지수만 전달)
+        # 최종 프롬프트 구성 (FRED 지표 포함)
         final_prompt = f"""
         {prompt_template}
 
         [분석할 실시간 데이터]
-        {json.dumps(data, ensure_ascii=False, indent=2)}
+        - CNN Fear & Greed: {data.get('fng_score')} ({data.get('fng_description')})
+        - Economic Indicators (FRED):
+          * FED FUNDS RATE: {data.get('fedfunds', {}).get('value')}% (as of {data.get('fedfunds', {}).get('date')})
+          * VIX: {data.get('vix', {}).get('value')} (as of {data.get('vix', {}).get('date')})
+          * Non-farm Payrolls: {data.get('payems', {}).get('value')} (as of {data.get('payems', {}).get('date')})
+          * Unemployment Rate: {data.get('unrate', {}).get('value')}% (as of {data.get('unrate', {}).get('date')})
+          * 10-Year Treasury Yield: {data.get('dgs10', {}).get('value')}% (as of {data.get('dgs10', {}).get('date')})
+          * S&P 500 Index: {data.get('sp500', {}).get('value')} (as of {data.get('sp500', {}).get('date')})
 
         [기준 시간]
         {now_str}
 
         [데이터 매칭 지침]
-        1. 헤더 섹션의 S&P500 {{지수}} 위치에는 JSON의 'value'를 사용합니다.
+        1. 헤더 섹션의 S&P500 {{지수}} 위치에는 JSON의 S&P 500 Index 'value'를 사용합니다.
         2. {{현재시간}} 위치에는 '{now_str}'을 기입하세요.
         3. 디자인 유지: 원본 디자인의 모든 Tailwind CSS 클래스를 절대 생략하지 마세요.
-        4. **금리와 고용 지표는 오늘 날짜를 반드시 확인하여 가장 최근의 이전의 수치를 사용하세요. 오늘날짜와 한달 이상 차이나는 정보는 사용하지 마세요. (매우 중요)**
-        5. **수치와 설명이 논리적으로 일치하는지 마지막으로 한 번 더 검토하고 출력해줘. (매우 중요)**
+        4. **제공된 FRED 경제 지표들(금리, VIX, 고용 등)을 분석 내용에 적극 반영하여 전문적인 인사이트를 제공하세요.**
+        5. **금리와 고용 지표는 제공된 날짜를 확인하여 최신 상태인지 언급하세요.**
+        6. **수치와 설명이 논리적으로 일치하는지 마지막으로 한 번 더 검토하고 출력해줘. (매우 중요)**
         """
         
         response = client.models.generate_content(
@@ -127,9 +156,8 @@ def generate_gemini_snp_report(data):
 
 def update_fng():
     if db:
+        # 1. CNN F&G 데이터 수집 및 저장
         index_data = fear_and_greed.get()
-        
-        # 1. Firestore 저장
         doc_ref = db.collection('market_sentiment').document('cnn_fng')
         doc_ref.set({
             'value': index_data.value,
@@ -138,13 +166,33 @@ def update_fng():
         })
         print(f"CNN FNG 업데이트 완료: {index_data.value}")
 
-        # 2. AI 리포트 생성 (지수 값만 전달)
-        output_data = {
-            "value": index_data.value,
-            "description": index_data.description,
+        # 2. FRED 경제 지표 수집
+        fred_indicators = {
+            'fedfunds': get_fred_data('FEDFUNDS'),
+            'vix': get_fred_data('VIXCLS'),
+            'payems': get_fred_data('PAYEMS'),
+            'unrate': get_fred_data('UNRATE'),
+            'dgs10': get_fred_data('DGS10'),
+            'sp500': get_fred_data('SP500')
+        }
+        
+        # FRED 데이터 Firestore 저장
+        fred_ref = db.collection('market_sentiment').document('fred_indicators')
+        fred_ref.set({
+            'indicators': fred_indicators,
+            'last_update': firestore.SERVER_TIMESTAMP
+        })
+        print("FRED 경제 지표 업데이트 완료")
+
+        # 3. AI 리포트 생성
+        report_data = {
+            "fng_score": index_data.value,
+            "fng_description": index_data.description,
             "last_update": str(index_data.last_update)
         }
-        generate_gemini_snp_report(output_data)
+        report_data.update(fred_indicators)
+        
+        generate_gemini_snp_report(report_data)
     else:
         print("Firestore client not initialized. Skipping FNG update.")
 

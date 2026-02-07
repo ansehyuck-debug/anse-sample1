@@ -21,6 +21,7 @@ jobs:
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_INDEX_ADVISOR_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python -c 'from main import update_fng; update_fng()'
       - name: Commit and Push changes
         run: |

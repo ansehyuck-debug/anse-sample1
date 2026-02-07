@@ -199,15 +199,23 @@
         <button id="generate-proverb" class="mt-4 rounded-md bg-primary/10 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/20 transition-colors" data-i18n="new-proverb">새 격언 확인하기</button>
 </div>
 
-<!-- US Market Indices (Static or Placeholder) -->
+<!-- Market Indicators -->
+<div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-white dark:bg-[#161f2c] p-6 shadow-sm">
+    <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider" data-i18n="market-indicators">Market Indicators</h4>
+    <div id="fred-indicators-container" class="space-y-4">
+        <p class="text-xs text-slate-400" data-i18n="loading">Loading indicators...</p>
+    </div>
+</div>
+
+<!-- US Market Indices -->
 <div class="rounded-xl border border-[#e7ecf4] dark:border-[#1e293b] bg-primary text-white p-6 shadow-sm">
 <div class="flex items-center justify-between mb-4">
-<h4 class="text-sm font-bold uppercase tracking-wider">S&amp;P 500</h4>
-<a href="https://www.google.com/finance/quote/.INX:INDEXSP" target="_blank"><span class="material-symbols-outlined">insights</span></a>
+<h4 class="text-sm font-bold uppercase tracking-wider" data-i18n="sp500">S&P 500</h4>
+<a href="https://www.google.com/finance/quote/.INX:INDEXSP" target="_blank"><span class="material-symbols-outlined text-white">insights</span></a>
 </div>
 <div class="flex flex-col gap-1">
-<p id="market-index-value" class="text-3xl font-black" data-i18n="view-online">View Online</p>
-<p class="text-xs text-white/70 mt-2" data-i18n="click-to-chart">Click icon to see real-time chart</p>
+<p id="market-index-value" class="text-3xl font-black" data-i18n="loading">Loading...</p>
+<p id="market-index-date" class="text-xs text-white/70 mt-2">--:--</p>
 </div>
 </div>
 
@@ -454,10 +462,82 @@
             }
         }
 
+        // FRED API logic
+        async function getLatestFred(series) {
+            try {
+                const res = await fetch(`/api/fred?series=${series}`);
+                if (!res.ok) throw new Error('API fetch failed');
+                const data = await res.json();
+                if (data.observations && data.observations.length > 0) {
+                    const latest = data.observations[0];
+                    return {
+                        date: latest.date,
+                        value: latest.value === '.' ? 'N/A' : latest.value
+                    };
+                }
+                return { error: 'No data' };
+            } catch (err) {
+                console.error(err);
+                return { error: err.message };
+            }
+        }
+
+        async function updateFredIndicators() {
+            const container = document.getElementById('fred-indicators-container');
+            const sp500Value = document.getElementById('market-index-value');
+            const sp500Date = document.getElementById('market-index-date');
+
+            const items = [
+                { id: 'fedfunds', series: 'FEDFUNDS' },
+                { id: 'vix', series: 'VIXCLS' },
+                { id: 'payems', series: 'PAYEMS' },
+                { id: 'unrate', series: 'UNRATE' },
+                { id: 'dgs10', series: 'DGS10' }
+            ];
+
+            // Update S&P 500
+            const spResult = await getLatestFred('SP500');
+            if (sp500Value && sp500Date) {
+                if (spResult.error) {
+                    sp500Value.textContent = "Error";
+                } else {
+                    sp500Value.textContent = parseFloat(spResult.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    sp500Date.textContent = spResult.date;
+                }
+            }
+
+            // Update other indicators
+            if (container) {
+                container.innerHTML = '';
+                for (const item of items) {
+                    const result = await getLatestFred(item.series);
+                    let displayValue = result.error ? 'N/A' : result.value;
+                    
+                    // Format values if possible
+                    if (!result.error && !isNaN(result.value)) {
+                        const val = parseFloat(result.value);
+                        if (item.id === 'payems') displayValue = (val/1000).toFixed(1) + 'M';
+                        else if (item.id === 'unrate' || item.id === 'fedfunds' || item.id === 'dgs10') displayValue = val.toFixed(2) + '%';
+                        else displayValue = val.toFixed(2);
+                    }
+
+                    container.innerHTML += `
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span class="dark:text-white" data-i18n="${item.id}">${i18n.translate(item.id)}</span>
+                                <span class="text-primary">${displayValue}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400 text-right">${result.date || ''}</div>
+                        </div>`;
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             fetchUSSentiment();
             updateUSMarketStatus();
             displayRandomProverb();
+            updateFredIndicators();
             document.getElementById('generate-proverb')?.addEventListener('click', displayRandomProverb);
 
             document.getElementById('how-calculated-button')?.addEventListener('click', () => {
@@ -507,6 +587,7 @@
                 fetchUSSentiment();
                 updateUSMarketStatus();
                 displayRandomProverb();
+                updateFredIndicators();
             });
 
             // Advisor logic
