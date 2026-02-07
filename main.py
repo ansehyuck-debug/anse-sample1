@@ -78,19 +78,24 @@ def generate_gemini_snp_report(data):
         now = datetime.utcnow() + timedelta(hours=9)
         now_str = now.strftime("%Y. %m. %d. %p %I:%M").replace("AM", "오전").replace("PM", "오후")
 
+        # 안전하게 데이터를 가져오기 위한 헬퍼
+        def safe_get(key):
+            val = data.get(key)
+            return val if isinstance(val, dict) else {}
+
         # 최종 프롬프트 구성 (FRED 지표 포함)
         final_prompt = f"""
         {prompt_template}
 
         [분석할 실시간 데이터]
-        - CNN Fear & Greed: {data.get('fng_score')} ({data.get('fng_description')})
+        - CNN Fear & Greed: {data.get('fng_score', 'N/A')} ({data.get('fng_description', 'N/A')})
         - Economic Indicators (FRED):
-          * FED FUNDS RATE: {data.get('fedfunds', {}).get('value')}% (as of {data.get('fedfunds', {}).get('date')})
-          * VIX: {data.get('vix', {}).get('value')} (as of {data.get('vix', {}).get('date')})
-          * Non-farm Payrolls: {data.get('payems', {}).get('value')} (as of {data.get('payems', {}).get('date')})
-          * Unemployment Rate: {data.get('unrate', {}).get('value')}% (as of {data.get('unrate', {}).get('date')})
-          * 10-Year Treasury Yield: {data.get('dgs10', {}).get('value')}% (as of {data.get('dgs10', {}).get('date')})
-          * S&P 500 Index: {data.get('sp500', {}).get('value')} (as of {data.get('sp500', {}).get('date')})
+          * FED FUNDS RATE: {safe_get('fedfunds').get('value', 'N/A')}% (as of {safe_get('fedfunds').get('date', 'N/A')})
+          * VIX: {safe_get('vix').get('value', 'N/A')} (as of {safe_get('vix').get('date', 'N/A')})
+          * Non-farm Payrolls: {safe_get('payems').get('value', 'N/A')} (as of {safe_get('payems').get('date', 'N/A')})
+          * Unemployment Rate: {safe_get('unrate').get('value', 'N/A')}% (as of {safe_get('unrate').get('date', 'N/A')})
+          * 10-Year Treasury Yield: {safe_get('dgs10').get('value', 'N/A')}% (as of {safe_get('dgs10').get('date', 'N/A')})
+          * S&P 500 Index: {safe_get('sp500').get('value', 'N/A')} (as of {safe_get('sp500').get('date', 'N/A')})
 
         [기준 시간]
         {now_str}

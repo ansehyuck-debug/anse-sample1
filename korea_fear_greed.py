@@ -573,7 +573,6 @@ status_obj = get_status(score) # Changed to status_obj
 # 중괄호를 피하기 위해 dict() 생성자 사용
 data_to_save = dict(
     score=score,
-    status=status_obj, # Save the object
     timestamp=firestore.SERVER_TIMESTAMP,
     kospi_value=kospi_value,
     kospi_change_point=kospi_change_point,

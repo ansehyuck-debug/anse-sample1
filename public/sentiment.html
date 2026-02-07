@@ -422,10 +422,15 @@
                     const data = querySnapshot.docs[0].data();
                     
                     // 1. Update Gauge (CNN F&G)
-                    updateGauge(data.fng_value);
+                    if (data.fng_value !== undefined) {
+                        updateGauge(data.fng_value);
+                    } else {
+                        console.warn("fng_value missing in Firestore data");
+                        document.getElementById('status').textContent = "DATA ERROR";
+                    }
 
                     // 2. Update Last Updated Time
-                    if (data.timestamp) {
+                    if (data.timestamp && lastUpdatedEl) {
                         const dateObj = data.timestamp.toDate();
                         const currentLang = i18n.getLanguage();
                         const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
@@ -438,8 +443,9 @@
 
                     // 3. Update S&P 500 Index
                     if (sp500Value && data.sp500) {
-                        sp500Value.textContent = parseFloat(data.sp500.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                        if (sp500Date) sp500Date.textContent = data.sp500.date;
+                        const val = parseFloat(data.sp500.value);
+                        sp500Value.textContent = isNaN(val) ? "N/A" : val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        if (sp500Date) sp500Date.textContent = data.sp500.date || "--:--";
                     }
 
                     // 4. Update Other Economic Indicators
@@ -454,10 +460,8 @@
                     if (container) {
                         container.innerHTML = '';
                         items.forEach(item => {
-                            const fredData = data[item.key];
-                            if (!fredData) return;
-
-                            let displayValue = fredData.value === '.' ? 'N/A' : fredData.value;
+                            const fredData = data[item.key] || {};
+                            let displayValue = (fredData.value === '.' || !fredData.value) ? 'N/A' : fredData.value;
                             
                             if (displayValue !== 'N/A' && !isNaN(displayValue)) {
                                 const val = parseFloat(displayValue);
@@ -476,9 +480,13 @@
                                 </div>`;
                         });
                     }
+                } else {
+                    console.log("No data found in 'us_index' collection.");
+                    if (document.getElementById('status')) document.getElementById('status').textContent = "NO DATA";
                 }
             } catch (error) {
                 console.error("Error fetching US index from Firestore:", error);
+                if (document.getElementById('status')) document.getElementById('status').textContent = "ERROR";
             }
         }
 
