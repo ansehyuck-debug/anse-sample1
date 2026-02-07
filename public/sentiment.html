@@ -574,9 +574,8 @@
                     fetch(advisorFiles[activeAdvisor]).then(r => r.text()).then(html => { advisorAdviceDisplay.innerHTML = html; }).catch(() => { advisorAdviceDisplay.innerHTML = `<p class="text-sm text-red-500">${i18n.translate("failed-to-load-advice")}</p>`; });
                 }
             }
+            // Gemini 버튼만 활성화
             if (advisorButtons.gemini) advisorButtons.gemini.addEventListener('click', () => updateAdvisorDisplay('gemini'));
-            if (advisorButtons.gpt) advisorButtons.gpt.addEventListener('click', () => updateAdvisorDisplay('gpt'));
-            if (advisorButtons.grok) advisorButtons.grok.addEventListener('click', () => updateAdvisorDisplay('grok'));
             updateAdvisorDisplay('gemini');
         });
 
