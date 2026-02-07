@@ -156,15 +156,9 @@ def generate_gemini_snp_report(data):
 
 def update_fng():
     if db:
-        # 1. CNN F&G 데이터 수집 및 저장
+        # 1. CNN F&G 데이터 수집
         index_data = fear_and_greed.get()
-        doc_ref = db.collection('market_sentiment').document('cnn_fng')
-        doc_ref.set({
-            'value': index_data.value,
-            'description': index_data.description,
-            'last_update': index_data.last_update
-        })
-        print(f"CNN FNG 업데이트 완료: {index_data.value}")
+        print(f"CNN FNG 수집 완료: {index_data.value}")
 
         # 2. FRED 경제 지표 수집
         fred_indicators = {
@@ -175,16 +169,25 @@ def update_fng():
             'dgs10': get_fred_data('DGS10'),
             'sp500': get_fred_data('SP500')
         }
-        
-        # FRED 데이터 Firestore 저장
-        fred_ref = db.collection('market_sentiment').document('fred_indicators')
-        fred_ref.set({
-            'indicators': fred_indicators,
-            'last_update': firestore.SERVER_TIMESTAMP
-        })
-        print("FRED 경제 지표 업데이트 완료")
+        print("FRED 경제 지표 수집 완료")
 
-        # 3. AI 리포트 생성
+        # 3. 통합 데이터 구성 및 Firestore 누적 저장 (us_index 컬렉션)
+        us_data_to_save = {
+            'fng_value': index_data.value,
+            'fng_description': index_data.description,
+            'timestamp': firestore.SERVER_TIMESTAMP,
+            'fedfunds': fred_indicators['fedfunds'],
+            'vix': fred_indicators['vix'],
+            'payems': fred_indicators['payems'],
+            'unrate': fred_indicators['unrate'],
+            'dgs10': fred_indicators['dgs10'],
+            'sp500': fred_indicators['sp500']
+        }
+        
+        db.collection('us_index').add(us_data_to_save)
+        print(f"US 통합 지표 Firestore 저장 완료 (us_index)")
+
+        # 4. AI 리포트 생성용 데이터 구성
         report_data = {
             "fng_score": index_data.value,
             "fng_description": index_data.description,

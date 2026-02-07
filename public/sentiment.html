@@ -407,48 +407,78 @@
             }
         }
 
-        async function fetchUSSentiment() {
-            const quoteEl = document.getElementById('sentiment-quote');
+        // Fetch latest US market data from Firestore
+        async function fetchLatestUSIndex() {
             const lastUpdatedEl = document.getElementById('last-updated-time');
+            const container = document.getElementById('fred-indicators-container');
+            const sp500Value = document.getElementById('market-index-value');
+            const sp500Date = document.getElementById('market-index-date');
 
             try {
-                const doc = await db.collection('market_sentiment').doc('cnn_fng').get();
-                if (doc.exists) {
-                    const data = doc.data();
-                    const value = data.value;
-                    updateGauge(value);
-
-                    let quoteText = "";
-                    if (value >= 0 && value <= 24) { quoteText = i18n.translate("quote-extreme-fear"); }
-                    else if (value >= 25 && value <= 44) { quoteText = i18n.translate("quote-fear"); }
-                    else if (value >= 45 && value <= 55) { quoteText = i18n.translate("quote-neutral"); }
-                    else if (value >= 56 && value <= 75) { quoteText = i18n.translate("quote-greed"); }
-                    else if (value >= 76 && value <= 100) { quoteText = i18n.translate("quote-extreme-greed"); }
-                    else { quoteText = i18n.translate("quote-unknown"); }
-
-                    if (quoteEl) quoteEl.textContent = quoteText;
+                // Get the most recent document from us_index collection
+                const querySnapshot = await db.collection('us_index').orderBy('timestamp', 'desc').limit(1).get();
+                
+                if (!querySnapshot.empty) {
+                    const data = querySnapshot.docs[0].data();
                     
-                    if (data.last_update) {
-                        const dateObj = data.last_update.toDate ? data.last_update.toDate() : new Date(data.last_update);
+                    // 1. Update Gauge (CNN F&G)
+                    updateGauge(data.fng_value);
+
+                    // 2. Update Last Updated Time
+                    if (data.timestamp) {
+                        const dateObj = data.timestamp.toDate();
                         const currentLang = i18n.getLanguage();
                         const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
                         const time = dateObj.toLocaleString(locale, { 
-                            year: 'numeric', 
-                            month: '2-digit', 
-                            day: '2-digit', 
-                            hour: '2-digit', 
-                            minute: '2-digit', 
-                            hour12: true 
+                            year: 'numeric', month: '2-digit', day: '2-digit', 
+                            hour: '2-digit', minute: '2-digit', hour12: true 
                         }) + ' ' + i18n.translate("time-suffix");
-                        const lastUpdatedLabel = i18n.translate("last-updated");
-                        lastUpdatedEl.innerHTML = `<span data-i18n="last-updated">${lastUpdatedLabel}</span>: ${time}`;
+                        lastUpdatedEl.innerHTML = `<span data-i18n="last-updated">${i18n.translate("last-updated")}</span>: ${time}`;
                     }
-                } else {
-                    if (quoteEl) quoteEl.textContent = i18n.translate("preparing-advice");
+
+                    // 3. Update S&P 500 Index
+                    if (sp500Value && data.sp500) {
+                        sp500Value.textContent = parseFloat(data.sp500.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        if (sp500Date) sp500Date.textContent = data.sp500.date;
+                    }
+
+                    // 4. Update Other Economic Indicators
+                    const items = [
+                        { id: 'fedfunds', key: 'fedfunds' },
+                        { id: 'vix', key: 'vix' },
+                        { id: 'payems', key: 'payems' },
+                        { id: 'unrate', key: 'unrate' },
+                        { id: 'dgs10', key: 'dgs10' }
+                    ];
+
+                    if (container) {
+                        container.innerHTML = '';
+                        items.forEach(item => {
+                            const fredData = data[item.key];
+                            if (!fredData) return;
+
+                            let displayValue = fredData.value === '.' ? 'N/A' : fredData.value;
+                            
+                            if (displayValue !== 'N/A' && !isNaN(displayValue)) {
+                                const val = parseFloat(displayValue);
+                                if (item.id === 'payems') displayValue = (val/1000).toFixed(1) + 'M';
+                                else if (item.id === 'unrate' || item.id === 'fedfunds' || item.id === 'dgs10') displayValue = val.toFixed(2) + '%';
+                                else displayValue = val.toFixed(2);
+                            }
+
+                            container.innerHTML += `
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex justify-between text-xs font-bold">
+                                        <span class="dark:text-white" data-i18n="${item.id}">${i18n.translate(item.id)}</span>
+                                        <span class="text-primary">${displayValue}</span>
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 text-right">${fredData.date || ''}</div>
+                                </div>`;
+                        });
+                    }
                 }
             } catch (error) {
-                console.error("Error fetching US sentiment:", error);
-                if (quoteEl) quoteEl.textContent = i18n.translate("failed-to-load-advice");
+                console.error("Error fetching US index from Firestore:", error);
             }
         }
 
@@ -462,82 +492,10 @@
             }
         }
 
-        // FRED API logic
-        async function getLatestFred(series) {
-            try {
-                const res = await fetch(`/api/fred?series=${series}`);
-                if (!res.ok) throw new Error('API fetch failed');
-                const data = await res.json();
-                if (data.observations && data.observations.length > 0) {
-                    const latest = data.observations[0];
-                    return {
-                        date: latest.date,
-                        value: latest.value === '.' ? 'N/A' : latest.value
-                    };
-                }
-                return { error: 'No data' };
-            } catch (err) {
-                console.error(err);
-                return { error: err.message };
-            }
-        }
-
-        async function updateFredIndicators() {
-            const container = document.getElementById('fred-indicators-container');
-            const sp500Value = document.getElementById('market-index-value');
-            const sp500Date = document.getElementById('market-index-date');
-
-            const items = [
-                { id: 'fedfunds', series: 'FEDFUNDS' },
-                { id: 'vix', series: 'VIXCLS' },
-                { id: 'payems', series: 'PAYEMS' },
-                { id: 'unrate', series: 'UNRATE' },
-                { id: 'dgs10', series: 'DGS10' }
-            ];
-
-            // Update S&P 500
-            const spResult = await getLatestFred('SP500');
-            if (sp500Value && sp500Date) {
-                if (spResult.error) {
-                    sp500Value.textContent = "Error";
-                } else {
-                    sp500Value.textContent = parseFloat(spResult.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                    sp500Date.textContent = spResult.date;
-                }
-            }
-
-            // Update other indicators
-            if (container) {
-                container.innerHTML = '';
-                for (const item of items) {
-                    const result = await getLatestFred(item.series);
-                    let displayValue = result.error ? 'N/A' : result.value;
-                    
-                    // Format values if possible
-                    if (!result.error && !isNaN(result.value)) {
-                        const val = parseFloat(result.value);
-                        if (item.id === 'payems') displayValue = (val/1000).toFixed(1) + 'M';
-                        else if (item.id === 'unrate' || item.id === 'fedfunds' || item.id === 'dgs10') displayValue = val.toFixed(2) + '%';
-                        else displayValue = val.toFixed(2);
-                    }
-
-                    container.innerHTML += `
-                        <div class="flex flex-col gap-1">
-                            <div class="flex justify-between text-xs font-bold">
-                                <span class="dark:text-white" data-i18n="${item.id}">${i18n.translate(item.id)}</span>
-                                <span class="text-primary">${displayValue}</span>
-                            </div>
-                            <div class="text-[10px] text-slate-400 text-right">${result.date || ''}</div>
-                        </div>`;
-                }
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            fetchUSSentiment();
+            fetchLatestUSIndex();
             updateUSMarketStatus();
             displayRandomProverb();
-            updateFredIndicators();
             document.getElementById('generate-proverb')?.addEventListener('click', displayRandomProverb);
 
             document.getElementById('how-calculated-button')?.addEventListener('click', () => {
@@ -584,10 +542,9 @@
             });
 
             window.addEventListener('languageChanged', () => {
-                fetchUSSentiment();
+                fetchLatestUSIndex();
                 updateUSMarketStatus();
                 displayRandomProverb();
-                updateFredIndicators();
             });
 
             // Advisor logic
