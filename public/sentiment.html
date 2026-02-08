@@ -448,8 +448,18 @@
                     // 3. Update S&P 500 Index
                     if (sp500Value && data.sp500) {
                         const val = parseFloat(data.sp500.value);
-                        sp500Value.textContent = isNaN(val) ? "N/A" : val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                        if (sp500Date) sp500Date.textContent = data.sp500.date || "--:--";
+                        sp500Value.textContent = isNaN(val) ? "Loading..." : val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        
+                        // Use Firestore timestamp instead of FRED date for time display
+                        if (sp500Date && data.timestamp) {
+                            const dateObj = data.timestamp.toDate();
+                            const currentLang = i18n.getLanguage();
+                            const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+                            sp500Date.textContent = dateObj.toLocaleString(locale, { 
+                                year: 'numeric', month: '2-digit', day: '2-digit', 
+                                hour: '2-digit', minute: '2-digit', hour12: true 
+                            }) + ' ' + i18n.translate("time-suffix");
+                        }
                     }
 
                     // 4. Update Other Economic Indicators
