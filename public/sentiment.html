@@ -16,14 +16,14 @@
 <meta property="og:description" content="일일 업데이트되는 미국 공포 탐욕 지수와 주요 경제 지표 분석 리포트를 확인하세요." data-i18n="desc-us"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://anse.ai.kr/sentiment.html"/>
-<meta property="og:image" content="https://anse.ai.kr/images/neutral.png"/>
+<meta property="og:image" content="https://anse.ai.kr/images/anse_ai_kr.png"/>
 <meta name="author" content="anse.ai.kr"/>
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="미국 주식 공포 탐욕 지수 - S&P 500 및 주요 경제 지표 AI 분석" data-i18n="title-us"/>
 <meta name="twitter:description" content="일일 업데이트되는 미국 공포 탐욕 지수와 주요 경제 지표 분석 리포트를 확인하세요." data-i18n="desc-us"/>
-<meta name="twitter:image" content="https://anse.ai.kr/images/neutral.png"/>
+<meta name="twitter:image" content="https://anse.ai.kr/images/anse_ai_kr.png"/>
 
 <!-- Structured Data for GEO (AI Search Optimization) -->
 <script type="application/ld+json">
@@ -155,12 +155,12 @@
 <h3 class="text-lg font-bold" data-i18n="current-sentiment">Current Sentiment</h3>
 <span id="last-updated-time" class="text-sm font-medium text-[#49699c]"><span data-i18n="last-updated">Last updated</span>: -</span>
 </div>
-<div class="relative flex flex-col items-center py-10">
+<div class="relative flex flex-col items-center py-10" role="img" aria-label="CNN Fear and Greed Index Gauge">
 <!-- Gauge visualization -->
 <div class="relative h-48 w-80 overflow-hidden rounded-t-full bg-slate-100 dark:bg-slate-800">
 <!-- Gauge segments colored with conic gradient -->
-<div class="absolute inset-0 gauge-gradient opacity-80" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
-<div class="absolute bottom-0 left-1/2 h-32 w-64 -translate-x-1/2 rounded-t-full bg-white dark:bg-[#161f2c]"></div>
+<div class="absolute inset-0 gauge-gradient opacity-80" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);" aria-hidden="true"></div>
+<div class="absolute bottom-0 left-1/2 h-32 w-64 -translate-x-1/2 rounded-t-full bg-white dark:bg-[#161f2c]" aria-hidden="true"></div>
 <!-- Needle -->
 <div class="absolute bottom-0 left-1/2 h-40 w-1 -translate-x-1/2 origin-bottom transition-transform duration-1000 ease-out" id="gauge-needle">
 <div class="h-full w-full bg-slate-900 dark:bg-white rounded-full"></div>
@@ -219,6 +219,9 @@
     <h4 class="mb-4 text-sm font-bold text-[#49699c] uppercase tracking-wider" data-i18n="market-indicators">Market Indicators</h4>
     <div id="fred-indicators-container" class="space-y-4">
         <p class="text-xs text-slate-400" data-i18n="loading">Loading indicators...</p>
+    </div>
+    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <p class="text-[10px] text-[#49699c] dark:text-slate-500" data-i18n="footer-desc-us">Data provided by CNN Business and FRED.</p>
     </div>
 </div>
 
