@@ -398,20 +398,28 @@ def get_scores():
     kospi_value = None
     kospi_change_rate = None
     kospi_change_point = None
-    try:
-        df_kospi = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=5))
-        if not df_kospi.empty:
-            curr_close = df_kospi['Close'].iloc[-1]
-            prev_close = df_kospi['Close'].iloc[-2]
-            
-            kospi_value = round(curr_close, 2)
-            kospi_change_point = round(curr_close - prev_close, 2)
-            kospi_change_rate = round((kospi_change_point / prev_close) * 100, 2)
-            print(f"KOSPI 현재가: {kospi_value}, 등락포인트: {kospi_change_point}, 등락률: {kospi_change_rate}%")
-        else:
-            print("KOSPI 데이터를 FinanceDataReader에서 가져오지 못했습니다.")
-    except Exception as e:
-        print(f"KOSPI 데이터 가져오기 오류: {e}")
+    
+    for i in range(10): # 오늘부터 10일 전까지 시도
+        target_date = datetime.now() - timedelta(days=i)
+        try:
+            df_kospi = fdr.DataReader('KS11', start=target_date - timedelta(days=5)) # 넉넉한 과거 데이터 확보
+            if not df_kospi.empty and len(df_kospi) >= 2: # 최소 2일 데이터 필요 (현재, 이전 종가)
+                curr_close = df_kospi['Close'].iloc[-1]
+                prev_close = df_kospi['Close'].iloc[-2]
+                
+                kospi_value = round(curr_close, 2)
+                kospi_change_point = round(curr_close - prev_close, 2)
+                kospi_change_rate = round((kospi_change_point / prev_close) * 100, 2)
+                print(f"KOSPI 현재가: {kospi_value}, 등락포인트: {kospi_change_point}, 등락률: {kospi_change_rate}% (데이터 날짜: {df_kospi.index[-1].strftime('%Y-%m-%d')})")
+                break # 데이터 찾으면 루프 종료
+            else:
+                print(f"KOSPI 데이터 (KS11) {target_date.strftime('%Y%m%d')} 조회 실패: 데이터 부족. 재시도.")
+        except Exception as e:
+            print(f"KOSPI 데이터 (KS11) {target_date.strftime('%Y%m%d')} 조회 오류: {e}. 재시도.")
+        time.sleep(0.5) # 짧은 지연
+    
+    if kospi_value is None:
+        print("KOSPI 데이터 최종 오류: 10일 동안 유효한 데이터를 찾지 못했습니다. KOSPI 값은 None으로 유지됩니다.")
 
     return int(final_score), scores, kospi_value, kospi_change_point, kospi_change_rate
 

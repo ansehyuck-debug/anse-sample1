@@ -384,9 +384,21 @@
             updateGauge(doc.score);
             
             // KOSPI Value
-            document.getElementById('kospi-value').textContent = doc.kospi_value.toFixed(2);
-            document.getElementById('kospi-change-rate').textContent = `${doc.kospi_change_rate > 0 ? '+' : ''}${doc.kospi_change_rate.toFixed(2)}%`;
-            document.getElementById('kospi-change-point').textContent = `${doc.kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(doc.kospi_change_point).toFixed(2)}`;
+            if (doc.kospi_value !== null && doc.kospi_value !== undefined) {
+                document.getElementById('kospi-value').textContent = doc.kospi_value.toFixed(2);
+            } else {
+                document.getElementById('kospi-value').textContent = "----.--";
+            }
+            if (doc.kospi_change_rate !== null && doc.kospi_change_rate !== undefined) {
+                document.getElementById('kospi-change-rate').textContent = `${doc.kospi_change_rate > 0 ? '+' : ''}${doc.kospi_change_rate.toFixed(2)}%`;
+            } else {
+                document.getElementById('kospi-change-rate').textContent = "--.--%";
+            }
+            if (doc.kospi_change_point !== null && doc.kospi_change_point !== undefined) {
+                document.getElementById('kospi-change-point').textContent = `${doc.kospi_change_point > 0 ? '▲' : '▼'} ${Math.abs(doc.kospi_change_point).toFixed(2)}`;
+            } else {
+                document.getElementById('kospi-change-point').textContent = "--.--";
+            }
             
             const dateObj = doc.timestamp.toDate();
             const currentLang = i18n.getLanguage();
