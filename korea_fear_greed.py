@@ -53,9 +53,9 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
         "AUTH_KEY": auth_key,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
-    # KRX Open API의 기본 URL이 data-dbg.krx.co.kr 이므로 이를 사용
-    # API에 따라 svc/apis/idx/ 또는 svc/apis/sto/ 등을 사용
-    base_url = "https://data-dbg.krx.co.kr/svc/apis/"
+    # KRX Open API의 기본 URL이 data.krx.co.kr 이므로 이를 사용 (운영 서버)
+    # data-dbg.krx.co.kr은 테스트 서버이므로 LOGOUT 오류가 빈번할 수 있음
+    base_url = "https://data.krx.co.kr/svc/apis/"
     full_url = base_url + endpoint
     # print(f"KRX API 호출: URL={full_url}, Params={params}") # Removed verbose logging
     try:
