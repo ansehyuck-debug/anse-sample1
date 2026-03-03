@@ -60,7 +60,8 @@ function setupEventListeners(p) {
 
     // Login/Logout
     p.querySelector('#login-button')?.addEventListener('click', () => {
-        supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+        alert(window.i18n?.getLanguage() === 'ko' ? "현재 로그인 기능이 점검 중입니다." : "Login is currently under maintenance.");
+        // supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
     });
     p.querySelector('#logout-button-dropdown')?.addEventListener('click', async () => {
         await supabaseClient.auth.signOut();
@@ -128,7 +129,8 @@ function updateAuthUI(user) {
         if(mE) mE.textContent = user.email;
         checkSubscriptionStatus(user.id);
     } else {
-        loginBtn.classList.remove('hidden'); prof.classList.add('hidden');
+        // 로그인 기능 비활성화를 위해 버튼을 표시하지 않음
+        loginBtn.classList.add('hidden'); prof.classList.add('hidden');
     }
 }
 
