@@ -1,4 +1,4 @@
-# Last updated: 2026-01-26 - Forced re-push for workflow debugging. Another re-push attempt.
+# Last updated: 2026-03-03 - Fixed KRX API endpoint and strengthened authentication.
 import os
 import json
 import pandas as pd
@@ -53,27 +53,27 @@ def _call_krx_api(endpoint, params, auth_key_env_var="KRX_API_KEY"):
         "AUTH_KEY": auth_key,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
-    # KRX Open API의 기본 URL이 data.krx.co.kr 이므로 이를 사용 (운영 서버)
-    # data-dbg.krx.co.kr은 테스트 서버이므로 LOGOUT 오류가 빈번할 수 있음
-    base_url = "https://data.krx.co.kr/svc/apis/"
+    # KRX Open API의 엔드포인트는 data-dbg.krx.co.kr을 사용합니다.
+    base_url = "https://data-dbg.krx.co.kr/svc/apis/"
     full_url = base_url + endpoint
-    # print(f"KRX API 호출: URL={full_url}, Params={params}") # Removed verbose logging
+    
+    # [보완] 인증키를 쿼리 파라미터에도 추가하여 인증 성공률을 높임
+    if params is None:
+        params = {}
+    params["AUTH_KEY"] = auth_key
+    
     try:
-        response = requests.get(full_url, headers=headers, params=params, timeout=30) # Increased timeout
-        response.raise_for_status() # HTTP 오류 발생 시 예외 발생
+        response = requests.get(full_url, headers=headers, params=params, timeout=30)
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as http_err:
         print("HTTP 오류 발생: %s" % http_err)
-        print("응답 내용: %s" % response.text)
+        # 401/403 등 인증 오류 시 응답 내용 확인을 위해 추가
+        if response.text:
+            print("응답 내용 요약: %s" % response.text[:200])
         raise
-    except requests.exceptions.ConnectionError as conn_err:
-        print("연결 오류 발생: %s" % conn_err)
-        raise
-    except requests.exceptions.Timeout as timeout_err:
-        print("요청 시간 초과: %s" % timeout_err)
-        raise
-    except requests.exceptions.RequestException as req_err:
-        print("요청 오류 발생: %s" % req_err)
+    except Exception as e:
+        print("API 호출 중 예외 발생: %s" % str(e))
         raise
 
 def get_vkospi_from_krx_api(date_str):
@@ -212,7 +212,8 @@ def get_scores():
         for i in range(10): # 오늘부터 10일 전까지 시도
             target_date = datetime.now() - timedelta(days=i)
             try:
-                df = fdr.DataReader('KS11', start=target_date - timedelta(days=200))
+                # [변경] 'KS11' 대신 Yahoo Finance 심볼 '^KS11' 사용하여 KRX LOGOUT 오류 회피
+                df = fdr.DataReader('^KS11', start=target_date - timedelta(days=200))
                 if not df.empty and len(df) >= 125: # 최소 125일 데이터 필요
                     ma125 = df['Close'].rolling(window=125).mean().iloc[-1]
                     curr = df['Close'].iloc[-1]
@@ -237,8 +238,8 @@ def get_scores():
         for i in range(10): # 오늘부터 10일 전까지 시도
             target_date = datetime.now() - timedelta(days=i)
             try:
-                # RSI 계산을 위해 넉넉한 기간의 데이터 필요 (14일 + 1일 diff)
-                df_rsi = fdr.DataReader('KS11', start=target_date - timedelta(days=40)) 
+                # [변경] '^KS11' 사용
+                df_rsi = fdr.DataReader('^KS11', start=target_date - timedelta(days=40)) 
                 if not df_rsi.empty and len(df_rsi) > 14: # 최소 14일 데이터 필요
                     delta = df_rsi['Close'].diff()
                     gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
@@ -262,8 +263,8 @@ def get_scores():
 
     # 지표 3: ADR (상승/하락 비율) - 20일 이동평균 (신뢰성 강화 버전)
     try:
-        # 최근 45일치 데이터를 가져와서 충분한 거래일 후보 확보
-        df_ks = fdr.DataReader('KS11', start=datetime.now() - timedelta(days=45))
+        # [변경] '^KS11' 사용
+        df_ks = fdr.DataReader('^KS11', start=datetime.now() - timedelta(days=45))
         all_trading_days = df_ks.index.strftime('%Y%m%d').tolist()
         all_trading_days.reverse() # 최신 날짜부터 역순으로 검사
         
@@ -402,7 +403,8 @@ def get_scores():
     for i in range(10): # 오늘부터 10일 전까지 시도
         target_date = datetime.now() - timedelta(days=i)
         try:
-            df_kospi = fdr.DataReader('KS11', start=target_date - timedelta(days=5)) # 넉넉한 과거 데이터 확보
+            # [변경] '^KS11' 사용
+            df_kospi = fdr.DataReader('^KS11', start=target_date - timedelta(days=5)) # 넉넉한 과거 데이터 확보
             if not df_kospi.empty and len(df_kospi) >= 2: # 최소 2일 데이터 필요 (현재, 이전 종가)
                 curr_close = df_kospi['Close'].iloc[-1]
                 prev_close = df_kospi['Close'].iloc[-2]
@@ -615,7 +617,7 @@ output_data = {
     "kospi_value": kospi_value,
     "kospi_change_point": kospi_change_point,
     "kospi_change_rate": kospi_change_rate,
-    "individual_scores": individual_scores
+    "indicator_scores": individual_scores # individual_scores로 변경하여 프롬프트와 맞춤
 }
 
 # [추가] 제미나이 리포트 생성 실행
